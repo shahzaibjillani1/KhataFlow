@@ -1,0 +1,354 @@
+﻿using KhataFlow.Core.Domain.Entities;
+using KhataFlow.Core.Enums;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+
+namespace KhataFlow.Infrastructure.Data;
+
+public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Business> Businesses => Set<Business>();
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Sale> Sales => Set<Sale>();
+    public DbSet<SaleItem> SaleItems => Set<SaleItem>();
+    public DbSet<LedgerEntry> LedgerEntries => Set<LedgerEntry>();
+    public DbSet<Expense> Expenses => Set<Expense>();
+    public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
+    public DbSet<InvoiceSettings> InvoiceSettings => Set<InvoiceSettings>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.HasDefaultSchema("business");
+
+        builder.Entity<Business>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Customer>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Product>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Category>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Sale>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<SaleItem>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<LedgerEntry>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Expense>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<SubscriptionPlan>().HasQueryFilter(e => !e.IsDeleted);
+        builder.Entity<Notification>().HasQueryFilter(e => !e.IsDeleted);
+
+        builder.Entity<Business>(e =>
+        {
+            e.HasKey(b => b.Id);
+            e.Property(b => b.OwnerId).IsRequired();       
+            e.Property(b => b.BusinessName).IsRequired().HasMaxLength(100);
+            e.Property(b => b.OwnerName).IsRequired().HasMaxLength(100);
+            e.Property(b => b.OwnerEmail).IsRequired().HasMaxLength(150);
+            e.Property(b => b.Email).IsRequired().HasMaxLength(150);
+            e.Property(b => b.PhoneNumber).HasMaxLength(20);
+            e.Property(b => b.SubscriptionExpiry).IsRequired();
+            e.Property(b => b.BusinessNameUr).HasMaxLength(100);
+            e.Property(b => b.OwnerNameUr).HasMaxLength(100);
+            e.Property(b => b.AddressUr).HasMaxLength(500);
+            e.HasIndex(b => b.Email)
+             .IsUnique()
+             .HasDatabaseName("IX_Business_Email");
+
+            e.HasIndex(b => b.OwnerId)
+             .HasDatabaseName("IX_Business_OwnerId");
+        });
+
+        builder.Entity<Customer>(e =>
+        {
+            e.HasKey(c => c.Id);
+            e.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            e.Property(c => c.PhoneNumber).HasMaxLength(20);
+
+            e.Property(c => c.PublicToken)
+             .IsRequired()
+             .HasMaxLength(12);
+            e.Property(c => c.NameUr).HasMaxLength(100);
+            e.Property(c => c.AddressUr).HasMaxLength(500);
+            e.HasIndex(c => c.PublicToken)
+             .IsUnique()
+             .HasDatabaseName("IX_Customer_PublicToken");
+
+            e.HasOne(c => c.Business)
+             .WithMany(b => b.Customers)
+             .HasForeignKey(c => c.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(c => c.BusinessId)
+             .HasDatabaseName("IX_Customer_BusinessId");
+
+            e.HasIndex(c => new { c.BusinessId, c.PhoneNumber })
+             .HasDatabaseName("IX_Customer_BusinessId_Phone");
+        });
+
+        builder.Entity<Category>(e =>
+        {
+            e.HasKey(c => c.Id);
+            e.Property(c => c.CategoryName).IsRequired().HasMaxLength(50);
+            e.Property(c => c.CategoryNameUr).HasMaxLength(50);
+            e.Property(c => c.DescriptionUr).HasMaxLength(500);
+            e.HasOne(c => c.Business)
+             .WithMany(b => b.Categories)
+             .HasForeignKey(c => c.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(c => new { c.BusinessId, c.CategoryName })
+             .IsUnique()
+             .HasDatabaseName("IX_Category_BusinessId_Name");
+        });
+
+        builder.Entity<Product>(e =>
+        {
+            e.HasKey(p => p.Id);
+            e.Property(p => p.ProductName).IsRequired().HasMaxLength(100);
+            e.Property(p => p.Price).HasColumnType("decimal(18,2)");
+            e.Ignore(p => p.InventoryStatus);
+            e.Property(p => p.ProductNameUr).HasMaxLength(100);
+            e.HasOne(p => p.Business)
+             .WithMany(b => b.Products)
+             .HasForeignKey(p => p.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasOne(p => p.Category)
+             .WithMany(c => c.Products)
+             .HasForeignKey(p => p.CategoryId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(p => p.BusinessId)
+             .HasDatabaseName("IX_Product_BusinessId");
+
+            e.HasIndex(p => new { p.BusinessId, p.CategoryId })
+             .HasDatabaseName("IX_Product_BusinessId_CategoryId");
+
+            e.HasIndex(p => new { p.BusinessId, p.Stock })
+             .HasDatabaseName("IX_Product_BusinessId_Stock");
+        });
+
+        builder.Entity<Sale>(e =>
+        {
+            e.HasKey(s => s.Id);
+            e.Property(s => s.InvoiceNumber).IsRequired().HasMaxLength(50);
+            e.Property(s => s.Note).HasMaxLength(500);        
+            e.Property(s => s.NoteUr).HasMaxLength(500);
+            e.Property(s => s.DiscountAmount).HasColumnType("decimal(18,2)");
+
+            e.Ignore(s => s.TotalAmount);
+            e.Ignore(s => s.Subtotal);
+            e.Ignore(s => s.GrandTotal);
+
+            e.HasOne(s => s.Business)
+             .WithMany(b => b.Sales)
+             .HasForeignKey(s => s.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasOne(s => s.Customer)
+             .WithMany(c => c.Sales)
+             .HasForeignKey(s => s.CustomerId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(s => new { s.BusinessId, s.InvoiceNumber })
+             .IsUnique()
+             .HasDatabaseName("IX_Sale_BusinessId_InvoiceNumber");
+
+            e.HasIndex(s => new { s.BusinessId, s.Date })
+             .HasDatabaseName("IX_Sale_BusinessId_Date");
+
+            e.HasIndex(s => new { s.BusinessId, s.CustomerId })
+             .HasDatabaseName("IX_Sale_BusinessId_CustomerId");
+        });
+
+        builder.Entity<SaleItem>(e =>
+        {
+            e.HasKey(si => si.Id);
+            e.Property(si => si.UnitPrice).HasColumnType("decimal(18,2)");
+            e.Ignore(si => si.Total);
+
+            e.HasOne(si => si.Sale)
+             .WithMany(s => s.Items)
+             .HasForeignKey(si => si.SaleId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            e.HasOne(si => si.Product)
+             .WithMany()
+             .HasForeignKey(si => si.ProductId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(si => si.SaleId)
+             .HasDatabaseName("IX_SaleItem_SaleId");
+        });
+
+        builder.Entity<LedgerEntry>(e =>
+        {
+            e.HasKey(l => l.Id);
+            e.Property(l => l.Amount).HasColumnType("decimal(18,2)");
+            e.Property(l => l.NotesUr).HasMaxLength(500);
+
+            e.HasOne(l => l.Business)
+             .WithMany()
+             .HasForeignKey(l => l.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasOne(l => l.Customer)
+             .WithMany(c => c.LedgerEntries)
+             .HasForeignKey(l => l.CustomerId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            
+            e.HasOne(l => l.Sale)
+             .WithMany()
+             .HasForeignKey(l => l.SaleId)
+             .IsRequired(false)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(l => new { l.BusinessId, l.CustomerId })
+             .HasDatabaseName("IX_LedgerEntry_BusinessId_CustomerId");
+
+            e.HasIndex(l => l.SaleId)
+             .HasDatabaseName("IX_LedgerEntry_SaleId");
+        });
+
+        builder.Entity<Expense>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Title).IsRequired().HasMaxLength(150);
+            e.Property(x => x.Amount).HasColumnType("decimal(18,2)");
+            e.Property(x => x.Note).HasMaxLength(500);
+            e.Property(x => x.Category)
+              .HasConversion<string>()
+              .HasMaxLength(50);
+            e.Property(x => x.TitleUr).HasMaxLength(150);
+            e.Property(x => x.NoteUr).HasMaxLength(500);
+            e.HasOne(x => x.Business)
+             .WithMany()
+             .HasForeignKey(x => x.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(x => x.BusinessId)
+             .HasDatabaseName("IX_Expense_BusinessId");
+
+            e.HasIndex(x => new { x.BusinessId, x.Date })
+             .HasDatabaseName("IX_Expense_BusinessId_Date");
+        });
+
+        builder.Entity<SubscriptionPlan>(e =>
+        {
+            e.HasKey(sp => sp.Id);
+            e.Property(sp => sp.PlanName).IsRequired().HasMaxLength(50);
+            e.Property(sp => sp.PlanNameUr).HasMaxLength(50);
+            e.Property(sp => sp.MonthlyPrice).HasColumnType("decimal(18,2)");
+
+            e.Property(sp => sp.Features)
+             .HasConversion(
+                 v => JsonSerializer.Serialize(v, default(JsonSerializerOptions)),
+                 v => JsonSerializer.Deserialize<ICollection<string>>(v, default(JsonSerializerOptions))!
+             )
+             .Metadata.SetValueComparer(
+                 new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<ICollection<string>>(
+                     (c1, c2) => c1!.SequenceEqual(c2!),
+                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                     c => c.ToList()
+                 )
+             );
+
+            e.Property(sp => sp.FeaturesUr)
+             .HasConversion(
+                 v => JsonSerializer.Serialize(v, default(JsonSerializerOptions)),
+                 v => JsonSerializer.Deserialize<ICollection<string>>(v, default(JsonSerializerOptions))!
+             )
+             .Metadata.SetValueComparer(
+                 new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<ICollection<string>>(
+                     (c1, c2) => c1!.SequenceEqual(c2!),
+                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                     c => c.ToList()
+                 )
+             );
+
+            e.Property(sp => sp.MaxProducts).IsRequired().HasDefaultValue(-1);
+            e.Property(sp => sp.MaxCustomers).IsRequired().HasDefaultValue(-1);
+            e.Property(sp => sp.MaxStaffUsers).IsRequired().HasDefaultValue(1);
+            e.Property(sp => sp.MaxSalesPerMonth).IsRequired().HasDefaultValue(-1);
+            e.Property(sp => sp.AllowVoiceInput).IsRequired().HasDefaultValue(false);
+            e.Property(sp => sp.AllowWhatsAppShare).IsRequired().HasDefaultValue(false);
+            e.Property(sp => sp.AllowCustomBranding).IsRequired().HasDefaultValue(false);
+
+            e.HasIndex(sp => sp.PlanType)
+             .IsUnique()
+             .HasDatabaseName("IX_SubscriptionPlan_PlanType");
+        });
+
+        builder.Entity<Notification>(e =>
+        {
+            e.HasKey(n => n.Id);
+            e.Property(n => n.Title).IsRequired().HasMaxLength(100);
+            e.Property(n => n.Message).IsRequired().HasMaxLength(500);
+            e.Property(n => n.Target).HasConversion<string>().HasMaxLength(20);
+            e.Property(n => n.Type).HasConversion<string>().HasMaxLength(30);
+            e.Property(n => n.TitleUr).HasMaxLength(100);
+            e.Property(n => n.MessageUr).HasMaxLength(500);
+            e.HasOne(n => n.User)
+             .WithMany()
+             .HasForeignKey(n => n.UserId)
+             .OnDelete(DeleteBehavior.Restrict)
+             .IsRequired(false);
+
+            e.HasOne(n => n.Business)
+             .WithMany()
+             .HasForeignKey(n => n.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict)
+             .IsRequired(false);
+
+            e.HasIndex(n => n.BusinessId)
+             .HasDatabaseName("IX_Notification_BusinessId");
+
+            e.HasIndex(n => n.UserId)
+             .HasDatabaseName("IX_Notification_UserId");
+
+            e.HasIndex(n => new { n.BusinessId, n.IsRead })
+             .HasDatabaseName("IX_Notification_BusinessId_IsRead");
+
+            e.HasIndex(n => n.SentAt)
+             .HasDatabaseName("IX_Notification_SentAt");
+        });
+
+        builder.Entity<IdempotencyRecord>(e =>
+        {
+            e.HasKey(r => r.Id);
+            e.Property(r => r.IdempotencyKey).IsRequired().HasMaxLength(200);
+            e.Property(r => r.CreatedAt).IsRequired();
+
+            e.HasIndex(r => r.IdempotencyKey)
+             .IsUnique()
+             .HasDatabaseName("IX_IdempotencyRecord_Key");
+        });
+
+        builder.Entity<InvoiceSettings>(e =>
+        {
+            e.HasKey(i => i.Id);
+            e.Property(i => i.PrimaryColorHex).IsRequired().HasMaxLength(7);
+            e.Property(i => i.AccentColorHex).IsRequired().HasMaxLength(7);
+            e.Property(i => i.FontFamily).IsRequired().HasMaxLength(50);
+            e.Property(i => i.FooterNote).HasMaxLength(300);
+            e.Property(i => i.LogoUrl).HasMaxLength(2048);
+
+            e.Property(i => i.Style)
+             .HasConversion<string>()
+             .HasMaxLength(20);
+
+            e.HasOne(i => i.Business)
+             .WithOne()
+             .HasForeignKey<InvoiceSettings>(i => i.BusinessId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasIndex(i => i.BusinessId)
+             .IsUnique()
+             .HasDatabaseName("IX_InvoiceSettings_BusinessId");
+        });
+    }
+    
+}

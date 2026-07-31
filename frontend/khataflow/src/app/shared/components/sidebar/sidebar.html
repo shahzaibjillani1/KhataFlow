@@ -1,0 +1,81 @@
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'" [ngClass]="[
+    collapsed ? 'w-20' : 'w-64',
+    mobileOpen
+      ? 'translate-x-0'
+      : (lang() === 'ur' ? 'translate-x-full sm:translate-x-0' : '-translate-x-full sm:translate-x-0'),
+    lang() === 'ur' ? 'border-l' : 'border-r'
+  ]"
+  class="fixed sm:relative z-50 h-full bg-sidebar-bg text-text-heading flex flex-col transition-all duration-300 border-sidebar-border">
+
+  <div class="flex items-center gap-3 px-5 py-5 border-b border-sidebar-border">
+
+    <img src="images/flow.png" alt="logo" [ngClass]="lang() === 'ur' ? 'scale-x-[-1]' : ''"
+      class="w-10 sm:w-12 h-8 sm:h-10 rounded-xl sm:rounded-2xl transition-transform duration-300" />
+
+    @if (!collapsed) {
+    <h1 class="text-xl font-bold text-text-heading flex items-baseline gap-1">
+      <span>{{ t('sidebar.brandPart1') }}</span>
+      <span class="text-primary-icon">{{ t('sidebar.brandPart2') }}</span>
+    </h1>
+    }
+
+  </div>
+
+  <nav class="flex flex-col gap-1 px-3 mt-5">
+
+    @if (!collapsed) {
+    <p class="text-xs font-semibold text-text-muted uppercase tracking-widest px-3 mb-2">
+      {{ t('sidebar.menu') }}
+    </p>
+    }
+
+    @for (item of menuItems(); track item.route) {
+
+    <a [routerLink]="item.route" routerLinkActive="bg-nav-item-active-bg !text-nav-item-active-text font-semibold"
+      [routerLinkActiveOptions]="{ exact: true }" [class.justify-center]="collapsed" (click)="onTabSelect(item)"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-label hover:bg-nav-item-hover-bg hover:!text-nav-item-hover-text transition">
+      <i [class]="item.icon + ' text-lg w-6 text-center flex-shrink-0'"></i>
+
+      @if (!collapsed) {
+
+      <span class="flex-1 font-medium">
+        {{ t(item.labelKey) }}
+      </span>
+
+      @if (item.badge) {
+      <span class="bg-badge-notification-bg text-white text-xs font-bold px-2 py-0.5 rounded-full">
+        {{ productCount }}
+      </span>
+      }
+
+      }
+
+    </a>
+
+    } @empty {
+
+    <p class="text-xs text-text-muted px-3">
+      {{ t('sidebar.noMenuItems') }}
+    </p>
+
+    }
+
+  </nav>
+
+  <div class="mt-auto p-4">
+
+    <button type="button" (click)="logout()"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-label hover:bg-nav-item-hover-bg hover:text-danger-text transition"
+      [ngClass]="{ 'justify-center w-full': collapsed }">
+
+      <i class="fa-solid fa-arrow-right-from-bracket text-lg w-6 text-center"></i>
+
+      @if (!collapsed) {
+      <span class="font-medium">{{ t('sidebar.logout') }}</span>
+      }
+
+    </button>
+
+  </div>
+
+</div>

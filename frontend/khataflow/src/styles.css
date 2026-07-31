@@ -1,0 +1,135 @@
+@import 'tailwindcss';
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@theme {
+  /* Breakpoints */
+  --breakpoint-xs: 475px;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Layout */
+  --color-bg-page: var(--color-gray-50);
+  --color-bg-card: var(--color-white);
+
+  /* Border */
+  --color-border-card: var(--color-gray-100);
+  --color-border-table: var(--color-gray-200);
+
+  /* Text */
+  --color-text-heading: var(--color-gray-800);
+  --color-text-body: var(--color-gray-700);
+  --color-text-label: var(--color-gray-600);
+  --color-text-muted: var(--color-gray-400);
+  /* Input - error state */
+  --color-input-border-error: var(--color-red-400);
+
+  /* Button - disabled state */
+  --color-btn-disabled-bg: var(--color-gray-300);
+  /* Primary / Brand */
+  --color-primary: var(--color-indigo-600);
+  --color-primary-hover: var(--color-indigo-700);
+  --color-primary-soft: var(--color-indigo-50);
+  --color-primary-soft-hover: var(--color-indigo-100);
+  --color-primary-text: var(--color-indigo-600);
+  --color-primary-icon: var(--color-indigo-500);
+  --color-primary-border: var(--color-indigo-200);
+
+  /* Button */
+  --color-btn-primary: var(--color-indigo-600);
+  --color-btn-primary-hover: var(--color-indigo-700);
+
+  /* Avatar */
+  --color-avatar-bg: var(--color-indigo-600);
+
+  /* Status - Udhar / Warning */
+  --color-udhar-bg: var(--color-amber-50);
+  --color-udhar-border: var(--color-amber-200);
+  --color-udhar-label: var(--color-amber-600);
+  --color-udhar-value: var(--color-amber-700);
+  --color-udhar-muted: var(--color-amber-500);
+  --color-udhar-btn: var(--color-amber-600);
+  --color-udhar-btn-hover: var(--color-amber-700);
+
+  /* Focus Ring */
+  --color-focus-ring: var(--color-indigo-400);
+
+  /* Toggle */
+  --color-toggle-off: var(--color-gray-200);
+
+  /* Status - Success */
+  --color-status-success-bg: var(--color-green-50);
+  --color-status-success-text: var(--color-green-700);
+  --color-status-success-border: var(--color-green-100);
+  --color-status-success-dot: var(--color-green-500);
+
+  /* Danger Zone */
+  --color-danger-border: var(--color-red-100);
+  --color-danger-divider: var(--color-red-50);
+  --color-danger-text: var(--color-red-600);
+  --color-danger-icon: var(--color-red-500);
+  --color-danger-btn: var(--color-red-500);
+  --color-danger-btn-hover: var(--color-red-600);
+
+  /* Warning */
+  --color-warning-text: var(--color-amber-600);
+  --color-warning-border: var(--color-amber-200);
+  --color-warning-soft: var(--color-amber-50);
+  --color-warning-soft-hover: var(--color-amber-100);
+
+  /* Input */
+  --color-input-bg: var(--color-gray-50);
+  --color-input-bg-focus: var(--color-white);
+  --color-input-border: var(--color-gray-200);
+  --color-input-placeholder: var(--color-gray-300);
+
+  /* Badge - Udhar */
+  --color-badge-udhar-bg: var(--color-orange-100);
+  --color-badge-udhar-text: var(--color-orange-500);
+
+  /* Status - Danger */
+  --color-text-danger: var(--color-red-500);
+
+  /* Reset Button */
+  --color-btn-reset-bg: var(--color-gray-50);
+  --color-btn-reset-bg-hover: var(--color-gray-100);
+  --color-btn-reset-border: var(--color-gray-200);
+  --color-btn-reset-text: var(--color-gray-600);
+
+  /* Success */
+  --color-success: var(--color-green-500);
+  --color-success-hover: var(--color-green-600);
+  --color-success-soft: var(--color-green-50);
+
+  /* Danger Soft */
+  --color-danger-soft: var(--color-red-50);
+
+  /* Table / Hover */
+  --color-table-header-bg: var(--color-gray-50);
+  --color-hover-bg: var(--color-gray-50);
+
+  /* Icon */
+  --color-icon-muted: var(--color-gray-300);
+
+  /* Error */
+  --color-error: var(--color-red-500);
+  --color-error-soft: var(--color-red-50);
+
+  /* Sidebar */
+  --color-sidebar-bg: var(--color-white);
+  --color-sidebar-border: var(--color-gray-100);
+  --color-nav-item-active-bg: var(--color-indigo-50);
+  --color-nav-item-active-text: var(--color-indigo-600);
+  --color-nav-item-hover-bg: var(--color-gray-100);
+  --color-nav-item-hover-text: var(--color-gray-900);
+  --color-badge-notification-bg: var(--color-orange-400);
+}
+
+@source "../src/**/*.{html,ts}";
+
+/* ✅ Safelist dynamic classes that Tailwind scanner can't detect at build time */
+@source inline("bg-nav-item-active-bg !text-nav-item-active-text hover:bg-nav-item-hover-bg hover:!text-nav-item-hover-text bg-badge-notification-bg hover:!text-danger-text");

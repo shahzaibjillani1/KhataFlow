@@ -1,0 +1,235 @@
+﻿using KhataFlow.Core.Domain.Entities;
+using KhataFlow.Core.Domain.IdentityEntities;
+using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Core.DTO.Request;
+using KhataFlow.Core.DTO.Response;
+using KhataFlow.Core.Enums;
+using KhataFlow.Core.Exceptions;
+using KhataFlow.Core.ServiceContracts;
+using Microsoft.AspNetCore.Identity;
+
+public class UserService : IUserService
+{
+    private readonly IUserRepository _userRepository;
+    private readonly IBusinessRepository _businessRepository;
+    private readonly ITokenService _tokenService;
+    private readonly INotificationService _notificationService;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UserService(
+        IUserRepository userRepository,
+        ITokenService tokenService,
+        IBusinessRepository businessRepository,
+        INotificationService notificationService,
+        UserManager<ApplicationUser> userManager)
+    {
+        _userRepository = userRepository;
+        _tokenService = tokenService;
+        _businessRepository = businessRepository;
+        _notificationService = notificationService;
+        _userManager = userManager;
+    }
+
+    public async Task<List<UserResponse>> GetUsersAsync()
+    {
+        var users = await _userRepository.GetAllAsync();
+
+        return users.Select(u => new UserResponse(
+            Id: u.Id,
+            FullName: u.FullName,
+            DisplayName: u.DisplayName,
+            Email: u.Email,
+            PhoneNumber: u.PhoneNumber,
+            ProfilePictureUrl: u.ProfilePictureUrl,
+            BusinessId: u.BusinessId,
+            Gender: u.Gender.ToString(),
+            DateOfBirth: u.DateOfBirth,
+            Role: u.Role.ToString(),
+            Status: u.Status.ToString(),
+            Plan: u.Plan.ToString(),
+            PlanExpiryDate: u.PlanExpiryDate,
+            CreatedAt: u.CreatedAt,
+            LastLoginAt: u.LastLoginAt
+        )).ToList();
+    }
+
+    public async Task<AuthResponse?> Login(LoginRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.EmailOrUsername, nameof(request.EmailOrUsername));
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Password, nameof(request.Password));
+
+        var user = await _userManager.FindByEmailAsync(request.EmailOrUsername)
+                   ?? await _userManager.FindByNameAsync(request.EmailOrUsername.ToLowerInvariant());
+
+        if (user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
+            throw new UnauthorizedAccessException("Invalid credentials.");
+
+        return await _tokenService.GenerateAuthResponseAsync(user);
+    }
+
+    public async Task<AuthResponse?> Register(RegisterRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Email, nameof(request.Email));
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Password, nameof(request.Password));
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Username, nameof(request.Username));
+
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
+        var normalizedUsername = request.Username.Trim().ToLowerInvariant();
+
+        var existingEmail = await _userManager.FindByEmailAsync(normalizedEmail);
+        if (existingEmail is not null)
+            throw new InvalidOperationException("An account with this email already exists.");
+
+        var existingUsername = await _userManager.FindByNameAsync(normalizedUsername);
+        if (existingUsername is not null)
+            throw new InvalidOperationException("This username is already taken.");
+
+        var businessId = Guid.NewGuid();
+
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid(),
+            Email = normalizedEmail,
+            UserName = normalizedUsername,
+            FullName = request.FullName,
+            PhoneNumber = request.PhoneNumber,
+            Role = UserRole.Owner,
+            BusinessId = businessId,
+        };
+
+        await _userRepository.AddAsync(user, request.Password);
+
+        var business = new Business
+        {
+            Id = businessId,
+            BusinessName = request.BusinessName,
+            OwnerId = user.Id,
+            SubscriptionExpiry = DateTime.UtcNow.AddDays(30),
+            Email = normalizedEmail,
+            PhoneNumber = request.PhoneNumber ?? string.Empty
+        };
+
+        await _businessRepository.AddAsync(business);
+
+        await TryNotifyAsync(new CreateNotificationRequest(
+            Target: NotificationTarget.Business,
+            Title: "Welcome to KhataFlow!",
+            Message: $"Hi {user.FullName}, '{business.BusinessName}' is set up. Your trial runs until {business.SubscriptionExpiry:MMM dd, yyyy}.",
+            Type: NotificationType.WelcomeMessage,
+            BusinessId: businessId,
+            ReferenceId: user.Id));
+
+        await TryNotifyAsync(new CreateNotificationRequest(
+            Target: NotificationTarget.Admin,
+            Title: "New Business Registered",
+            Message: $"'{business.BusinessName}' ({user.Email}) just signed up.",
+            Type: NotificationType.NewBusinessRegistered,
+            BusinessId: Guid.Empty,
+            ReferenceId: businessId));
+
+        return await _tokenService.GenerateAuthResponseAsync(user);
+    }
+
+    private async Task TryNotifyAsync(CreateNotificationRequest request)
+    {
+        try
+        {
+            await _notificationService.CreateNotificationAsync(request);
+        }
+        catch
+        {
+        }
+    }
+    public async Task<UserResponse> EditUserAsync(
+    Guid targetUserId, Guid requestingUserId, UserUpdateRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString())
+            ?? throw new NotFoundException($"User '{targetUserId}' not found.");
+
+        if (targetUserId != requestingUserId)
+            throw new ForbiddenException("You do not have permission to edit this user.");
+
+        if (!string.IsNullOrWhiteSpace(request.FullName))
+            user.FullName = request.FullName;
+
+        if (!string.IsNullOrWhiteSpace(request.DisplayName))
+            user.DisplayName = request.DisplayName;
+
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+            user.PhoneNumber = request.PhoneNumber;
+
+        if (!string.IsNullOrWhiteSpace(request.ProfilePictureUrl))
+            user.ProfilePictureUrl = request.ProfilePictureUrl;
+
+        if (request.Gender.HasValue)
+            user.Gender = request.Gender.Value;
+
+        if (request.DateOfBirth.HasValue)
+            user.DateOfBirth = request.DateOfBirth.Value;
+
+        string? newNormalizedEmail = null;
+
+        if (!string.IsNullOrWhiteSpace(request.Email) &&
+            !string.Equals(request.Email, user.Email, StringComparison.OrdinalIgnoreCase))
+        {
+            var existing = await _userManager.FindByEmailAsync(request.Email);
+            if (existing is not null && existing.Id != user.Id)
+                throw new ConflictException($"Email '{request.Email}' is already in use.");
+
+            newNormalizedEmail = request.Email.ToLowerInvariant();
+
+            var emailResult = await _userManager.SetEmailAsync(user, newNormalizedEmail);
+            if (!emailResult.Succeeded)
+                throw new DomainException(string.Join("; ", emailResult.Errors.Select(e => e.Description)));
+
+            var usernameResult = await _userManager.SetUserNameAsync(user, newNormalizedEmail);
+            if (!usernameResult.Succeeded)
+                throw new DomainException(string.Join("; ", usernameResult.Errors.Select(e => e.Description)));
+        }
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+            throw new DomainException(string.Join("; ", updateResult.Errors.Select(e => e.Description)));
+
+        if (newNormalizedEmail is not null && user.Role == UserRole.Owner)
+        {
+            await TrySyncBusinessOwnerEmailAsync(user.Id, newNormalizedEmail);
+        }
+
+        return new UserResponse(
+            Id: user.Id,
+            FullName: user.FullName,
+            DisplayName: user.DisplayName,
+            Email: user.Email,
+            PhoneNumber: user.PhoneNumber,
+            ProfilePictureUrl: user.ProfilePictureUrl,
+            BusinessId: user.BusinessId,
+            Gender: user.Gender.ToString(),
+            DateOfBirth: user.DateOfBirth,
+            Role: user.Role.ToString(),
+            Status: user.Status.ToString(),
+            Plan: user.Plan.ToString(),
+            PlanExpiryDate: user.PlanExpiryDate,
+            CreatedAt: user.CreatedAt,
+            LastLoginAt: user.LastLoginAt
+        );
+    }
+
+    private async Task TrySyncBusinessOwnerEmailAsync(Guid ownerId, string newEmail)
+    {
+        try
+        {
+            var business = await _businessRepository.GetByOwnerIdAsync(ownerId);
+            if (business is null)
+                return;
+
+            business.OwnerEmail = newEmail;
+            business.UpdatedAt = DateTime.UtcNow;
+
+            await _businessRepository.UpdateAsync(business);
+        }
+        catch
+        {
+        }
+    }
+}

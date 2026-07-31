@@ -1,0 +1,271 @@
+﻿using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Core.DTO.Request;
+using KhataFlow.Core.DTO.Response;
+using KhataFlow.Core.Enums;
+using KhataFlow.Core.ServiceContracts;
+
+namespace KhataFlow.Core.Services;
+
+public class VoiceOrchestrationService : IVoiceOrchestrationService
+{
+    private readonly VoiceIntentExtractor _extractor;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IProductRepository _productRepository; // ASSUMPTION — confirm method name below
+    private readonly ILedgerService _ledgerService;
+    private readonly IExpenseService _expenseService;
+    private readonly ISaleService _saleService;
+
+    public VoiceOrchestrationService(
+        VoiceIntentExtractor extractor,
+        ICustomerRepository customerRepository,
+        IProductRepository productRepository,
+        ILedgerService ledgerService,
+        IExpenseService expenseService,
+        ISaleService saleService)
+    {
+        _extractor = extractor;
+        _customerRepository = customerRepository;
+        _productRepository = productRepository;
+        _ledgerService = ledgerService;
+        _expenseService = expenseService;
+        _saleService = saleService;
+    }
+
+    public async Task<VoiceCommandResponse> ProcessVoiceCommandAsync(
+        byte[] audioBytes, string mimeType, Guid businessId, CancellationToken ct = default)
+    {
+        var intentResult = await _extractor.ExtractAsync(audioBytes, mimeType, ct);
+
+        if (intentResult is null || intentResult.Intent == VoiceIntent.Unknown)
+        {
+            return Fail(VoiceIntent.Unknown, "Sorry, I couldn't understand that command. Please try again.");
+        }
+
+        return intentResult.Intent switch
+        {
+            VoiceIntent.RecordPayment => await HandleRecordPaymentAsync(intentResult, businessId, ct),
+            VoiceIntent.CreateExpense => await HandleCreateExpenseAsync(intentResult, businessId, ct),
+            VoiceIntent.CreateSale => await HandleCreateSaleAsync(intentResult, businessId, forceUdhar: false, ct),
+            VoiceIntent.AddUdhar => await HandleCreateSaleAsync(intentResult, businessId, forceUdhar: true, ct),
+            _ => Fail(intentResult.Intent, "This type of voice command isn't supported yet.")
+        };
+    }
+
+    private async Task<VoiceCommandResponse> HandleCreateSaleAsync(
+        VoiceIntentResult intent, Guid businessId, bool forceUdhar, CancellationToken ct)
+    {
+        if (intent.Items is null || intent.Items.Count == 0)
+            return Fail(intent.Intent, "No products were understood in that command.");
+
+        var wantsUdhar = forceUdhar ||
+            string.Equals(intent.PaymentMethod, "Udhar", StringComparison.OrdinalIgnoreCase);
+
+        Guid? customerId = null;
+
+        if (!string.IsNullOrWhiteSpace(intent.CustomerName))
+        {
+            var matchedCustomer = await ResolveCustomerAsync(intent.CustomerName, businessId);
+
+            if (matchedCustomer is null)
+                return Fail(intent.Intent, $"No customer named '{intent.CustomerName}' found.");
+
+            if (matchedCustomer.Ambiguous)
+                return Fail(intent.Intent,
+                    $"Multiple customers named '{intent.CustomerName}' found. Please specify by phone number.");
+
+            customerId = matchedCustomer.Customer!.Id;
+        }
+
+        if (wantsUdhar && customerId is null)
+            return Fail(intent.Intent, "A customer name is required for Udhar sales.");
+
+        // Resolve each spoken product name against the catalog.
+        // ASSUMPTION: IProductRepository exposes GetByBusinessIdAsync like ICustomerRepository does.
+        var products = await _productRepository.GetByBusinessIdAsync(businessId);
+        var resolvedItems = new List<SaleItemRequest>();
+
+        foreach (var spokenItem in intent.Items)
+        {
+            var match = ResolveProduct(spokenItem.ProductName, products);
+
+            if (match is null)
+                return Fail(intent.Intent, $"No product matching '{spokenItem.ProductName}' was found.");
+
+            if (match.Ambiguous)
+                return Fail(intent.Intent,
+                    $"Multiple products matching '{spokenItem.ProductName}' were found. Please be more specific.");
+
+            var quantity = (int)spokenItem.Quantity;
+            if (quantity <= 0) quantity = 1;
+
+            resolvedItems.Add(new SaleItemRequest(match.Product!.Id, quantity));
+        }
+
+        try
+        {
+            var request = new SaleAddRequest(
+                CustomerId: customerId,
+                PaymentStatus: wantsUdhar ? PaymentStatus.Udhar : PaymentStatus.Paid,
+                Note: "Recorded via voice command",
+                Items: resolvedItems
+            );
+
+            // NOTE: businessId is the 2nd argument here, matching SaleService's real signature.
+            var sale = await _saleService.AddSaleAsync(request, businessId);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = wantsUdhar
+                    ? $"Udhar sale of {resolvedItems.Count} item(s) recorded."
+                    : $"Sale of {resolvedItems.Count} item(s) recorded.",
+                Data = sale
+            };
+        }
+        catch (Exception ex) when (ex is FluentValidation.ValidationException
+                                       or KeyNotFoundException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<VoiceCommandResponse> HandleRecordPaymentAsync(
+        VoiceIntentResult intent, Guid businessId, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(intent.CustomerName))
+            return Fail(intent.Intent, "No customer name was understood.");
+
+        if (intent.Amount is null || intent.Amount <= 0)
+            return Fail(intent.Intent, "No valid payment amount was understood.");
+
+        var matchedCustomer = await ResolveCustomerAsync(intent.CustomerName, businessId);
+
+        if (matchedCustomer is null)
+            return Fail(intent.Intent, $"No customer named '{intent.CustomerName}' found.");
+
+        if (matchedCustomer.Ambiguous)
+            return Fail(intent.Intent,
+                $"Multiple customers named '{intent.CustomerName}' found. Please specify by phone number.");
+
+        try
+        {
+            var request = new RecordPaymentRequest
+            {
+                CustomerId = matchedCustomer.Customer!.Id,
+                Amount = intent.Amount.Value,
+                Notes = "Recorded via voice command"
+            };
+
+            var entry = await _ledgerService.RecordPaymentAsync(businessId, request);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = $"Payment of Rs {intent.Amount:N0} recorded for {matchedCustomer.Customer.Name}.",
+                Data = entry
+            };
+        }
+        catch (Exception ex) when (ex is KhataFlow.Core.Exceptions.DomainException
+                                       or FluentValidation.ValidationException
+                                       or KhataFlow.Core.Exceptions.NotFoundException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<VoiceCommandResponse> HandleCreateExpenseAsync(
+        VoiceIntentResult intent, Guid businessId, CancellationToken ct)
+    {
+        if (intent.Amount is null || intent.Amount <= 0)
+            return Fail(intent.Intent, "No valid expense amount was understood.");
+
+        if (!Enum.TryParse<ExpenseCategory>(intent.ExpenseCategory, ignoreCase: true, out var category))
+            category = ExpenseCategory.Miscellaneous;
+
+        try
+        {
+            var request = new ExpenseAddRequest
+            {
+                Title = !string.IsNullOrWhiteSpace(intent.Description)
+                    ? intent.Description
+                    : (intent.ExpenseCategory ?? "Voice expense"),
+                Amount = intent.Amount.Value,
+                Category = category,
+                Note = "Recorded via voice command"
+            };
+
+            var expense = await _expenseService.AddExpenseAsync(businessId, request);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = $"Expense of Rs {intent.Amount:N0} recorded under {category}.",
+                Data = expense
+            };
+        }
+        catch (Exception ex) when (ex is FluentValidation.ValidationException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<CustomerMatchResult?> ResolveCustomerAsync(string spokenName, Guid businessId)
+    {
+        var customers = await _customerRepository.GetByBusinessIdAsync(businessId);
+
+        var matches = customers
+            .Where(c => c.Name.Trim().Equals(spokenName.Trim(), StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (matches.Count == 0)
+            return null;
+
+        if (matches.Count > 1)
+            return new CustomerMatchResult { Ambiguous = true };
+
+        return new CustomerMatchResult { Customer = matches[0] };
+    }
+
+    private static ProductMatchResult? ResolveProduct(string spokenName, IEnumerable<Domain.Entities.Product> products)
+    {
+        var normalized = spokenName.Trim();
+
+        var exact = products
+            .Where(p => p.ProductName.Trim().Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (exact.Count == 1) return new ProductMatchResult { Product = exact[0] };
+        if (exact.Count > 1) return new ProductMatchResult { Ambiguous = true };
+
+        var contains = products
+            .Where(p => p.ProductName.Contains(normalized, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (contains.Count == 1) return new ProductMatchResult { Product = contains[0] };
+        if (contains.Count > 1) return new ProductMatchResult { Ambiguous = true };
+
+        return null;
+    }
+
+    private static VoiceCommandResponse Fail(VoiceIntent intent, string message) => new()
+    {
+        Intent = intent,
+        Success = false,
+        ErrorMessage = message
+    };
+
+    private class CustomerMatchResult
+    {
+        public Domain.Entities.Customer? Customer { get; set; }
+        public bool Ambiguous { get; set; }
+    }
+
+    private class ProductMatchResult
+    {
+        public Domain.Entities.Product? Product { get; set; }
+        public bool Ambiguous { get; set; }
+    }
+}

@@ -1,0 +1,208 @@
+<div class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen space-y-5">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+            <h1 class="text-xl font-semibold text-text-heading">Platform Analytics</h1>
+            @if (growth(); as g) {
+            <p class="text-sm text-text-muted mt-0.5">Real-time overview — {{ g.labels[g.labels.length - 1] }}</p>
+            }
+        </div>
+        <div class="flex gap-2">
+            <select [ngModel]="selectedPeriod()" (ngModelChange)="onPeriodChange($event)"
+                class="border border-input-border rounded-xl px-3 py-2 text-sm bg-input-bg text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                <option [ngValue]="ReportPeriod.Week">This Week</option>
+                <option [ngValue]="ReportPeriod.Month">This Month</option>
+            </select>
+
+            <button (click)="exportReport()"
+                class="flex items-center gap-2 border border-primary-border text-primary-text bg-bg-card hover:bg-primary-soft text-sm font-medium px-4 py-2 rounded-xl transition">
+                <i class="fa-solid fa-file-arrow-down text-xs"></i>
+                Export
+            </button>
+        </div>
+    </div>
+
+    @if (error()) {
+    <div class="rounded-xl border border-red-200 bg-red-50 text-red-600 text-sm px-4 py-3">
+        {{ error() }}
+    </div>
+    }
+
+    
+    <div class="relative space-y-5">
+
+        @if (loading() && !growth()) {
+        <div class="absolute inset-0 z-10 flex items-center justify-center bg-bg-page/80 backdrop-blur-[1px] rounded-2xl">
+            <div class="flex items-center gap-2 text-text-muted text-sm">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                Loading platform report...
+            </div>
+        </div>
+        }
+
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+            @for (stat of stats(); track stat.title) {
+            <app-stat-card [icon]="stat.icon" [iconBg]="stat.iconBg" [iconColor]="stat.iconColor" [title]="stat.title"
+                [value]="stat.value" [badgeText]="stat.badgeText" [badgeType]="stat.badgeType" />
+            }
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+
+            <div class="xl:col-span-2 bg-bg-card rounded-2xl border border-border-card shadow-sm p-5 sm:p-6">
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                    <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-primary-icon"></i>
+                        Platform Growth
+                    </h2>
+
+                    <div class="flex gap-1.5">
+                        @for (tab of chartTabs; track tab) {
+                        <button (click)="switchTab(tab)" class="text-xs font-medium px-3 py-1.5 rounded-lg transition"
+                            [ngClass]="activeTab === tab
+                            ? 'bg-primary text-white'
+                            : 'bg-hover-bg text-text-muted hover:bg-border-card'">
+                            {{ tab }}
+                        </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="relative h-44 sm:h-56">
+                    <canvas #platformChart></canvas>
+                </div>
+
+            </div>
+
+            <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-5 sm:p-6">
+
+                <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2 mb-5">
+                    <i class="fa-solid fa-chart-pie text-primary-icon"></i>
+                    Revenue by Plan
+                </h2>
+
+                <div class="relative w-36 h-36 sm:w-40 sm:h-40 mx-auto mb-4">
+                    <canvas #revenueChart></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <p class="text-base font-semibold text-text-heading">{{ totalPlanRevenue() }}</p>
+                        <p class="text-xs text-text-muted">Total</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5">
+                    @if (revenueByPlan().length > 0 && totalPlanRevenueRaw() === 0) {
+                    <p class="text-xs text-text-muted text-center py-2">No plan-level revenue recorded yet.</p>
+                    }
+                    @for (item of revenueBreakdown(); track item.label) {
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" [style.background]="item.color"></span>
+                            <span class="text-xs text-text-label">{{ item.label }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-text-heading">{{ item.value }}</span>
+                            <span class="text-xs text-text-muted">({{ item.pct }}%)</span>
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="text-xs text-text-muted">No plan revenue yet.</p>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+
+            <div class="xl:col-span-2 bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+                <div class="h-1 bg-primary"></div>
+
+                <div class="px-5 py-4 border-b border-border-card">
+                    <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-warning-text"></i>
+                        Top Performing Businesses
+                    </h2>
+                </div>
+
+                <div class="divide-y divide-border-card">
+                    @for (biz of topBusinesses(); track biz.businessId) {
+                    <div class="flex items-center gap-4 px-5 py-3.5 hover:bg-hover-bg transition">
+
+                        <span class="text-xs font-semibold text-text-muted w-5 flex-shrink-0">
+                            {{ biz.rank }}
+                        </span>
+
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
+                            [style.background]="biz.color">
+                            {{ biz.name.charAt(0) }}
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-medium text-text-heading truncate">{{ biz.name }}</p>
+                                <span class="text-sm font-semibold text-text-heading ml-2 flex-shrink-0">
+                                    {{ biz.revenue }}
+                                </span>
+                            </div>
+
+                            <div class="h-1.5 bg-hover-bg rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-700" [style.width.%]="biz.pct"
+                                    [style.background]="biz.color">
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0" [ngClass]="{
+                            'bg-primary-soft text-primary-text border border-primary-border': biz.plan === 'Basic',
+                            'bg-warning-soft text-warning-text border border-warning-border': biz.plan === 'Premium',
+                            'bg-hover-bg text-text-muted': biz.plan === 'Free'
+                        }">
+                            {{ biz.plan }}
+                        </span>
+
+                    </div>
+                    } @empty {
+                    <p class="text-xs text-text-muted px-5 py-4">No sales in this period yet.</p>
+                    }
+                </div>
+
+            </div>
+
+            <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+                <div class="h-1 bg-primary"></div>
+
+                <div class="px-5 py-4 border-b border-border-card">
+                    <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-warning-text"></i>
+                        Recent Activity
+                    </h2>
+                </div>
+
+                <div class="divide-y divide-border-card overflow-y-auto max-h-64">
+                    @for (event of recentActivity(); track event.id) {
+                    <div class="flex items-start gap-3 px-5 py-3.5">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                            [ngClass]="event.iconBg">
+                            <i [class]="event.icon + ' text-xs ' + event.iconColor"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs font-medium text-text-heading leading-snug">{{ event.message }}</p>
+                            <p class="text-xs text-text-muted mt-0.5">{{ event.time }}</p>
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="text-xs text-text-muted px-5 py-4">No recent activity.</p>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

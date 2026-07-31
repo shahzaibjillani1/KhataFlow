@@ -1,0 +1,167 @@
+<div *transloco="let t" class="p-3 sm:p-5 lg:p-6 space-y-5 bg-bg-page min-h-screen">
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+
+        <app-stat-card [title]="t('dashboard.stats.todaySales')"
+            [value]="summary() ? ('Rs ' + summary()!.todaySales.toLocaleString()) : '—'"
+            icon="fa-solid fa-money-bill-wave" iconBg="bg-orange-50" iconColor="text-orange-500" />
+
+        @if (canSeeFinancials) {
+        <app-stat-card [title]="t('dashboard.stats.monthlyRevenue')"
+            [value]="summary() ? ('Rs ' + summary()!.monthlyRevenue.toLocaleString()) : '—'"
+            icon="fa-solid fa-chart-line" iconBg="bg-blue-50" iconColor="text-blue-500" />
+        }
+
+        <app-stat-card [title]="t('dashboard.stats.totalProducts')" [value]="summary() ? summary()!.products.toString() : '—'"
+            icon="fa-solid fa-box" iconBg="bg-amber-50" iconColor="text-amber-500" />
+
+        <app-stat-card [title]="t('dashboard.stats.lowStockAlerts')" [value]="summary() ? summary()!.lowStock.toString() : '—'"
+            icon="fa-solid fa-triangle-exclamation" iconBg="bg-yellow-50" iconColor="text-yellow-500" />
+
+    </div>
+
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+
+        <div class="xl:col-span-2 space-y-5">
+
+            @if (canSeeFinancials) {
+            <div class="bg-bg-card rounded-2xl p-4 sm:p-5 shadow-md border border-border-card">
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
+                    <h2 class="font-semibold text-text-heading flex items-center gap-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-chart-column text-primary-icon"></i>
+                        {{ t('dashboard.weeklySales.title') }}
+                    </h2>
+
+                    <div class="flex bg-gray-100 p-1 rounded-lg w-fit self-start sm:self-auto">
+                        <button (click)="setChartType('bar')"
+                            [class]="chartType === 'bar'
+                ? 'px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-btn-primary text-white shadow'
+                : 'px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-md text-text-label hover:bg-white transition'">
+                            {{ t('dashboard.weeklySales.bar') }}
+                        </button>
+                        <button (click)="setChartType('line')"
+                            [class]="chartType === 'line'
+                ? 'px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-btn-primary text-white shadow'
+                : 'px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-md text-text-label hover:bg-white transition'">
+                            {{ t('dashboard.weeklySales.line') }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative h-40 sm:h-48 md:h-56">
+                    @if (isLoadingChart()) {
+                    <div class="absolute inset-0 flex items-center justify-center text-sm text-text-muted">
+                        {{ t('dashboard.weeklySales.loading') }}
+                    </div>
+                    }
+                    <canvas #salesChart></canvas>
+                </div>
+
+            </div>
+            }
+
+
+            <div class="bg-bg-card rounded-2xl p-4 sm:p-5 shadow-md border border-border-card">
+
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-semibold text-text-heading flex items-center gap-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-table-list text-primary-icon"></i>
+                        {{ t('dashboard.recentSales.title') }}
+                    </h2>
+                    <button (click)="navigateTo('sales')"
+                        class="text-xs sm:text-sm text-primary-text border border-primary-soft px-3 sm:px-4 py-1.5 rounded-xl hover:bg-primary-soft transition">
+                        {{ t('dashboard.recentSales.viewAll') }}
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                    <table class="w-full text-xs sm:text-sm min-w-[500px]">
+                        <thead>
+                            <tr class="text-[10px] sm:text-xs text-text-label uppercase border-b border-border-table">
+                                <th class="text-left pb-3">{{ t('dashboard.recentSales.invoiceCol') }}</th>
+                                <th class="text-left pb-3">{{ t('dashboard.recentSales.customerCol') }}</th>
+                                <th class="text-left pb-3 hidden sm:table-cell">{{ t('dashboard.recentSales.itemsCol') }}</th>
+                                <th class="text-left pb-3">{{ t('dashboard.recentSales.amountCol') }}</th>
+                                <th class="text-left pb-3">{{ t('dashboard.recentSales.statusCol') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (sale of recentSales(); track sale.id) {
+                            <tr class="border-b border-border-card hover:bg-bg-page transition">
+                                <td class="py-3 font-medium">{{ sale.invoiceNumber || ('#' + sale.id.slice(0, 8)) }}</td>
+                                <td>{{ sale.customerName | localizedText:sale.customerNameUr:lang() }}</td>
+                                <td class="hidden sm:table-cell">{{ sale.itemCount }}</td>
+                                <td class="font-medium">Rs {{ sale.totalAmount.toLocaleString() }}</td>
+                                <td>
+                                    <span [class]="paymentStatusClass(sale.paymentStatus) + ' px-2 py-1 rounded-md text-[10px] sm:text-xs'">
+                                        {{ paymentStatusDisplay(sale.paymentStatus) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="5" class="py-6 text-center text-text-muted">{{ t('dashboard.recentSales.noSales') }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-5">
+
+            <div class="bg-bg-card rounded-2xl p-4 sm:p-5 shadow-md border border-border-card">
+                <h2 class="font-semibold text-text-heading flex items-center gap-2 mb-4 text-sm sm:text-base">
+                    <i class="fa-solid fa-bolt text-yellow-400"></i> {{ t('dashboard.quickActions.title') }}
+                </h2>
+                <div class="space-y-2 sm:space-y-3">
+                    @for (action of quickActions; track action.path) {
+                    <button (click)="navigateTo(action.path)"
+                        class="w-full py-3 px-4 rounded-xl flex items-center gap-2 text-sm transition" [ngClass]="action.primary 
+        ? 'bg-btn-primary hover:bg-btn-primary-hover text-white' 
+        : 'bg-bg-page text-text-body border border-border-table hover:bg-bg-page'">
+                        <i class="fa-solid" [ngClass]="action.icon"></i>
+                        {{ t(action.labelKey) }}
+                    </button>
+                    }
+                </div>
+            </div>
+
+            @if (canSeeFinancials) {
+            <div class="bg-bg-card rounded-2xl p-4 sm:p-5 shadow-md border border-border-card">
+                <h2 class="font-semibold text-text-heading flex items-center gap-2 mb-4 text-sm sm:text-base">
+                    <i class="fa-solid fa-trophy text-primary-icon"></i> {{ t('dashboard.topProducts.title') }}
+                </h2>
+                <div class="space-y-4">
+                    @for (product of topProducts(); track product.id; let i = $index) {
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs bg-primary-soft text-primary-text px-2 py-1 rounded-md shrink-0">{{ i + 1 }}</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between mb-1 gap-2">
+                                <span class="text-xs sm:text-sm font-medium truncate">{{ product.productName | localizedText:product.productNameUr:lang() }}</span>
+                                <span class="text-xs text-text-muted shrink-0">Rs {{ product.price.toLocaleString() }}</span>
+                            </div>
+
+                            <div class="h-2 bg-gray-100 rounded-full">
+                                <div class="h-full bg-primary rounded-full" [style.width.%]="Math.min(product.stock, 100)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="text-sm text-text-muted">{{ t('dashboard.topProducts.noData') }}</p>
+                    }
+                </div>
+            </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

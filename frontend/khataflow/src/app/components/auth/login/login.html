@@ -1,0 +1,94 @@
+<div *transloco="let t" [dir]="dir()" class="min-h-screen bg-bg-page flex items-center justify-center px-4">
+
+  <div class="bg-bg-card w-full max-w-md rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8">
+
+    <div class="flex items-center gap-3 mb-6 sm:mb-8">
+      <img src="images/flow.png" alt="logo" class="w-10 sm:w-12 h-8 sm:h-10 rounded-xl sm:rounded-2xl" />
+      <h1 class="text-xl sm:text-2xl font-semibold text-text-heading">
+        {{ t('sidebar.brandPart1') }}<span class="text-primary-text">{{ t('sidebar.brandPart2') }}</span>
+      </h1>
+    </div>
+
+    <h2 class="text-lg sm:text-xl font-bold mb-1 text-text-heading">{{ t('login.welcomeBack') }}</h2>
+    <p class="text-text-muted text-xs sm:text-sm mb-5 sm:mb-6">
+      {{ t('login.subtitle') }}
+    </p>
+
+    @if (errorMessage()) {
+    <div class="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
+      {{ errorMessage() }}
+    </div>
+    }
+
+    <form class="space-y-4" (ngSubmit)="login()">
+
+      <div>
+        <label class="text-xs sm:text-sm text-text-label font-semibold">
+          {{ t('login.emailOrPhone') }}
+        </label>
+        <input type="text" [(ngModel)]="email" name="email" [placeholder]="t('login.emailPlaceholder')"
+          class="w-full mt-1 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-input-border focus:outline-none focus:ring-2 focus:ring-focus-ring bg-input-bg-focus text-text-body text-sm sm:text-base" />
+      </div>
+
+      <div>
+        <label class="text-xs sm:text-sm text-text-label font-semibold">
+          {{ t('login.password') }}
+        </label>
+        <div class="relative mt-1">
+          <input [type]="showPassword() ? 'text' : 'password'" [(ngModel)]="password" name="password"
+            placeholder="••••••"
+            class="w-full p-2.5 sm:p-3 pr-10 rounded-lg sm:rounded-xl border border-input-border focus:outline-none focus:ring-2 focus:ring-focus-ring bg-input-bg-focus text-text-body text-sm sm:text-base" />
+          <button type="button" (click)="togglePasswordVisibility()"
+            class="absolute inset-y-0 right-3 flex items-center text-text-muted hover:text-text-body"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+            @if (showPassword()) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+              <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+              <line x1="2" x2="22" y1="2" y2="22" />
+            </svg>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            }
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs sm:text-sm">
+        <label class="flex items-center gap-2 text-text-body">
+          <input type="checkbox" class="accent-primary">
+          {{ t('login.rememberMe') }}
+        </label>
+        <a routerLink="/forgot-password" class="text-primary-text font-medium">
+          {{ t('login.forgotPassword') }}
+        </a>
+      </div>
+
+      <button type="submit" [disabled]="isLoading()"
+        class="w-full bg-btn-primary hover:bg-btn-primary-hover text-white py-3 rounded-xl font-medium shadow-md transition disabled:opacity-60">
+        {{ isLoading() ? t('login.signingIn') : t('login.signIn') }}
+      </button>
+
+      <div class="flex items-center gap-2 text-text-muted text-xs sm:text-sm">
+        <hr class="flex-1 border-border-card">
+        {{ t('login.or') }}
+        <hr class="flex-1 border-border-card">
+      </div>
+
+      <button routerLink="/register" type="button"
+        class="w-full border border-btn-reset-border py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-btn-reset-text text-sm sm:text-base hover:bg-btn-reset-bg-hover transition">
+        {{ t('login.createAccount') }}
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<router-outlet></router-outlet>

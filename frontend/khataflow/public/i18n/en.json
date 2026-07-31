@@ -1,0 +1,990 @@
+{
+  "sidebar": {
+    "brandPart1": "Khata",
+    "brandPart2": "Flow",
+    "menu": "Menu",
+    "staffInvite": "Invite Staff",
+    "dashboard": "Dashboard",
+    "sales": "Sales / POS",
+    "products": "Products",
+    "invoiceSettings": "Invoice Settings",
+    "customers": "Customers",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "settings": "Settings",
+    "usersAndBusinesses": "Users & Businesses",
+    "subscriptions": "Subscriptions",
+    "analytics": "Analytics",
+    "systemSettings": "System Settings",
+    "logout": "Logout",
+    "noMenuItems": "No menu items"
+  },
+  "productModal": {
+    "editTitle": "Edit Product",
+    "addTitle": "Add Product",
+    "productName": "Product Name",
+    "productNamePlaceholder": "Enter product name",
+    "nameRequired": "Product name is required",
+    "category": "Category",
+    "saving": "Saving...",
+    "selectCategory": "Select a category",
+    "categoryRequired": "Category is required",
+    "noCategories": "No categories available yet.",
+    "price": "Price",
+    "stock": "Stock",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "header": {
+    "searchPlaceholder": "Search...",
+    "notifications": "Notifications",
+    "markAllRead": "Mark all read",
+    "noNotifications": "No notifications yet.",
+    "viewAllNotifications": "View all notifications",
+    "businessInfo": "Business Info",
+    "logout": "Logout",
+    "timeAgo": {
+      "justNow": "Just now",
+      "minuteAgo": "{{count}} minute ago",
+      "minutesAgo": "{{count}} minutes ago",
+      "hourAgo": "{{count}} hour ago",
+      "hoursAgo": "{{count}} hours ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago"
+    }
+  },
+  "notificationsPage": {
+    "title": "Notifications",
+    "unreadSuffix": "unread",
+    "markAllRead": "Mark all as read",
+    "markAll": "Mark all",
+    "loading": "Loading notifications",
+    "loadError": "Could not load notifications.",
+    "empty": "No notifications here",
+    "delete": "Delete",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "payment": "Payments",
+      "alert": "Alerts",
+      "info": "Info"
+    }
+  },
+  "customerModal": {
+    "editTitle": "Edit Customer",
+    "addTitle": "Add Customer",
+    "customerName": "Customer Name",
+    "address": "Address",
+    "saving": "Saving...",
+    "addressPlaceholder": "e.g. Shop 12, Main Bazaar",
+    "addressRequired": "Address is required.",
+    "phoneInvalid": "Enter a valid Pakistani number, e.g. 0300-1234567.",
+    "customerNamePlaceholder": "Enter customer name",
+    "nameRequired": "Name is required",
+    "phone": "Phone",
+    "phonePlaceholder": "03XX-XXXXXXX",
+    "phoneRequired": "Phone is required",
+    "totalPurchases": "Total Purchases",
+    "outstanding": "Outstanding (Udhar)",
+    "lastVisit": "Last Visit",
+    "lastVisitPlaceholder": "e.g. Today / Mar 20",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "actions": {
+    "khata": "Khata",
+    "addUdhar": "+ Udhar",
+    "pay": "Pay",
+    "edit": "Edit",
+    "share": "Share on WhatsApp"
+  },
+  "shareMessage": "Hi {{name}}, here's your ledger. You can view your balance and history anytime here: {{link}}",
+  "sales": {
+    "banners": {
+      "listening": "Listening... tap the mic again to stop."
+    },
+    "offline": {
+      "banner": "You're offline — new sales will be saved and synced automatically once you're back online.",
+      "pendingSection": "Pending Sync",
+      "pendingCount": "{{count}} pending sync",
+      "pendingBadge": "Pending sync",
+      "conflictGeneric": "This sale couldn't be synced due to a conflict.",
+      "dismiss": "Dismiss",
+      "cancel": "Cancel",
+      "alreadySyncing": "This sale is already syncing — try again in a moment.",
+      "saleQueued": "Sale saved offline — it'll sync once you're back online.",
+      "deleteRequiresConnection": "Deleting sales requires an internet connection.",
+      "checkoutWillQueue": "You're offline — this sale will be saved locally and synced once you're back online."
+    },
+    "selectAll": "Select All",
+    "delete": "Delete",
+    "bulkDeleteConfirm": "Delete {{count}} selected sale(s)?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "premiumFeature": "Premium feature — upgrade to unlock",
+    "stats": {
+      "todaySales": "Today's Sales",
+      "transactions": "{{count}} transactions",
+      "udharPending": "Udhar Pending",
+      "salesCount": "{{count}} sales",
+      "cartTotal": "Cart Total",
+      "items": "{{count}} items"
+    },
+    "newSale": {
+      "title": "New Sale",
+      "searchPlaceholder": "Search product...",
+      "inStock": "{{count}} in stock",
+      "browse": "Browse",
+      "add": "Add",
+      "stopRecording": "Stop recording",
+      "addByVoice": "Add sale by voice"
+    },
+    "errors": {
+      "loadProducts": "Couldn't load products. Please refresh.",
+      "loadSales": "Couldn't load sales history. Please refresh."
+    },
+    "voice": {
+      "errors": {
+        "unsupported": "Voice input isn't supported on this device.",
+        "permissionDenied": "Microphone access was denied. Please allow it to use voice commands.",
+        "processFailed": "Couldn't process the recording. Please try again.",
+        "notUnderstood": "Sorry, I couldn't understand that. Please try again.",
+        "notASale": "That doesn't sound like a sale. Try again or add it manually."
+      },
+      "saleRecorded": "Sale recorded successfully."
+    },
+    "customerPicker": {
+      "searchPlaceholder": "Search customers...",
+      "searching": "Searching...",
+      "noResults": "No customers found."
+    },
+    "history": {
+      "title": "Sales History",
+      "allStatus": "All Status",
+      "loading": "Loading sales…",
+      "invoiceCol": "Invoice",
+      "dateCol": "Date",
+      "customerCol": "Customer",
+      "itemsCol": "Items",
+      "amountCol": "Amount",
+      "statusCol": "Status",
+      "actionCol": "Action",
+      "invoiceBtn": "Invoice",
+      "deleteBtn": "Delete",
+      "deleteConfirm": "Delete this sale record? This cannot be undone.",
+      "deleteConfirmShort": "Delete this sale record?",
+      "yesDelete": "Yes, Delete",
+      "cancel": "Cancel",
+      "noSales": "No sales found.",
+      "customerLabel": "Customer",
+      "itemsLabel": "Items",
+      "amountLabel": "Amount",
+      "pagination": {
+        "prev": "Prev",
+        "next": "Next",
+        "pageInfo": "Page {{page}} of {{total}}"
+      }
+    },
+    "status": {
+      "paid": "Paid",
+      "udhar": "Udhar",
+      "pending": "Pending"
+    },
+    "paymentMethods": {
+      "cash": "Cash",
+      "card": "Card",
+      "udhar": "Udhar"
+    },
+    "cart": {
+      "title": "Cart",
+      "walkIn": "Walk-in Customer",
+      "outstanding": "Outstanding: Rs {{amount}}",
+      "empty": "Cart is empty",
+      "emptyHint": "Search or browse products above",
+      "discount": "Discount (Rs)",
+      "subtotal": "Subtotal",
+      "discountLabel": "Discount",
+      "total": "Total",
+      "completeSale": "Complete Sale",
+      "clearCart": "Clear Cart"
+    },
+    "productPicker": {
+      "title": "Select Product",
+      "searchPlaceholder": "Search products...",
+      "all": "All",
+      "inStock": "{{count}} in stock",
+      "outOfStock": "Out of stock"
+    },
+    "checkout": {
+      "title": "Complete Sale",
+      "orderSummary": "Order Summary",
+      "discount": "Discount",
+      "total": "Total",
+      "customer": "Customer",
+      "walkIn": "Walk-in Customer",
+      "paymentMethod": "Payment Method",
+      "udharWarning": "Please select a customer for udhar",
+      "cancel": "Cancel",
+      "processing": "Processing…",
+      "confirmSale": "Confirm Sale"
+    }
+  },
+  "settings": {
+    "loading": "Loading your settings…",
+    "business": {
+      "title": "Business Info",
+      "name": "Business Name",
+      "ownerName": "Owner Name",
+      "phone": "Phone",
+      "address": "Address",
+      "saving": "Saving...",
+      "saved": "Saved!",
+      "saveChanges": "Save Changes"
+    },
+    "profile": {
+      "title": "Profile",
+      "email": "Email",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Leave blank to keep current",
+      "passwordNote": "Password change isn't available yet.",
+      "updating": "Updating...",
+      "updated": "Updated!",
+      "update": "Update"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "renews": "Renews {{date}}",
+      "locationsUsed": "Locations used",
+      "locationsFooter": "{{used}} of {{total}} business locations used",
+      "onPremium": "You're on Premium — enjoy all features!",
+      "upgrade": "Upgrade to Premium",
+      "basicPlan": "Basic Plan",
+      "premiumPlan": "Premium Plan"
+    },
+    "upgradeModal": {
+      "title": "Upgrade to Premium",
+      "subtitle": "Unlock all features for your business",
+      "step": "Step {{step}} of 3",
+      "recommended": "Recommended",
+      "upgradingTo": "Upgrading to",
+      "perMonth": "/mo",
+      "firstMonthOff": "First month 20% off",
+      "useCode": "Use code",
+      "atCheckout": "at checkout",
+      "maybeLater": "Maybe Later",
+      "continue": "Continue",
+      "paymentDetails": "Payment Details",
+      "cardholderName": "Cardholder Name",
+      "cardNumber": "Card Number",
+      "expiry": "Expiry",
+      "cvv": "CVV",
+      "promoCode": "Promo Code",
+      "apply": "Apply",
+      "promoApplied": "20% discount applied — Rs 1,999/mo",
+      "promoInvalid": "Invalid promo code. Try PREMIUM20.",
+      "premiumPlanLine": "Premium Plan",
+      "perMonthPrice": "/ mo",
+      "promoLine": "Promo (PREMIUM20)",
+      "totalToday": "Total Today",
+      "secured": "Secured with 256-bit SSL encryption",
+      "back": "Back",
+      "processing": "Processing...",
+      "payAndUpgrade": "Pay & Upgrade",
+      "onPremiumTitle": "You're on Premium!",
+      "upgradedSuccess": "Your account has been upgraded successfully.",
+      "nextBilling": "Next billing:",
+      "startUsing": "Start Using Premium"
+    },
+    "planFeatures": {
+      "unlimitedProducts": "Unlimited products",
+      "udharSystem": "Udhar / Khata system",
+      "whatsappInvoices": "WhatsApp invoices",
+      "reportsAnalytics": "Reports & analytics",
+      "oneLocation": "1 business location",
+      "everythingInBasic": "Everything in Basic",
+      "multiBranch": "Multi-branch support",
+      "staffAccounts": "Staff accounts",
+      "prioritySupport": "Priority support 24/7",
+      "customBranding": "Custom branding",
+      "advancedAnalytics": "Advanced analytics"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "todaySales": "Today's Sales",
+      "monthlyRevenue": "Monthly Revenue",
+      "totalProducts": "Total Products",
+      "lowStockAlerts": "Low Stock Alerts"
+    },
+    "weeklySales": {
+      "title": "Weekly Sales",
+      "bar": "Bar",
+      "line": "Line",
+      "loading": "Loading chart…"
+    },
+    "recentSales": {
+      "title": "Recent Sales",
+      "viewAll": "View All",
+      "invoiceCol": "Invoice",
+      "customerCol": "Customer",
+      "itemsCol": "Items",
+      "amountCol": "Amount",
+      "statusCol": "Status",
+      "noSales": "No sales yet."
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newSale": "New Sale",
+      "addProduct": "Add Product",
+      "addCustomer": "Add Customer",
+      "newInvoice": "New Invoice"
+    },
+    "topProducts": {
+      "title": "Top Products",
+      "noData": "No sales data yet."
+    },
+    "status": {
+      "paid": "Paid",
+      "udhar": "Udhar",
+      "unknown": "Status {{status}}"
+    }
+  },
+  "expense": {
+    "totalExpenses": "Total Expenses",
+    "entriesCount": "{{count}} entries • Last 30 days",
+    "export": "Export",
+    "retry": "Retry",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "pagination": { "prev": "Prev", "next": "Next" },
+    "bulk": {
+      "selectAll": "Select all",
+      "selectedCount": "{{count}} selected",
+      "clearSelection": "Clear selection",
+      "deleteSelected": "Delete selected",
+      "confirmMessage": "Delete {{count}} selected expense(s)? This cannot be undone.",
+      "yesDelete": "Yes, delete"
+    },
+    "searchPlaceholder": "Search expenses...",
+    "premiumFeature": "Premium feature — upgrade to unlock",
+    "allCategories": "All Categories",
+    "language": "Language",
+    "catalogTruncatedWarning": "Showing a partial view — your expense list is larger than this page can display. Contact support if search/sort results look incomplete.",
+    "deleteConfirm": "Delete this expense? This cannot be undone.",
+    "errors": {
+      "loadFailed": "Could not load expenses. Please try again.",
+      "addFailed": "Could not save expense. Please try again.",
+      "alreadySyncing": "This expense is already syncing — try again in a moment."
+    },
+    "offline": {
+      "banner": "You're offline — new expenses will be saved and synced automatically once you're back online.",
+      "pendingCount": "{{count}} pending sync",
+      "pendingBadge": "Pending sync",
+      "willQueue": "You're offline — this expense will be saved locally and synced once you're back online."
+    },
+    "voice": {
+      "premiumOnly": "Voice commands are a Premium feature",
+      "errors": {
+        "unsupported": "Voice input isn't supported on this device.",
+        "permissionDenied": "Microphone access was denied. Please allow it to use voice commands.",
+        "processFailed": "Couldn't process the recording. Please try again.",
+        "notUnderstood": "Sorry, I couldn't understand that. Please try again.",
+        "notAnExpense": "That doesn't sound like an expense. Try again or add it manually."
+      },
+      "expenseRecorded": "Expense recorded successfully."
+    },
+    "categories": {
+      "rent": "Rent",
+      "electricity": "Electricity",
+      "gas": "Gas",
+      "internet": "Internet",
+      "salary": "Salary",
+      "transport": "Transport",
+      "maintenance": "Maintenance",
+      "stationery": "Stationery",
+      "tax": "Tax",
+      "refreshment": "Refreshment",
+      "miscellaneous": "Miscellaneous"
+    },
+    "stopRecording": "Stop recording",
+    "addByVoice": "Add expense by voice",
+    "addExpense": "Add Expense",
+    "add": "Add",
+    "listening": "Listening... tap the mic again to stop.",
+    "table": {
+      "title": "Title",
+      "category": "Category",
+      "note": "Note",
+      "date": "Date",
+      "amount": "Amount",
+      "actions": "Actions",
+      "loading": "Loading expenses...",
+      "noExpenses": "No expenses found.",
+      "delete": "Delete",
+      "deleting": "Deleting..."
+    },
+    "totalLabel": "Total",
+    "expensesCount": "{{count}} expenses",
+    "modal": {
+      "title": "Add Expense",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Electricity bill",
+      "titleRequired": "Title is required.",
+      "amountLabel": "Amount",
+      "amountRequired": "Enter a valid amount.",
+      "categoryLabel": "Category",
+      "noteLabel": "Note (optional)",
+      "notePlaceholder": "Additional details...",
+      "cancel": "Cancel",
+      "save": "Save Expense",
+      "saving": "Saving..."
+    }
+  },
+  "customers": {
+    "listening": "Listening... tap the mic again to stop.",
+    "totalOutstanding": "Total Outstanding (Udhar/Khata)",
+    "premiumFeature": "Premium feature — upgrade to unlock",
+    "fromCustomers": "From {{count}} customers • Updated just now",
+    "export": "Export",
+    "retry": "Retry",
+    "offline": {
+      "banner": "You're offline — customer changes and new customers will need a connection.",
+      "addRequiresConnection": "Adding customers requires an internet connection.",
+      "deleteRequiresConnection": "Deleting customers requires an internet connection."
+    },
+    "bulk": {
+      "selectAll": "Select all",
+      "selectedCount": "{{count}} selected",
+      "clearSelection": "Clear selection",
+      "deleteSelected": "Delete selected",
+      "confirmTitle": "Delete customers?",
+      "confirmMessage": "Are you sure you want to delete {{count}} selected customer(s)? This cannot be undone.",
+      "deleting": "Deleting...",
+      "yesDelete": "Yes, delete"
+    },
+    "exportPageOnly": "Export current page only",
+    "viewAllUdhar": "View All Udhar",
+    "shareMessage": "Hi {{name}}, here's your ledger (khata):\n{{link}}",
+    "invalidPhone": "This customer doesn't have a valid WhatsApp number.",
+    "searchPlaceholder": "Search customers...",
+    "publicLedger": {
+      "linkInvalidTitle": "This link doesn't work anymore.",
+      "linkInvalidSubtitle": "Please ask the shop to send you a new one.",
+      "errorTitle": "Couldn't load this page.",
+      "errorSubtitle": "Please try again in a moment.",
+      "youOwe": "You owe",
+      "allClear": "You're all clear",
+      "recentActivity": "Recent activity",
+      "noActivity": "Nothing here yet.",
+      "tookCredit": "You took goods on credit",
+      "youPaid": "You paid",
+      "more": "+{{count}} more",
+      "qty": "Qty",
+      "each": "each",
+      "itemCount": "{{count}} item",
+      "itemCount_plural": "{{count}} items",
+      "noteLabel": "Note"
+    },
+    "filters": {
+      "all": "All Customers",
+      "hasUdhar": "Has Udhar",
+      "clear": "Clear"
+    },
+    "sort": {
+      "label": "Sort By",
+      "nameAsc": "Name A–Z",
+      "nameDesc": "Name Z–A",
+      "outstandingDesc": "Highest Udhar",
+      "outstandingAsc": "Lowest Udhar",
+      "purchasesDesc": "Most Purchases",
+      "lastVisitDesc": "Recent Visit"
+    },
+    "stopRecording": "Stop recording",
+    "addByVoice": "Add udhar or record payment by voice",
+    "addCustomer": "Add Customer",
+    "loading": "Loading customers…",
+    "table": {
+      "customer": "Customer",
+      "phone": "Phone",
+      "totalPurchases": "Total Purchases",
+      "outstanding": "Outstanding (Udhar)",
+      "lastVisit": "Last Visit",
+      "actions": "Actions"
+    },
+    "noAddress": "No address",
+    "clear": "Clear",
+    "actions": {
+      "khata": "Khata",
+      "addUdhar": "+ Udhar",
+      "pay": "Pay",
+      "edit": "Edit"
+    },
+    "deleteConfirm": "Delete {{name}}? This cannot be undone.",
+    "deleteConfirmShort": "Delete {{name}}?",
+    "yesDelete": "Yes, Delete",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "close": "Close",
+    "noCustomers": "No customers found.",
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "customersCount": "{{count}} customers",
+    "totalOutstandingLabel": "Total outstanding",
+    "outstandingLabel": "Outstanding",
+    "mobile": {
+      "purchases": "Purchases",
+      "lastVisit": "Last Visit",
+      "address": "Address"
+    },
+    "khata": {
+      "loading": "Loading khata…",
+      "totalPurchases": "Total Purchases",
+      "outstanding": "Outstanding",
+      "totalPaid": "Total Paid",
+      "noEntries": "No entries yet",
+      "udhar": "Udhar",
+      "payment": "Payment",
+      "balance": "Balance",
+      "recordPayment": "Record Payment"
+    },
+    "udharModal": {
+      "title": "Add Udhar",
+      "currentBalance": "Current balance",
+      "amount": "Amount (Rs)",
+      "amountPlaceholder": "e.g. 500",
+      "note": "Note",
+      "notePlaceholder": "e.g. Grocery items, ration...",
+      "newBalance": "New balance after udhar"
+    },
+    "paymentModal": {
+      "title": "Record Payment",
+      "outstanding": "Outstanding",
+      "quickAmount": "Quick Amount",
+      "full": "Full",
+      "amount": "Amount (Rs)",
+      "exceedsBalance": "Amount cannot exceed the outstanding balance",
+      "note": "Note",
+      "notePlaceholder": "e.g. Cash, bank transfer...",
+      "remainingBalance": "Remaining balance",
+      "confirm": "Confirm Payment"
+    }
+  },
+  "invoice": {
+    "loading": "Loading invoice…",
+    "notFound": {
+      "title": "Invoice not found",
+      "description": "The invoice you're looking for doesn't exist or has been removed."
+    },
+    "goBack": "Go Back",
+    "print": "Print",
+    "whatsapp": "WhatsApp",
+    "pdf": "PDF",
+    "title": "Invoice",
+    "invoiceNo": "Invoice #",
+    "date": "Date",
+    "customer": "Customer",
+    "status": {
+      "label": "Status",
+      "paid": "Paid",
+      "udhar": "Udhar",
+      "pending": "Pending"
+    },
+    "items": "Items ({{count}})",
+    "itemsInSale": "{{count}} item(s) in this sale",
+    "breakdownUnavailable": "Itemized breakdown unavailable",
+    "grandTotal": "Grand Total",
+    "udharNotice": "This invoice is on <strong>Udhar</strong>. Payment of <strong>Rs {{amount}}</strong> is pending from {{customer}}.",
+    "paidNotice": "Payment of <strong>Rs {{amount}}</strong> received.",
+    "thankYou": "Thank you for your business!",
+    "poweredBy": "Powered by",
+    "share": "Share"
+  },
+  "products": {
+    "searchPlaceholder": "Search products...",
+    "allCategories": "All Categories",
+    "allStatus": "All Status",
+    "addProduct": "Add Product",
+    "retry": "Retry",
+    "loading": "Loading products…",
+    "premiumFeature": "Upgrade to Premium to export products",
+    "selectAll": "Select All",
+    "delete": "Delete",
+    "export": "Export",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "confirmDelete": "Confirm delete?",
+    "noProducts": "No products found",
+    "addCategory": "Add Category",
+    "category": {
+      "title": "New Category",
+      "nameLabel": "Category Name",
+      "namePlaceholder": "e.g. Beverages",
+      "nameRequired": "Category name is required.",
+      "duplicate": "A category with this name already exists.",
+      "saveFailed": "Failed to save category. Please try again.",
+      "save": "Save"
+    },
+    "errors": {
+      "loadFailed": "Could not load products. Please try again.",
+      "saveFailed": "Could not save changes. Please try again."
+    },
+    "offline": {
+      "banner": "You're offline — product changes and new products will need a connection.",
+      "addRequiresConnection": "Adding products requires an internet connection.",
+      "deleteRequiresConnection": "Deleting products requires an internet connection.",
+      "pendingBadge": "Pending sync",
+      "onlyPriceStockOffline": "Only price and stock can be edited while offline. Go online to change name or category.",
+      "categoryNotResolved": "This product's category can't be resolved offline — open it once while online first."
+    },
+    "bulkDeleteConfirm": "Delete {{count}} selected product(s)?",
+    "catalogTruncatedWarning": "Showing a partial view — your product list is larger than this page can display. Contact support if search/sort results look incomplete.",
+    "table": {
+      "name": "Name",
+      "category": "Category",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "inStock": "In Stock",
+      "lowStock": "Low Stock",
+      "outOfStock": "Out of Stock"
+    },
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "productsCount": "{{count}} products",
+    "unitsCount": "{{count}} units",
+    "mobileSummary": {
+      "in": "{{count}} in",
+      "low": "{{count}} low",
+      "out": "{{count}} out"
+    }
+  },
+  "reports": {
+    "dateRange": "Date Range",
+    "apply": "Apply",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "retry": "Retry",
+    "loading": "Loading report…",
+    "revenueTrend": "Revenue Trend",
+    "noTrendData": "Monthly trend data not available yet",
+    "topSellingProducts": "Top Selling Products",
+    "noTopProductsData": "Top-products data not available yet",
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "grossProfit": "Gross Profit",
+      "totalOrders": "Total Orders",
+      "avgPerOrder": "Avg Rs {{amount}}/order",
+      "expenses": "Expenses",
+      "outstanding": "Outstanding",
+      "totalCustomers": "Total Customers"
+    },
+    "errors": {
+      "topProducts": "Top products unavailable right now.",
+      "revenueTrend": "Revenue trend unavailable right now.",
+      "loadFailed": "Could not load report data. Please try again.",
+      "dateRangeInvalid": "\"From\" date must be before \"To\" date."
+    },
+    "chart": {
+      "revenue": "Revenue"
+    }
+  },
+  "staffInvite": {
+    "title": "Invite Staff Member",
+    "successMessage": "Invitation sent successfully.",
+    "sendViaWhatsApp": "Send invite via WhatsApp",
+    "subtitle": "Add a manager or staff member to your team",
+    "errorMessageFallback": "Failed to send invitation. Please try again.",
+    "fields": {
+      "fullName": {
+        "label": "Full Name",
+        "error": "Full name must be at least 3 characters."
+      },
+      "email": {
+        "label": "Email",
+        "error": "Enter a valid email address."
+      },
+      "phoneNumber": {
+        "label": "Phone Number",
+        "placeholder": "+923001234567",
+        "error": "Enter a valid phone number."
+      },
+      "role": {
+        "label": "Role",
+        "options": {
+          "Manager": "Manager",
+          "Staff": "Staff"
+        }
+      }
+    },
+    "submit": {
+      "default": "Send Invitation",
+      "loading": "Sending…"
+    }
+  },
+  "login": {
+    "welcomeBack": "Welcome back",
+    "subtitle": "Sign in to your KhataFlow dashboard",
+    "emailOrPhone": "EMAIL OR PHONE",
+    "emailPlaceholder": "owner@shop.com",
+    "password": "PASSWORD",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signingIn": "Signing in…",
+    "signIn": "Sign In →",
+    "or": "or",
+    "createAccount": "Create new account",
+    "errors": {
+      "missingFields": "Please enter both email and password.",
+      "invalidCredentials": "Invalid email or password.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "landing": {
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "how": "How It Works",
+      "faq": "FAQ",
+      "login": "Log in",
+      "getStarted": "Get Started",
+      "langToggle": "Switch language"
+    },
+    "hero": {
+      "eyebrow": "THE DIGITAL KHATA",
+      "title": {
+        "line1": "Every sale.",
+        "line2Before": "Every ",
+        "line2Highlight": "udhar.",
+        "line3": "One ledger."
+      },
+      "subtitle": "KhataFlow replaces the paper khata with a live one — ring up a sale, mark it paid or udhar, and let the ledger settle itself.",
+      "ctaPrimary": "Start your ledger — free",
+      "ctaSecondary": "See a live sale",
+      "checklist": {
+        "noPaper": "No more paper khata",
+        "staffLogins": "Staff & manager logins",
+        "bilingual": "EN + اردو"
+      },
+      "mock": {
+        "activeCustomer": "ACTIVE CUSTOMER",
+        "loggingSale": "LOGGING SALE",
+        "item1": "Atta 10kg × 1",
+        "item2": "Cooking Oil 5L × 2",
+        "item3": "Tea 950g × 1",
+        "total": "Total"
+      }
+    },
+    "roles": {
+      "eyebrow": "BUILT FOR THE WHOLE COUNTER",
+      "title": "One counter. Every role, invited.",
+      "subtitle": "Owners run the shop, managers run the floor, staff run the till — invite all three from a single tab, and give each one only what they need to see.",
+      "owner": {
+        "label": "OWNER",
+        "title": "Full ledger, full control.",
+        "description": "Revenue, reports, subscription, and the Invite tab — owners see every number the shop produces."
+      },
+      "staff": {
+        "label": "MANAGER · STAFF",
+        "title": "Just what the till needs.",
+        "description": "Ring up sales, log stock, and record udhar — scoped to the floor, without the owner's reports."
+      },
+      "inviteMock": {
+        "label": "INVITE TAB",
+        "send": "Send invite"
+      }
+    },
+    "modulesSection": {
+      "eyebrow": "EVERYTHING BEHIND THE COUNTER",
+      "title": "One tab for every part of the shop.",
+      "subtitle": "From the morning open to the night's tally, KhataFlow runs behind the counter so you don't have to run the numbers by hand."
+    },
+    "modules": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Today's sales, low stock, and the week's chart the moment you log in.",
+        "stat": "Rs 48,200 today"
+      },
+      "sales": {
+        "title": "Sales & POS",
+        "description": "Ring up a cart, apply a discount, or just say the sale out loud.",
+        "stat": "112 sales today"
+      },
+      "products": {
+        "title": "Products",
+        "description": "Stock, categories, and pricing kept current across every till.",
+        "stat": "312 SKUs tracked"
+      },
+      "customers": {
+        "title": "Customers & Udhar",
+        "description": "Every customer's balance, sorted by who owes the most.",
+        "stat": "Rs 96,400 outstanding"
+      },
+      "expenses": {
+        "title": "Expenses",
+        "description": "Log a rent payment or a supplier bill by typing — or by voice.",
+        "stat": "18 logged this month"
+      },
+      "reports": {
+        "title": "Reports",
+        "description": "Revenue, profit, and top sellers, exported to PDF or Excel.",
+        "stat": "Export in one tap"
+      }
+    },
+    "voice": {
+      "eyebrow": "VOICE CAPTURE",
+      "title": { "line1": "Say the sale.", "line2": "We'll log the udhar." },
+      "subtitle": "Speak the sale during checkout, in English or Urdu. KhataFlow writes it to the cart, marks it paid or udhar, and updates the customer's balance before you've put the phone down.",
+      "liveLedgerLabel": "LIVE LEDGER",
+      "recording": "RECORDING",
+      "mock": {
+        "customer1": "Zainab Traders",
+        "udharAmount": "− Rs 4,200 udhar",
+        "customer2": "Hamid General Store",
+        "paidAmount": "+ Rs 2,000 paid",
+        "customer3": "Kamran Khan",
+        "sayingUdhar": "Rs 5,830 — saying \"udhar\"…"
+      },
+      "bullets": {
+        "voiceLogged": "Voice-logged sales and udhar, in English and Urdu",
+        "balancesUpdate": "Outstanding balances update the instant you speak",
+        "whatsappDelivery": "Ledger delivered to the customer over WhatsApp in one tap"
+      }
+    },
+    "how": {
+      "eyebrow": "THE WORKFLOW",
+      "title": "From ring-up to reminder, in four steps.",
+      "step1": {
+        "title": "Ring up the sale",
+        "description": "Search or browse the shelf, set a quantity, and the cart's ready before the customer's done talking.",
+        "item1": "Cooking Oil 5L × 2",
+        "item2": "Atta 10kg × 1"
+      },
+      "step2": {
+        "title": "Choose how it's paid",
+        "description": "Cash, card, or udhar — logged straight to the customer's running balance."
+      },
+      "step3": {
+        "title": "Reminders go out",
+        "description": "A ledger update lands on the customer's WhatsApp — no phone calls, no awkward asking.",
+        "mock": "Balance sent to +92 3xx"
+      },
+      "step4": {
+        "title": "Close the day",
+        "description": "The dashboard tallies revenue, profit, and exactly what's still owed — no adding it up by hand.",
+        "mockLabel": "TODAY",
+        "mockAmount": "Rs 48,200",
+        "mockSuffix": "revenue"
+      }
+    },
+    "faq": {
+      "title": "Questions shopkeepers actually ask.",
+      "subtitle": "If you don't find what you're looking for, reach out directly.",
+      "offline": {
+        "question": "Does KhataFlow work without internet?",
+        "answer": "Yes. Sales, stock changes, and udhar entries queue on the device and sync the moment your connection returns — the counter never has to stop for a dropped signal."
+      },
+      "invite": {
+        "question": "Can I invite my staff and managers?",
+        "answer": "From the Invite tab, an owner can add managers and counter staff by email, each scoped to what their role should see — a cashier rings up sales, a manager runs the floor, only the owner sees the subscription and full reports."
+      },
+      "udhar": {
+        "question": "Is udhar tracked automatically?",
+        "answer": "Every credit sale is written straight to that customer's ledger the moment you mark it as udhar — no separate notebook, no reconciling two records at closing time."
+      },
+      "share": {
+        "question": "Can I send a customer their ledger?",
+        "answer": "Yes — send any customer's outstanding balance and recent entries straight to their WhatsApp in one tap, instead of reading it out over the counter."
+      },
+      "urdu": {
+        "question": "Does it support Urdu?",
+        "answer": "The full app, invoices included, works in English and Urdu — switch anytime from the toggle in the header."
+      },
+      "pricing": {
+        "question": "Is there a fee per sale or per customer?",
+        "answer": "No. Pricing is one flat plan per shop — ring up as many sales and customers as the counter sees."
+      }
+    },
+    "cta": {
+      "title": "Close today's khata in the next five minutes.",
+      "subtitle": "No card required to try it on the counter.",
+      "button": "Get Started Free"
+    },
+    "footer": {
+      "tagline": "Apki dukaan, digital khata.",
+      "description": "KhataFlow is a point-of-sale and ledger built for Pakistan's shopkeepers — sales, stock, udhar, and staff, running from one counter tab in English or Urdu.",
+      "copyright": "© 2026 KhataFlow. All rights reserved."
+    }
+  },
+  "register": {
+    "createAccount": "Create your account",
+    "subtitle": "Get started in under 2 minutes",
+    "businessName": "BUSINESS NAME",
+    "businessNamePlaceholder": "Ahmed General Store",
+    "ownerName": "OWNER NAME",
+    "ownerNamePlaceholder": "Ahmed Ali",
+    "email": "EMAIL",
+    "emailPlaceholder": "owner@shop.com",
+    "phone": "PHONE",
+    "phonePlaceholder": "0300-1234567",
+    "password": "PASSWORD",
+    "creatingAccount": "Creating account…",
+    "createAccountBtn": "Create Account →",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "errors": {
+      "missingFields": "Please fill in all fields.",
+      "emailExists": "An account with this email already exists.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot password?",
+    "subtitle": "No worries, we'll send you reset instructions",
+    "identifier": "Email or Phone",
+    "identifierPlaceholder": "owner@shop.com",
+    "sending": "Sending...",
+    "sendCode": "Send Reset Code",
+    "checkInbox": "Check your inbox",
+    "codeSentTo": "We sent a 6-digit code to",
+    "verificationCode": "Verification Code",
+    "resendIn": "Resend code in",
+    "resend": "Didn't receive it? Resend",
+    "verifyCode": "Verify Code",
+    "setNewPassword": "Set new password",
+    "passwordHint": "Must be at least 8 characters",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "resetting": "Resetting...",
+    "resetPasswordBtn": "Reset Password",
+    "successTitle": "Password reset!",
+    "successSubtitle": "Your password has been updated successfully.",
+    "backToSignIn": "Back to Sign In",
+    "strength": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "errors": {
+      "missingIdentifier": "Please enter your email or phone number.",
+      "notFound": "We couldn't find an account with that email.",
+      "incompleteCode": "Please enter the 6-digit code.",
+      "invalidToken": "Invalid or expired code. Please try again.",
+      "tooShort": "Password must be at least 8 characters.",
+      "mismatch": "Passwords do not match.",
+      "generic": "Something went wrong. Please try again."
+    }
+  }
+}

@@ -1,0 +1,545 @@
+<div *transloco="let t" class="min-h-screen bg-[#F8F9FC] text-gray-900 font-sans">
+
+    <!-- ============================ NAV ============================ -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-100">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-4 px-4 md:px-8 py-4">
+            <a href="#" class="flex items-center gap-2 shrink-0">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <img src="images/flow.png" alt="logo" [ngClass]="lang() === 'ur' ? 'scale-x-[-1]' : ''"
+                        class="w-10 h-8 rounded-xl transition-transform duration-300" />
+                </span>
+                <span class="font-semibold text-lg tracking-tight">
+                    {{ t('sidebar.brandPart1') }}<span class="text-indigo-600">{{ t('sidebar.brandPart2') }}</span>
+                </span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-gray-600">
+                <a href="#home" class="hover:text-gray-900 transition-colors">{{ t('landing.nav.home') }}</a>
+                <a href="#modules" class="hover:text-gray-900 transition-colors">{{ t('landing.nav.features') }}</a>
+                <a href="#how" class="hover:text-gray-900 transition-colors">{{ t('landing.nav.how') }}</a>
+                <a href="#faq" class="hover:text-gray-900 transition-colors">{{ t('landing.nav.faq') }}</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button type="button" (click)="toggleLang()"
+                    class="hidden sm:inline-flex items-center rounded-lg bg-gray-100 p-1 text-xs font-semibold"
+                    [attr.aria-label]="t('landing.nav.langToggle')">
+                    <span class="rounded-md px-3 py-1 transition-colors"
+                        [class]="lang() === 'en' ? 'bg-indigo-600 text-white' : 'text-gray-600'">EN</span>
+                    <span class="rounded-md px-3 py-1 transition-colors"
+                        [class]="lang() === 'ur' ? 'bg-indigo-600 text-white' : 'text-gray-600'">اردو</span>
+                </button>
+
+                <select [value]="lang()" (change)="onLanguageChange($any($event.target).value)"
+                    [title]="t('landing.nav.langToggle')"
+                    class="sm:hidden rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold">
+                    <option value="en">EN</option>
+                    <option value="ur">اردو</option>
+                </select>
+
+                <a routerLink="/login" class="hidden sm:inline text-sm font-medium text-gray-600 hover:text-gray-900">{{
+                    t('landing.nav.login') }}</a>
+                <a href="#start"
+                    class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors">{{
+                    t('landing.nav.getStarted') }}</a>
+
+                <button type="button" (click)="toggleMobileMenu()"
+                    class="lg:hidden flex h-9 w-9 items-center justify-center rounded-lg text-gray-700"
+                    [attr.aria-label]="mobileMenuOpen() ? t('landing.nav.menuClose') : t('landing.nav.menuOpen')"
+                    [attr.aria-expanded]="mobileMenuOpen()" aria-controls="mobile-nav-panel">
+                    @if (!mobileMenuOpen()) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round">
+                        <path d="M4 7h16M4 12h16M4 17h16" />
+                    </svg>
+                    } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round">
+                        <path d="M6 6l12 12M18 6 6 18" />
+                    </svg>
+                    }
+                </button>
+            </div>
+        </div>
+
+        @if (mobileMenuOpen()) {
+        <div id="mobile-nav-panel" class="border-t border-gray-100 bg-white lg:hidden">
+            <nav class="flex flex-col p-4 text-sm font-medium">
+                <a href="#home" class="py-2">{{ t('landing.nav.home') }}</a>
+                <a href="#modules" class="py-2">{{ t('landing.nav.features') }}</a>
+                <a href="#how" class="py-2">{{ t('landing.nav.how') }}</a>
+                <a href="#faq" class="py-2">{{ t('landing.nav.faq') }}</a>
+                <a routerLink="/login" class="py-2">{{ t('landing.nav.login') }}</a>
+                <a href="#start"
+                    class="mt-2 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white">
+                    {{ t('landing.nav.getStarted') }}
+                </a>
+                <button type="button" (click)="toggleLang()"
+                    class="mt-3 inline-flex items-center rounded-lg bg-gray-100 p-1 text-xs font-semibold self-start"
+                    [attr.aria-label]="t('landing.nav.langToggle')">
+                    <span class="rounded-md px-3 py-1 transition-colors"
+                        [class]="lang() === 'en' ? 'bg-indigo-600 text-white' : 'text-gray-600'">EN</span>
+                    <span class="rounded-md px-3 py-1 transition-colors"
+                        [class]="lang() === 'ur' ? 'bg-indigo-600 text-white' : 'text-gray-600'">اردو</span>
+                </button>
+            </nav>
+        </div>
+        }
+    </header>
+
+    <!-- ============================ HERO ============================ -->
+    <section id="home" class="relative pt-16 pb-20 px-4 md:px-8 overflow-hidden">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+
+            <div>
+                <p class="text-xs font-semibold tracking-wide text-indigo-600 mb-5 uppercase">{{
+                    t('landing.hero.eyebrow') }}</p>
+                <h1 class="font-semibold leading-[1.1] text-5xl md:text-6xl tracking-tight text-gray-900">
+                    {{ t('landing.hero.title.line1') }}<br />
+                    {{ t('landing.hero.title.line2Before') }}<span class="text-amber-600">{{
+                        t('landing.hero.title.line2Highlight') }}</span><br />
+                    {{ t('landing.hero.title.line3') }}
+                </h1>
+                <p class="mt-6 text-lg text-gray-500 max-w-md">
+                    {{ t('landing.hero.subtitle') }}
+                </p>
+
+                <div class="mt-8 flex flex-wrap items-center gap-4">
+                    <a href="#start"
+                        class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3.5 text-white font-semibold hover:bg-indigo-700 transition-colors">
+                        {{ t('landing.hero.ctaPrimary') }}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rtl:rotate-180">
+                            <path d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
+                    </a>
+                    <a href="#how"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-3.5 font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                        {{ t('landing.hero.ctaSecondary') }}
+                    </a>
+                </div>
+
+                <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
+                    <li class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>{{ t('landing.hero.checklist.noPaper') }}</li>
+                    <li class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>{{ t('landing.hero.checklist.staffLogins') }}</li>
+                    <li class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>{{ t('landing.hero.checklist.bilingual') }}</li>
+                </ul>
+            </div>
+
+            <!-- Hero mock: same card language as the in-app Sales/POS + Customers screens -->
+            <div class="relative">
+                <div class="rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="px-6 pt-6 pb-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-gray-400">{{ t('landing.hero.mock.activeCustomer') }}</p>
+                                <p class="font-semibold text-lg text-gray-900">Kamran Khan</p>
+                            </div>
+                            <span
+                                class="flex items-center gap-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold px-3 py-1 border border-amber-100">
+                                <span class="h-1.5 w-1.5 rounded-full bg-amber-500 pulse-dot"></span>
+                                {{ t('landing.hero.mock.loggingSale') }}
+                            </span>
+                        </div>
+
+                        <div class="mt-5 space-y-2 text-sm">
+                            <div class="flex justify-between text-gray-600">
+                                <span>{{ t('landing.hero.mock.item1') }}</span><span>Rs 1,450</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>{{ t('landing.hero.mock.item2') }}</span><span>Rs 3,600</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>{{ t('landing.hero.mock.item3') }}</span><span>Rs 780</span>
+                            </div>
+                            <div class="border-t border-gray-100 my-2"></div>
+                            <div class="flex justify-between font-semibold text-base text-gray-900">
+                                <span>{{ t('landing.hero.mock.total') }}</span><span>Rs 5,830</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border-t border-gray-100 px-6 py-5 flex items-center justify-between">
+                        <span
+                            class="rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1">{{
+                            t('sales.status.udhar') }}</span>
+                        <span
+                            class="rounded-full bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1 opacity-50">{{
+                            t('sales.status.paid') }}</span>
+                        <!-- Decorative in this mock, so it's a non-interactive span rather than a dead <button> -->
+                        <span aria-hidden="true"
+                            class="rounded-lg bg-indigo-600 text-white text-sm font-semibold px-4 py-2">
+                            {{ t('actions.share') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ONE COUNTER, EVERY ROLE ===================== -->
+    <section class="px-4 md:px-8 py-20">
+        <div class="max-w-6xl mx-auto">
+            <p class="text-xs font-semibold tracking-wide text-indigo-600 mb-4 uppercase">{{
+                t('landing.roles.eyebrow') }}</p>
+            <h2 class="font-semibold text-4xl md:text-5xl max-w-2xl text-gray-900">{{ t('landing.roles.title') }}</h2>
+            <p class="mt-4 text-gray-500 max-w-xl">{{ t('landing.roles.subtitle') }}</p>
+
+            <div class="mt-12 grid md:grid-cols-2 gap-6">
+                <div class="rounded-2xl bg-white border border-gray-100 shadow-sm p-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="h-2 w-2 rounded-full bg-indigo-600"></span>
+                        <p class="text-xs font-semibold tracking-wide text-gray-400 uppercase">{{
+                            t('landing.roles.owner.label') }}</p>
+                    </div>
+                    <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.roles.owner.title') }}</h3>
+                    <p class="mt-3 text-gray-500">{{ t('landing.roles.owner.description') }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-white border border-gray-100 shadow-sm p-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                        <p class="text-xs font-semibold tracking-wide text-gray-400 uppercase">{{
+                            t('landing.roles.staff.label') }}</p>
+                    </div>
+                    <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.roles.staff.title') }}</h3>
+                    <p class="mt-3 text-gray-500">{{ t('landing.roles.staff.description') }}</p>
+                </div>
+            </div>
+
+            <!-- Invite mock card -->
+            <div
+                class="mt-8 rounded-2xl bg-white border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-xl">
+                <div class="flex-1">
+                    <p class="text-xs text-gray-400 mb-1">{{ t('landing.roles.inviteMock.label') }}</p>
+                    <p class="font-medium text-gray-900">bilal@corner-store.pk</p>
+                </div>
+                <select class="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium bg-white"
+                    [attr.aria-label]="t('staffInvite.fields.role.label')">
+                    <option>{{ t('staffInvite.fields.role.options.Manager') }}</option>
+                    <option>{{ t('staffInvite.fields.role.options.Staff') }}</option>
+                </select>
+                <button type="button"
+                    class="rounded-lg bg-indigo-600 text-white text-sm font-semibold px-4 py-2 whitespace-nowrap hover:bg-indigo-700 transition-colors">
+                    {{ t('landing.roles.inviteMock.send') }}
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ MODULE BENTO ============================ -->
+    <section id="modules" class="px-4 md:px-8 py-20 bg-white border-y border-gray-100">
+        <div class="max-w-6xl mx-auto">
+            <p class="text-xs font-semibold tracking-wide text-indigo-600 mb-4 uppercase">{{
+                t('landing.modulesSection.eyebrow') }}</p>
+            <h2 class="font-semibold text-4xl md:text-5xl max-w-xl text-gray-900">{{ t('landing.modulesSection.title')
+                }}
+            </h2>
+            <p class="mt-4 text-gray-500 max-w-xl">{{ t('landing.modulesSection.subtitle') }}</p>
+
+            <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                @for (m of modules; track m.titleKey; let i = $index) {
+                <div
+                    class="rounded-2xl bg-white border border-gray-100 p-6 hover:shadow-md hover:border-indigo-200 transition-all">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl mb-5"
+                        [class]="['bg-indigo-50 text-indigo-600', 'bg-orange-50 text-orange-600', 'bg-green-50 text-green-600', 'bg-blue-50 text-blue-600'][i % 4]">
+                        @switch (m.icon) {
+                        @case ('grid') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg>
+                        }
+                        @case ('cart') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="20" r="1" />
+                            <circle cx="18" cy="20" r="1" />
+                            <path d="M3 4h2l2.4 12.4a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L20 8H6.2" />
+                        </svg>
+                        }
+                        @case ('box') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 8 12 3 3 8l9 5 9-5Z" />
+                            <path d="M3 8v8l9 5 9-5V8" />
+                            <path d="M12 13v8" />
+                        </svg>
+                        }
+                        @case ('users') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        }
+                        @case ('receipt') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2h12v20l-3-2-3 2-3-2-3 2Z" />
+                            <path d="M9 8h6M9 12h6" />
+                        </svg>
+                        }
+                        @case ('chart') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18" />
+                            <path d="M7 15l4-5 3 3 5-7" />
+                        </svg>
+                        }
+                        @default {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9" />
+                        </svg>
+                        }
+                        }
+                    </div>
+                    <h3 class="font-semibold text-lg text-gray-900">{{ t(m.titleKey) }}</h3>
+                    <p class="mt-2 text-sm text-gray-500">{{ t(m.descriptionKey) }}</p>
+                    <p class="mt-4 text-xs text-indigo-600 font-semibold">{{ t(m.statKey) }}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ UDHAR DEEP-DIVE ============================ -->
+    <section class="px-4 md:px-8 py-20">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+
+            <div class="order-2 lg:order-1 rounded-2xl bg-white border border-gray-100 shadow-sm p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <p class="text-xs font-semibold tracking-wide text-gray-400 uppercase">{{
+                        t('landing.voice.liveLedgerLabel') }}</p>
+                    <span class="flex items-center gap-1.5 text-xs font-semibold text-amber-600">
+                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500 pulse-dot"></span>{{
+                        t('landing.voice.recording') }}
+                    </span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center rounded-lg bg-gray-50 px-4 py-3">
+                        <span class="text-gray-600">{{ t('landing.voice.mock.customer1') }}</span>
+                        <span class="text-amber-600 font-semibold">{{ t('landing.voice.mock.udharAmount') }}</span>
+                    </div>
+                    <div class="flex justify-between items-center rounded-lg bg-gray-50 px-4 py-3">
+                        <span class="text-gray-600">{{ t('landing.voice.mock.customer2') }}</span>
+                        <span class="text-green-600 font-semibold">{{ t('landing.voice.mock.paidAmount') }}</span>
+                    </div>
+                    <div
+                        class="flex justify-between items-center rounded-lg bg-indigo-50 px-4 py-3 border border-indigo-100">
+                        <span class="text-gray-900 font-medium">{{ t('landing.voice.mock.customer3') }}</span>
+                        <span class="text-indigo-600 font-semibold">{{ t('landing.voice.mock.sayingUdhar') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-1 lg:order-2">
+                <p class="text-xs font-semibold tracking-wide text-indigo-600 mb-4 uppercase">{{
+                    t('landing.voice.eyebrow') }}</p>
+                <h2 class="font-semibold text-4xl md:text-5xl text-gray-900">{{ t('landing.voice.title.line1')
+                    }}<br />{{
+                    t('landing.voice.title.line2') }}</h2>
+                <p class="mt-5 text-gray-500 max-w-md">{{ t('landing.voice.subtitle') }}</p>
+                <ul class="mt-6 space-y-3 text-sm text-gray-700">
+                    <li class="flex items-start gap-3">
+                        <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+                        </svg>
+                        {{ t('landing.voice.bullets.voiceLogged') }}
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+                        </svg>
+                        {{ t('landing.voice.bullets.balancesUpdate') }}
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+                        </svg>
+                        {{ t('landing.voice.bullets.whatsappDelivery') }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ HOW IT WORKS ============================ -->
+    <section id="how" class="px-4 md:px-8 py-20 bg-white border-y border-gray-100">
+        <div class="max-w-6xl mx-auto">
+            <p class="text-xs font-semibold tracking-wide text-indigo-600 mb-4 text-center uppercase">{{
+                t('landing.how.eyebrow') }}</p>
+            <h2 class="font-semibold text-4xl md:text-5xl text-center max-w-2xl mx-auto text-gray-900">{{
+                t('landing.how.title') }}</h2>
+
+            <ol class="mt-16 relative list-none">
+                <div class="hidden md:block absolute start-1/2 top-0 bottom-0 w-px bg-gray-100 -translate-x-1/2"></div>
+
+                <div class="space-y-16">
+                    <li class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-end md:pe-12">
+                            <p class="text-indigo-600 font-semibold mb-2" aria-hidden="true">01</p>
+                            <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.how.step1.title') }}</h3>
+                            <p class="mt-2 text-gray-500">{{ t('landing.how.step1.description') }}</p>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 text-sm md:ms-12">
+                            <div class="flex justify-between text-gray-600"><span>{{ t('landing.how.step1.item1')
+                                    }}</span></div>
+                            <div class="flex justify-between mt-1 text-gray-600"><span>{{ t('landing.how.step1.item2')
+                                    }}</span></div>
+                        </div>
+                    </li>
+
+                    <li class="grid md:grid-cols-2 gap-8 items-center">
+                        <div
+                            class="order-2 md:order-1 rounded-2xl bg-white border border-gray-100 shadow-sm p-5 md:me-12 flex gap-3">
+                            <span
+                                class="rounded-full bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1">{{
+                                t('sales.status.paid') }}</span>
+                            <span
+                                class="rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1">{{
+                                t('sales.status.udhar') }}</span>
+                        </div>
+                        <div class="order-1 md:order-2 md:ps-12">
+                            <p class="text-indigo-600 font-semibold mb-2" aria-hidden="true">02</p>
+                            <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.how.step2.title') }}</h3>
+                            <p class="mt-2 text-gray-500">{{ t('landing.how.step2.description') }}</p>
+                        </div>
+                    </li>
+
+                    <li class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-end md:pe-12">
+                            <p class="text-indigo-600 font-semibold mb-2" aria-hidden="true">03</p>
+                            <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.how.step3.title') }}</h3>
+                            <p class="mt-2 text-gray-500">{{ t('landing.how.step3.description') }}</p>
+                        </div>
+                        <div
+                            class="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 text-sm md:ms-12 flex items-center gap-2 text-gray-600">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A"
+                                stroke-width="1.8">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                            {{ t('landing.how.step3.mock') }}
+                        </div>
+                    </li>
+
+                    <li class="grid md:grid-cols-2 gap-8 items-center">
+                        <div
+                            class="order-2 md:order-1 rounded-2xl bg-white border border-gray-100 shadow-sm p-5 md:me-12">
+                            <p class="text-xs text-gray-400 mb-1">{{ t('landing.how.step4.mockLabel') }}</p>
+                            <p class="font-semibold text-xl text-gray-900">{{ t('landing.how.step4.mockAmount') }} <span
+                                    class="text-sm font-normal text-gray-400">{{ t('landing.how.step4.mockSuffix')
+                                    }}</span></p>
+                        </div>
+                        <div class="order-1 md:order-2 md:ps-12">
+                            <p class="text-indigo-600 font-semibold mb-2" aria-hidden="true">04</p>
+                            <h3 class="font-semibold text-2xl text-gray-900">{{ t('landing.how.step4.title') }}</h3>
+                            <p class="mt-2 text-gray-500">{{ t('landing.how.step4.description') }}</p>
+                        </div>
+                    </li>
+                </div>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ============================ FAQ ============================ -->
+    <section id="faq" class="px-4 md:px-8 py-20">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-semibold text-4xl md:text-5xl text-center text-gray-900">{{ t('landing.faq.title') }}</h2>
+            <p class="mt-3 text-center text-gray-500">{{ t('landing.faq.subtitle') }}</p>
+
+            <div class="mt-12 rounded-2xl bg-white border border-gray-100 shadow-sm divide-y divide-gray-100">
+                @for (faq of faqs; track faq.questionKey; let i = $index) {
+                <div>
+                    <button type="button" (click)="toggleFaq(i)" [id]="'faq-question-' + i"
+                        class="w-full flex items-center justify-between gap-4 px-6 py-5 text-start font-medium text-gray-900"
+                        [attr.aria-expanded]="openFaqIndex() === i" [attr.aria-controls]="'faq-answer-' + i">
+                        {{ t(faq.questionKey) }}
+                        <svg class="faq-chevron shrink-0 text-gray-400" [class.open]="openFaqIndex() === i" width="18"
+                            height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+                    @if (openFaqIndex() === i) {
+                    <p [id]="'faq-answer-' + i" [attr.aria-labelledby]="'faq-question-' + i"
+                        class="px-6 pb-5 text-gray-500 pe-8">{{ t(faq.answerKey) }}</p>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ CTA STRIP ============================ -->
+    <section id="start" class="px-4 md:px-8">
+        <div class="max-w-6xl mx-auto rounded-2xl bg-indigo-600 text-white px-8 py-14 text-center">
+            <h2 class="font-semibold text-3xl md:text-4xl">{{ t('landing.cta.title') }}</h2>
+            <p class="mt-3 text-indigo-100">{{ t('landing.cta.subtitle') }}</p>
+            <a routerLink="/login"
+                class="mt-7 inline-flex items-center gap-2 rounded-lg bg-white text-indigo-600 px-7 py-3.5 font-semibold hover:bg-indigo-50 transition-colors">
+                {{ t('landing.cta.button') }}
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================ FOOTER ============================ -->
+    <footer class="mt-14 bg-white border-t border-gray-100 px-4 md:px-8 pt-16 pb-10">
+        <div class="max-w-3xl mx-auto text-center">
+            <div
+                class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 mb-4">
+                <img src="images/flow.png" alt="logo" [ngClass]="lang() === 'ur' ? 'scale-x-[-1]' : ''"
+                    class="w-10 h-10 rounded-xl transition-transform duration-300" />
+            </div>
+            <p class="font-semibold text-xl text-gray-900">{{ t('sidebar.brandPart1') }}<span class="text-indigo-600">{{
+                    t('sidebar.brandPart2') }}</span></p>
+            <p class="text-gray-400 text-sm mt-1">{{ t('landing.footer.tagline') }}</p>
+            <p class="mt-5 text-gray-400 text-sm max-w-lg mx-auto">{{ t('landing.footer.description') }}</p>
+            <div class="mt-7 flex items-center justify-center gap-5 text-gray-400">
+                <a href="#" aria-label="Twitter" class="hover:text-indigo-600 transition-colors"><svg width="18"
+                        height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.7 0-1.3-.2-1.9-.5v.1a4.1 4.1 0 0 0 3.3 4 4.2 4.2 0 0 1-1.8.1 4.1 4.1 0 0 0 3.8 2.9A8.3 8.3 0 0 1 2 18.4a11.6 11.6 0 0 0 6.3 1.9c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.2Z" />
+                    </svg></a>
+                <a href="#" aria-label="LinkedIn" class="hover:text-indigo-600 transition-colors"><svg width="18"
+                        height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.77-2 4 0 4.75 2.6 4.75 6.1V21h-4v-5.6c0-1.35 0-3.1-1.9-3.1s-2.2 1.5-2.2 3v5.7h-4V9Z" />
+                    </svg></a>
+                <a href="#" aria-label="Facebook" class="hover:text-indigo-600 transition-colors"><svg width="18"
+                        height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.6c0-.9.25-1.6 1.6-1.6h1.7V3.1C15.9 3 15 3 13.9 3c-2.4 0-4 1.5-4 4.1v2.7H7v3.2h2.9v8h3.6Z" />
+                    </svg></a>
+                <a href="#" aria-label="Instagram" class="hover:text-indigo-600 transition-colors"><svg width="18"
+                        height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" />
+                    </svg></a>
+            </div>
+            <p class="mt-8 text-gray-300 text-xs">{{ t('landing.footer.copyright') }}</p>
+        </div>
+    </footer>
+</div>
+<router-outlet></router-outlet>

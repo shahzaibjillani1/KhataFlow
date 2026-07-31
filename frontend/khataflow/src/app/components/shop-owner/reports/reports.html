@@ -1,0 +1,128 @@
+<div *transloco="let t" class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen">
+
+    <div class="flex flex-col gap-3 mb-6 lg:flex-row lg:items-center lg:justify-between">
+
+        <div class="flex flex-col xs:flex-row xs:flex-wrap items-stretch xs:items-center gap-2">
+            <span class="text-sm text-text-muted flex-shrink-0">{{ t('reports.dateRange') }}:</span>
+            <div class="flex items-center gap-2 flex-wrap">
+                <input type="date" [(ngModel)]="dateFrom"
+                    class="flex-1 min-w-0 xs:flex-none border border-input-border rounded-xl px-3 py-2 text-sm bg-bg-card text-text-body focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                <span class="text-input-placeholder hidden xs:inline">—</span>
+                <input type="date" [(ngModel)]="dateTo"
+                    class="flex-1 min-w-0 xs:flex-none border border-input-border rounded-xl px-3 py-2 text-sm bg-bg-card text-text-body focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+            </div>
+            <button (click)="applyFilter()"
+                class="bg-btn-primary hover:bg-btn-primary-hover text-white text-sm font-medium px-5 py-2 rounded-xl transition w-full xs:w-auto">
+                {{ t('reports.apply') }}
+            </button>
+        </div>
+
+        <div class="flex gap-2">
+            <button (click)="exportPDF()"
+                class="flex-1 lg:flex-none flex items-center justify-center gap-2 border border-primary-border text-primary-text bg-bg-card hover:bg-primary-soft text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-xl transition">
+                <i class="fa-solid fa-file-pdf text-danger-icon text-xs"></i>
+                <span>{{ t('reports.pdf') }}</span>
+            </button>
+            <button (click)="exportExcel()"
+                class="flex-1 lg:flex-none flex items-center justify-center gap-2 border border-primary-border text-primary-text bg-bg-card hover:bg-primary-soft text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-xl transition">
+                <i class="fa-solid fa-file-excel text-success text-xs"></i>
+                <span>{{ t('reports.excel') }}</span>
+            </button>
+        </div>
+    </div>
+
+    @if (loadError()) {
+    <div class="mb-4 px-4 py-3 rounded-xl bg-danger-soft border border-danger-border text-sm text-danger-text flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2">
+        <span>{{ loadError() }}</span>
+        <button (click)="applyFilter()" class="text-xs font-medium underline flex-shrink-0">{{ t('reports.retry') }}</button>
+    </div>
+    }
+
+    @if (isLoading()) {
+    <div class="flex items-center justify-center py-16 text-sm text-text-muted">
+        <i class="fa-solid fa-spinner fa-spin mr-2"></i> {{ t('reports.loading') }}
+    </div>
+    } @else {
+
+    <div class="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <app-stat-card [title]="t('reports.stats.totalRevenue')" [value]="'Rs ' + (totalRevenue | number)" iconBg="bg-udhar-bg"
+            icon="fa-solid fa-sack-dollar" iconColor="text-udhar-value" />
+
+        <app-stat-card [title]="t('reports.stats.grossProfit')" [value]="'Rs ' + (grossProfit | number)"
+            [iconBg]="isProfitNegative ? 'bg-danger-soft' : 'bg-primary-soft'" icon="fa-solid fa-chart-line"
+            [iconColor]="isProfitNegative ? 'text-danger-text' : 'text-primary-icon'" />
+
+        <app-stat-card [title]="t('reports.stats.totalOrders')" [value]="totalOrders.toString()" iconBg="bg-input-bg"
+            icon="fa-solid fa-cart-shopping" iconColor="text-text-muted"
+            [badgeText]="t('reports.stats.avgPerOrder', { amount: (avgOrderValue | number) })" badgeType="neutral" />
+
+        <app-stat-card [title]="t('reports.stats.expenses')" [value]="'Rs ' + (expenses | number)" iconBg="bg-status-success-bg"
+            icon="fa-solid fa-money-bills" iconColor="text-status-success-dot" />
+
+        <app-stat-card [title]="t('reports.stats.outstanding')" [value]="'Rs ' + (totalOutstanding | number)" iconBg="bg-danger-soft"
+            icon="fa-solid fa-hourglass-half" iconColor="text-danger-text" />
+
+        <app-stat-card [title]="t('reports.stats.totalCustomers')" [value]="totalCustomers.toString()" iconBg="bg-primary-soft"
+            icon="fa-solid fa-users" iconColor="text-primary-icon" />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-4 sm:p-5">
+            <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-chart-bar text-primary-icon"></i>
+                {{ t('reports.revenueTrend') }}
+            </h2>
+            <div class="relative h-40 xs:h-48 sm:h-56 lg:h-64">
+                @if (revenueTrendError()) {
+                <div class="flex items-center justify-center h-full text-xs text-danger-text text-center px-4">
+                    {{ revenueTrendError() }}
+                </div>
+                } @else if (revenueData.length === 0) {
+                <div class="flex items-center justify-center h-full text-xs text-text-muted text-center px-4">
+                    {{ t('reports.noTrendData') }}
+                </div>
+                } @else {
+                <canvas #revenueChart></canvas>
+                }
+            </div>
+        </div>
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-4 sm:p-5">
+            <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-trophy text-warning-text"></i>
+                {{ t('reports.topSellingProducts') }}
+            </h2>
+
+            @if (topProductsError()) {
+            <p class="text-xs text-danger-text mb-3">{{ topProductsError() }}</p>
+            } @else if (topProducts().length === 0) {
+            <p class="text-xs text-text-muted">{{ t('reports.noTopProductsData') }}</p>
+            } @else {
+            <div class="space-y-4">
+                @for (product of topProducts(); track product.rank; let i = $index) {
+                <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-primary-soft border border-primary-border flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-medium text-primary-text">{{ product.rank }}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-1.5 gap-2">
+                            <span class="text-sm text-text-body truncate">{{ product.name | localizedText:product.nameUr:lang() }}</span>
+                            <span class="text-sm text-text-muted flex-shrink-0">Rs {{ product.price | number }}</span>
+                        </div>
+                        <div class="h-1.5 bg-input-bg rounded-full overflow-hidden">
+                            <div class="h-full bg-primary rounded-full transition-all duration-700"
+                                [style.width.%]="topProducts()[0].price ? (product.price / topProducts()[0].price) * 100 : 0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+    </div>
+    }
+
+</div>

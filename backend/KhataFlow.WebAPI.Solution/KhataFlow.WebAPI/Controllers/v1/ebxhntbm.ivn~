@@ -1,0 +1,34 @@
+﻿using KhataFlow.Core.DTO.Request;
+using KhataFlow.Core.ServiceContracts;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace KhataFlow.WebAPI.Controllers.v1;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UsersController : CustomControllerBase
+{
+    private readonly IUserService _userService;
+public UsersController(IUserService userService)
+    {
+        _userService = userService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var users = await _userService.GetUsersAsync();
+        if (users == null || !users.Any())
+            return NotFoundResponse("Users not found.");
+        return Success(users, "Users retrieved successfully.");
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> EditUser(Guid id, [FromBody] UserUpdateRequest request)
+    {
+        var requestingUserId = GetCurrentUserId();
+        var data = await _userService.EditUserAsync(id, requestingUserId, request);
+        return Success(data, "User updated successfully.");
+    }
+}

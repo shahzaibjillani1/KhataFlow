@@ -1,0 +1,226 @@
+@if (isLoading()) {
+<div *transloco="let t" class="flex flex-col items-center justify-center min-h-screen bg-bg-page px-4">
+  <i class="fa-solid fa-spinner fa-spin text-2xl text-primary-icon mb-3"></i>
+  <p class="text-sm text-text-muted">{{ t('invoice.loading') }}</p>
+</div>
+}
+
+@if (notFound) {
+<div *transloco="let t" class="flex flex-col items-center justify-center min-h-screen bg-bg-page px-4">
+  <div class="w-16 h-16 rounded-2xl bg-danger-soft border border-danger-border flex items-center justify-center mb-4">
+    <i class="fa-solid fa-file-circle-xmark text-2xl text-danger-icon"></i>
+  </div>
+  <p class="text-lg font-bold text-text-heading mb-1">{{ t('invoice.notFound.title') }}</p>
+  <p class="text-sm text-text-muted mb-5 text-center">{{ t('invoice.notFound.description') }}</p>
+  <button (click)="goBack()"
+    class="bg-btn-primary hover:bg-btn-primary-hover text-white px-6 py-2.5 rounded-xl text-sm font-medium transition">
+    <i class="fa-solid fa-arrow-left mr-2 text-xs"></i>{{ t('invoice.goBack') }}
+  </button>
+</div>
+}
+
+@if (invoice()) {
+<div *transloco="let t" class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen">
+
+  <div class="flex items-center gap-2 mb-5 flex-wrap">
+
+    <button (click)="goBack()"
+      class="w-9 h-9 flex items-center justify-center rounded-xl border border-border-table bg-bg-card hover:bg-hover-bg transition flex-shrink-0">
+      <i class="fa-solid fa-arrow-left text-text-label text-sm"></i>
+    </button>
+
+    <div class="flex items-center gap-2 flex-wrap flex-1">
+
+      <button (click)="print()"
+        class="flex items-center gap-2 bg-btn-primary hover:bg-btn-primary-hover text-white text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition">
+        <i class="fa-solid fa-print text-xs"></i>
+        <span class="hidden xs:inline">{{ t('invoice.print') }}</span>
+      </button>
+
+      <button (click)="shareWhatsApp()"
+        class="flex items-center gap-2 bg-success hover:bg-success-hover text-white text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition">
+        <i class="fa-brands fa-whatsapp text-xs sm:text-sm"></i>
+        <span class="hidden xs:inline">{{ t('invoice.whatsapp') }}</span>
+      </button>
+
+      <button (click)="downloadPDF()"
+        class="flex items-center gap-2 border border-btn-reset-border bg-bg-card hover:bg-btn-reset-bg-hover text-btn-reset-text text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition">
+        <i class="fa-solid fa-file-pdf text-danger-icon text-xs"></i>
+        <span class="hidden xs:inline">{{ t('invoice.pdf') }}</span>
+      </button>
+
+    </div>
+
+    <span
+      class="text-xs font-semibold text-text-muted border border-border-table bg-bg-card px-3 py-2 rounded-xl flex-shrink-0">
+      {{ inv.invoiceNo }}
+    </span>
+
+  </div>
+
+  <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden max-w-2xl mx-auto"
+    id="invoice-print">
+
+    <div class="px-4 sm:px-8 py-5 sm:py-6" [ngClass]="{ 'bg-primary': !brandingStyle() }"
+      [style.backgroundColor]="brandingStyle()?.primaryColorHex ?? null"
+      [style.fontFamily]="brandingStyle()?.fontFamily ?? null">
+
+      <div class="flex items-center gap-3 mb-5 sm:mb-6">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+          [ngClass]="{ 'bg-white/20': !brandingStyle()?.logoUrl }"
+          [style.backgroundColor]="brandingStyle()?.logoUrl ? null : (brandingStyle()?.accentColorHex ?? null)">
+          @if (brandingStyle()?.logoUrl) {
+          <img [src]="brandingStyle()!.logoUrl" alt="logo" class="w-full h-full object-contain rounded-xl" />
+          } @else {
+          <i class="fa-solid fa-store text-white text-base sm:text-xl"></i>
+          }
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-lg sm:text-2xl font-bold truncate text-white">{{ t('invoice.title') }}</h1>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+
+        <div class="bg-white/10 rounded-xl px-3 py-2.5 sm:bg-transparent sm:p-0 sm:rounded-none">
+          <p class="text-white/60 text-[10px] uppercase tracking-wide mb-1">{{ t('invoice.invoiceNo') }}</p>
+          <p class="text-white text-xs sm:text-sm font-semibold">{{ inv.invoiceNo }}</p>
+        </div>
+
+        <div class="bg-white/10 rounded-xl px-3 py-2.5 sm:bg-transparent sm:p-0 sm:rounded-none">
+          <p class="text-white/60 text-[10px] uppercase tracking-wide mb-1">{{ t('invoice.date') }}</p>
+          <p class="text-white text-xs sm:text-sm font-semibold">{{ inv.date | date:'medium' }}</p>
+        </div>
+
+        <div class="bg-white/10 rounded-xl px-3 py-2.5 sm:bg-transparent sm:p-0 sm:rounded-none">
+          <p class="text-white/60 text-[10px] uppercase tracking-wide mb-1">{{ t('invoice.customer') }}</p>
+          <p class="text-white text-xs sm:text-sm font-semibold truncate">{{ inv.customer }}</p>
+        </div>
+
+      </div>
+
+      <div class="mt-3 sm:mt-4">
+        <div class="bg-white/10 rounded-xl px-3 py-2.5 inline-block">
+          <p class="text-white/60 text-[10px] uppercase tracking-wide mb-1">{{ t('invoice.status.label') }}</p>
+          <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold" [ngClass]="{
+              'text-green-300':  inv.status === 'Paid',
+              'text-amber-300':  inv.status === 'Udhar',
+              'text-red-300':    inv.status === 'Pending'
+            }">
+            <i class="fa-solid text-xs" [ngClass]="{
+                'fa-circle-check': inv.status === 'Paid',
+                'fa-clock':        inv.status === 'Udhar',
+                'fa-circle-xmark': inv.status === 'Pending'
+              }">
+            </i>
+            {{ t(statusKey()) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 sm:px-8 py-5 border-b border-border-table">
+      <p class="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3">
+        {{ t('invoice.items', { count: inv.itemCount }) }}
+      </p>
+
+      @if (inv.items.length > 0) {
+      <div class="space-y-2">
+        @for (item of inv.items; track item.productId) {
+        <div class="flex items-center justify-between bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+          <div class="min-w-0 mr-3">
+            <p class="text-sm font-medium text-text-heading truncate">{{ item.productName }}</p>
+            <p class="text-xs text-text-muted">{{ item.quantity }} × Rs {{ item.unitPrice | number }}</p>
+          </div>
+          <span class="text-sm font-semibold text-text-heading flex-shrink-0">
+            Rs {{ item.lineTotal | number }}
+          </span>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="flex items-center justify-between bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-boxes-stacked text-text-muted text-sm"></i>
+          <span class="text-sm text-text-body">{{ t('invoice.itemsInSale', { count: inv.itemCount }) }}</span>
+        </div>
+        <span class="text-xs text-text-muted">{{ t('invoice.breakdownUnavailable') }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="px-4 sm:px-8 py-4 sm:py-5 border-t border-border-table">
+      <div class="ml-auto max-w-xs space-y-2">
+
+        <div class="flex justify-between items-center pt-2.5">
+          <span class="text-sm sm:text-base font-bold" [ngClass]="{ 'text-primary-text': !brandingStyle() }"
+            [style.color]="brandingStyle()?.primaryColorHex ?? null">
+            {{ t('invoice.grandTotal') }}
+          </span>
+          <span class="text-lg sm:text-xl font-bold" [ngClass]="{ 'text-primary-text': !brandingStyle() }"
+            [style.color]="brandingStyle()?.primaryColorHex ?? null">
+            Rs {{ inv.totalAmount | number }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    @if (inv.status === 'Udhar') {
+    <div class="mx-4 sm:mx-8 mb-4 bg-udhar-bg border border-udhar-border rounded-xl px-4 py-3">
+      <p class="text-xs text-udhar-label flex items-start gap-2">
+        <i class="fa-solid fa-clock mt-0.5 flex-shrink-0"></i>
+        <span
+          [innerHTML]="t('invoice.udharNotice', { amount: (inv.totalAmount | number), customer: inv.customer })"></span>
+      </p>
+    </div>
+    }
+
+    @if (inv.status === 'Paid') {
+    <div class="mx-4 sm:mx-8 mb-4 bg-status-success-bg border border-status-success-border rounded-xl px-4 py-3">
+      <p class="text-xs text-status-success-text flex items-center gap-2">
+        <i class="fa-solid fa-circle-check flex-shrink-0"></i>
+        <span [innerHTML]="t('invoice.paidNotice', { amount: (inv.totalAmount | number) })"></span>
+      </p>
+    </div>
+    }
+
+    @if (brandingStyle()?.footerNote) {
+    <div class="mx-4 sm:mx-8 mb-4 bg-gray-50 border border-border-card rounded-xl px-4 py-3">
+      <p class="text-xs text-text-muted italic">{{ brandingStyle()!.footerNote }}</p>
+    </div>
+    }
+
+    <div class="bg-input-bg border-t border-border-card px-4 sm:px-8 py-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+        <p class="text-xs text-text-muted">{{ t('invoice.thankYou') }} <i class="fa-solid fa-heart"></i></p>
+        <p class="text-xs text-text-muted">
+          {{ t('invoice.poweredBy') }} <span class="font-semibold text-text-body">KhataFlow</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 bg-bg-card border-t border-border-card px-4 py-3 flex gap-2 z-30">
+    <button (click)="shareWhatsApp()"
+      class="flex-1 flex items-center justify-center gap-2 bg-success hover:bg-success-hover text-white text-sm font-medium py-2.5 rounded-xl transition">
+      <i class="fa-brands fa-whatsapp"></i>
+      {{ t('invoice.share') }}
+    </button>
+    <button (click)="print()"
+      class="flex-1 flex items-center justify-center gap-2 bg-btn-primary hover:bg-btn-primary-hover text-white text-sm font-medium py-2.5 rounded-xl transition">
+      <i class="fa-solid fa-print text-xs"></i>
+      {{ t('invoice.print') }}
+    </button>
+    <button (click)="downloadPDF()"
+      class="flex-1 flex items-center justify-center gap-2 border border-btn-reset-border bg-bg-card hover:bg-btn-reset-bg-hover text-btn-reset-text text-sm font-medium py-2.5 rounded-xl transition">
+      <i class="fa-solid fa-file-pdf text-danger-icon text-xs"></i>
+      {{ t('invoice.pdf') }}
+    </button>
+  </div>
+
+  <div class="sm:hidden h-20"></div>
+
+</div>
+}

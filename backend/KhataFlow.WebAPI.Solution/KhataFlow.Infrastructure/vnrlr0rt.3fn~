@@ -1,0 +1,51 @@
+﻿using KhataFlow.Core.Domain.IdentityEntities;
+using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Infrastructure.Data;
+using KhataFlow.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace KhataFlow.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructureServices(
+    this IServiceCollection services,
+    IConfiguration configuration)
+    {
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("IdentityConnection")));
+
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("AppDbConnection")));
+
+        services.AddIdentityCore<ApplicationUser>(options =>
+        {
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequiredLength = 8;
+        })
+        .AddRoles<ApplicationRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
+        services.AddScoped<IBusinessRepository, BusinessRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPlatformReportRepository, PlatformReportRepository>();
+       services.AddScoped<INotificationRepository, NotificationRepository>(); services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<ISaleRepository, SaleRepository>();
+        services.AddScoped<ISubscriptionPlanRepository, SubscriptionPlanRepository>();
+        services.AddScoped<ILedgerRepository, LedgerRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
+
+        return services;
+    }
+}

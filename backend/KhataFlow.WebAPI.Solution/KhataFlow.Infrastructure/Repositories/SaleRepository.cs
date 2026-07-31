@@ -1,0 +1,371 @@
+﻿using Microsoft.EntityFrameworkCore;
+using KhataFlow.Core.Domain.Entities;
+using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Infrastructure.Data;
+using KhataFlow.Core.DTO.Response;
+
+namespace KhataFlow.Infrastructure.Repositories;
+
+public class SaleRepository : ISaleRepository
+{
+    private readonly AppDbContext _context;
+    private const int MaxInvoiceNumberRetries = 5;
+
+    public SaleRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<Sale> AddAsync(Sale sale, Guid businessId)
+    {
+        sale.CreatedAt = DateTime.UtcNow;
+        sale.BusinessId = businessId;
+
+        for (int attempt = 0; attempt < MaxInvoiceNumberRetries; attempt++)
+        {
+            sale.InvoiceNumber = await GenerateInvoiceNumberAsync(businessId);
+
+            try
+            {
+                await _context.Sales.AddAsync(sale);
+                await _context.SaveChangesAsync();
+
+                await _context.Entry(sale).Reference(s => s.Customer).LoadAsync();
+                await _context.Entry(sale).Collection(s => s.Items).LoadAsync();
+                foreach (var item in sale.Items)
+                {
+                    await _context.Entry(item).Reference(i => i.Product).LoadAsync();
+                }
+
+                return sale;
+            }
+            catch (DbUpdateException) when (attempt < MaxInvoiceNumberRetries - 1)
+            {
+                _context.Entry(sale).State = EntityState.Detached;
+            }
+        }
+
+        throw new InvalidOperationException(
+            $"Failed to generate a unique invoice number for business '{businessId}' after {MaxInvoiceNumberRetries} attempts.");
+    }
+
+    public async Task<List<Sale>> AddRangeAsync(IEnumerable<Sale> sales, Guid businessId)
+    {
+        var list = sales.ToList();
+
+        for (int attempt = 0; attempt < MaxInvoiceNumberRetries; attempt++)
+        {
+            var nextSequence = await GetNextInvoiceSequenceAsync(businessId);
+
+            foreach (var sale in list)
+            {
+                sale.CreatedAt = DateTime.UtcNow;
+                sale.BusinessId = businessId;
+                sale.InvoiceNumber = FormatInvoiceNumber(nextSequence);
+                nextSequence++;
+            }
+
+            try
+            {
+                await _context.Sales.AddRangeAsync(list);
+                await _context.SaveChangesAsync();
+                return list;
+            }
+            catch (DbUpdateException) when (attempt < MaxInvoiceNumberRetries - 1)
+            {
+                foreach (var sale in list)
+                {
+                    _context.Entry(sale).State = EntityState.Detached;
+                }
+            }
+        }
+
+        throw new InvalidOperationException(
+            $"Failed to generate unique invoice numbers for business '{businessId}' after {MaxInvoiceNumberRetries} attempts.");
+    }
+
+    private async Task<string> GenerateInvoiceNumberAsync(Guid businessId)
+    {
+        var next = await GetNextInvoiceSequenceAsync(businessId);
+        return FormatInvoiceNumber(next);
+    }
+
+    private async Task<int> GetNextInvoiceSequenceAsync(Guid businessId)
+    {
+        var count = await _context.Sales
+            .IgnoreQueryFilters()
+            .CountAsync(s => s.BusinessId == businessId);
+
+        return count + 1;
+    }
+
+    private static string FormatInvoiceNumber(int sequence)
+    {
+        return $"INV-{sequence:D4}"; 
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var sale = await _context.Sales.FindAsync(id);
+
+        if (sale == null || sale.IsDeleted)
+            return false;
+
+        sale.IsDeleted = true;
+        sale.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<Sale>> GetByBusinessIdAsync(Guid businessId)
+    {
+        return await _context.Sales
+            .Where(s => s.BusinessId == businessId && !s.IsDeleted)
+            .Include(s => s.Items)
+                .ThenInclude(i => i.Product)
+            .Include(s => s.Customer)  
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<List<Sale>> GetByDateRangeAsync(Guid businessId, DateOnly from, DateOnly to)
+    {
+        var start = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var end = to.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+
+        return await _context.Sales
+            .Where(s =>
+                s.BusinessId == businessId &&
+                !s.IsDeleted &&
+                s.Date >= start &&
+                s.Date <= end)
+            .Include(s => s.Items)
+                .ThenInclude(i => i.Product)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<Sale?> GetByIdAsync(Guid businessId, Guid saleId)
+    {
+        return await _context.Sales
+            .Where(s => s.Id == saleId && s.BusinessId == businessId && !s.IsDeleted)
+            .Include(s => s.Items)
+                .ThenInclude(i => i.Product)
+            .Include(s => s.Customer)
+            .Include(s => s.Business)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Sale?> GetByProductNameAsync(string productName, Guid businessId)
+    {
+        return await _context.Sales
+            .Where(s => s.BusinessId == businessId && !s.IsDeleted &&
+                        s.Items.Any(i => i.Product.ProductName.ToLower() == productName.ToLower()))
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<MonthlyRevenueResponse>> GetMonthlyRevenueAsync(Guid businessId, int year)
+    {
+        var startOfYear = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endOfYear = startOfYear.AddYears(1);
+
+        var rawData = await _context.SaleItems
+            .Where(i =>
+                !i.IsDeleted &&
+                !i.Sale.IsDeleted &&
+                i.Sale.BusinessId == businessId &&
+                i.Sale.Date >= startOfYear &&
+                i.Sale.Date < endOfYear)
+            .GroupBy(i => i.Sale.Date.Month)
+            .Select(g => new
+            {
+                Month = g.Key,
+                TotalRevenue = g.Sum(i => i.Quantity * i.UnitPrice)
+            })
+            .ToListAsync();
+
+        return Enumerable.Range(1, 12)
+            .Select(m => new MonthlyRevenueResponse
+            {
+                Month = new DateTime(year, m, 1).ToString("MMM"),
+                TotalRevenue = rawData.FirstOrDefault(x => x.Month == m)?.TotalRevenue ?? 0
+            })
+            .ToList();
+    }
+
+    public async Task<decimal> GetMonthlyRevenueAsync(Guid businessId)
+    {
+        var now = DateTime.UtcNow;
+        var startOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var startOfNextMonth = startOfMonth.AddMonths(1);
+
+        return await _context.SaleItems
+            .Where(i =>
+                !i.IsDeleted &&
+                !i.Sale.IsDeleted &&
+                i.Sale.BusinessId == businessId &&
+                i.Sale.Date >= startOfMonth &&
+                i.Sale.Date < startOfNextMonth)
+            .SumAsync(i => i.Quantity * i.UnitPrice);
+    }
+
+    public async Task<int> GetSaleCountAsync(Guid businessId)
+    {
+        return await _context.Sales
+            .CountAsync(s => s.BusinessId == businessId && !s.IsDeleted);
+    }
+
+    public async Task<int> GetTodayOrderCountAsync(Guid businessId)
+    {
+        var todayStart = DateTime.UtcNow.Date;
+        var todayEnd = todayStart.AddDays(1);
+
+        return await _context.Sales
+            .CountAsync(s =>
+                s.BusinessId == businessId &&
+                !s.IsDeleted &&
+                s.Date >= todayStart &&
+                s.Date < todayEnd);
+    }
+
+    public async Task<List<Sale>> GetTodaySalesAsync(Guid businessId)
+    {
+        var todayStart = DateTime.UtcNow.Date;
+        var todayEnd = todayStart.AddDays(1);
+
+        return await _context.Sales
+            .Where(s =>
+                s.BusinessId == businessId &&
+                !s.IsDeleted &&
+                s.Date >= todayStart &&
+                s.Date < todayEnd)
+            .Include(s => s.Items)
+                .ThenInclude(i => i.Product)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<decimal> GetTodaySalesTotalAsync(Guid businessId)
+    {
+        var todayStart = DateTime.UtcNow.Date;
+        var todayEnd = todayStart.AddDays(1);
+
+        return await _context.SaleItems
+            .Where(i =>
+                !i.IsDeleted &&
+                !i.Sale.IsDeleted &&
+                i.Sale.BusinessId == businessId &&
+                i.Sale.Date >= todayStart &&
+                i.Sale.Date < todayEnd)
+            .SumAsync(i => i.Quantity * i.UnitPrice);
+    }
+
+    public async Task<decimal> GetTotalRevenueAsync(Guid businessId, DateOnly from, DateOnly to)
+    {
+        var start = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var end = to.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+
+        return await _context.SaleItems
+            .Where(i =>
+                !i.IsDeleted &&
+                i.Sale.BusinessId == businessId &&
+                !i.Sale.IsDeleted &&
+                i.Sale.Date >= start &&
+                i.Sale.Date <= end)
+            .SumAsync(i => i.Quantity * i.UnitPrice);
+    }
+
+    public async Task<List<WeeklySalesResponse>> GetWeeklySalesAsync(Guid businessId)
+    {
+        var today = DateTime.UtcNow.Date;
+        var daysFromMonday = ((int)today.DayOfWeek + 6) % 7;
+        var startOfWeek = today.AddDays(-daysFromMonday);
+        var endOfWeek = startOfWeek.AddDays(7);
+
+        var rawData = await _context.SaleItems
+            .Where(i =>
+                !i.IsDeleted &&
+                !i.Sale.IsDeleted &&
+                i.Sale.BusinessId == businessId &&
+                i.Sale.Date >= startOfWeek &&
+                i.Sale.Date < endOfWeek)
+            .GroupBy(i => i.Sale.Date.Date)
+            .Select(g => new
+            {
+                Date = g.Key,
+                TotalSales = g.Sum(i => i.Quantity * i.UnitPrice)
+            })
+            .ToListAsync();
+
+        return Enumerable.Range(0, 7)
+            .Select(i =>
+            {
+                var day = startOfWeek.AddDays(i);
+                var match = rawData.FirstOrDefault(x => x.Date == day);
+                return new WeeklySalesResponse
+                {
+                    Day = day.ToString("ddd"),
+                    TotalSales = match?.TotalSales ?? 0
+                };
+            })
+            .ToList();
+    }
+
+    public async Task<Sale> UpdateAsync(Sale sale)
+    {
+        var existing = await _context.Sales
+            .Include(s => s.Items)
+            .FirstOrDefaultAsync(s => s.Id == sale.Id && s.BusinessId == sale.BusinessId && !s.IsDeleted)
+            ?? throw new KeyNotFoundException($"Sale '{sale.Id}' not found.");
+
+        existing.InvoiceNumber = sale.InvoiceNumber;
+        existing.Date = sale.Date;
+        existing.Note = sale.Note;
+        existing.NoteUr = sale.NoteUr;
+        existing.PaymentStatus = sale.PaymentStatus;
+        existing.PaymentMethod = sale.PaymentMethod;
+        existing.CustomerId = sale.CustomerId;
+        existing.DiscountAmount = sale.DiscountAmount;
+        existing.UpdatedAt = DateTime.UtcNow;
+        
+
+        _context.RemoveRange(existing.Items);
+        existing.Items = sale.Items;
+
+        await _context.SaveChangesAsync();
+
+        await _context.Entry(existing).Reference(s => s.Customer).LoadAsync();
+        await _context.Entry(existing).Collection(s => s.Items).LoadAsync();
+        foreach (var item in existing.Items)
+            await _context.Entry(item).Reference(i => i.Product).LoadAsync();
+
+        return existing;
+    }
+
+    public async Task<int> CountSinceAsync(Guid businessId, DateTime since)
+    => await _context.Sales
+        .Where(s => s.BusinessId == businessId && s.Date >= since)
+        .CountAsync();
+
+    public async Task<(List<Sale>, int)> GetPagedAsync(Guid businessId, int pageNumber, int pageSize)
+    {
+        var query = _context.Sales
+            .Where(s => s.BusinessId == businessId)
+            .Include(s => s.Items)
+                .ThenInclude(i => i.Product)   
+            .Include(s => s.Customer);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(s => s.Date)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+}

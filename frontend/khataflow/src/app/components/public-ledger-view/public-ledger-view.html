@@ -1,0 +1,167 @@
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'"
+  class="min-h-screen bg-bg-page flex flex-col items-center justify-center p-4 sm:p-6">
+
+  <div class="w-full max-w-md flex justify-end mb-3">
+    <div class="flex items-center bg-bg-card border border-border-card rounded-full p-1 shadow-sm">
+      <button (click)="switchLanguage('en')"
+        class="px-3.5 py-1.5 text-sm font-medium rounded-full transition-all"
+        [ngClass]="lang() === 'en' ? 'bg-primary text-white shadow-sm' : 'text-text-muted'">
+        EN
+      </button>
+      <button (click)="switchLanguage('ur')"
+        class="px-3.5 py-1.5 text-sm font-medium rounded-full transition-all"
+        [ngClass]="lang() === 'ur' ? 'bg-primary text-white shadow-sm' : 'text-text-muted'">
+        اردو
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="text-sm text-text-muted flex flex-col items-center gap-3">
+    <div class="w-10 h-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin"></div>
+    {{ t('customers.khata.loading') }}
+  </div>
+  }
+
+  @else if (notFound()) {
+  <div class="text-center max-w-sm bg-bg-card border border-border-card rounded-2xl px-6 py-10 shadow-sm">
+    <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-danger-soft flex items-center justify-center">
+      <i class="fa-solid fa-file-circle-xmark text-2xl text-danger-text"></i>
+    </div>
+    <p class="text-base font-medium text-text-heading">{{ t('customers.publicLedger.linkInvalidTitle') }}</p>
+    <p class="text-sm text-text-muted mt-1">{{ t('customers.publicLedger.linkInvalidSubtitle') }}</p>
+  </div>
+  }
+
+  @else if (state() === 'error') {
+  <div class="text-center max-w-sm bg-bg-card border border-border-card rounded-2xl px-6 py-10 shadow-sm">
+    <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-danger-soft flex items-center justify-center">
+      <i class="fa-solid fa-triangle-exclamation text-2xl text-danger-text"></i>
+    </div>
+    <p class="text-base font-medium text-danger-text">{{ t('customers.publicLedger.errorTitle') }}</p>
+    <p class="text-sm text-text-muted mt-1">{{ t('customers.publicLedger.errorSubtitle') }}</p>
+  </div>
+  }
+
+  @else if (ledger(); as data) {
+  <div class="bg-bg-card rounded-3xl border border-border-card shadow-lg shadow-black/5 p-6 max-w-md w-full">
+
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0">
+        <span class="text-white text-lg font-bold">{{ initials(data.customerName) }}</span>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs text-text-muted">{{ data.businessName | localizedText:data.businessNameUr:lang() }}</p>
+        <h1 class="text-lg font-bold text-text-heading truncate">
+          {{ data.customerName | localizedText:data.customerNameUr:lang() }}
+        </h1>
+      </div>
+    </div>
+
+    <div class="rounded-2xl p-6 mb-6 text-center"
+      [ngClass]="data.currentBalance > 0 ? 'bg-udhar-bg border border-udhar-border' : 'bg-status-success-bg border border-status-success-border'">
+      <p class="text-sm font-medium mb-2"
+        [ngClass]="data.currentBalance > 0 ? 'text-udhar-label' : 'text-status-success-text'">
+        {{ data.currentBalance > 0 ? t('customers.publicLedger.youOwe') : t('customers.publicLedger.allClear') }}
+      </p>
+      <p class="text-4xl font-extrabold" dir="ltr"
+        [ngClass]="data.currentBalance > 0 ? 'text-udhar-value' : 'text-status-success-text'">
+        {{ data.currency }} {{ data.currentBalance | number }}
+      </p>
+      @if (data.currentBalance === 0) {
+        <i class="fa-solid fa-circle-check text-status-success-text mt-2 block text-xl"></i>
+      }
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold text-text-heading mb-3">{{ t('customers.publicLedger.recentActivity') }}</p>
+
+      @if (data.history.length === 0) {
+      <div class="text-center py-8">
+        <i class="fa-regular fa-book-open text-2xl text-text-muted block mb-2"></i>
+        <p class="text-sm text-text-muted">{{ t('customers.publicLedger.noActivity') }}</p>
+      </div>
+      }
+
+      <div class="space-y-3 max-h-[28rem] overflow-y-auto pe-1">
+        @for (entry of data.history; track $index) {
+        <div class="rounded-xl overflow-hidden border"
+          [ngClass]="entry.type === 'Udhar' ? 'bg-udhar-bg border-udhar-border' : 'bg-status-success-bg border-status-success-border'">
+
+          <div class="flex items-center gap-3 p-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-bg-card">
+              <i class="text-sm" [ngClass]="entry.type === 'Udhar'
+                ? 'fa-solid fa-cart-shopping text-udhar-label'
+                : 'fa-solid fa-hand-holding-dollar text-status-success-text'"></i>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-semibold"
+                [ngClass]="entry.type === 'Udhar' ? 'text-udhar-label' : 'text-status-success-text'">
+                {{ entry.type === 'Udhar' ? t('customers.publicLedger.tookCredit') : t('customers.publicLedger.youPaid') }}
+              </p>
+              <p class="text-xs text-text-muted mt-0.5" dir="ltr">{{ entry.date | date:'MMM d, y · h:mm a' }}</p>
+            </div>
+
+            <p class="text-base font-bold flex-shrink-0" dir="ltr"
+              [ngClass]="entry.type === 'Udhar' ? 'text-udhar-value' : 'text-status-success-text'">
+              {{ entry.type === 'Udhar' ? '+' : '−' }}{{ data.currency }} {{ entry.amount | number }}
+            </p>
+          </div>
+
+          @if (entry.items && entry.items.length > 0) {
+          <div class="bg-bg-card mx-2 mb-2 rounded-lg divide-y divide-border-table">
+            @for (item of entry.items; track item.productName) {
+            <div class="flex items-center justify-between gap-3 px-3 py-2">
+              <div class="min-w-0">
+                <p class="text-sm text-text-heading truncate">
+                  {{ item.productName | localizedText:item.productNameUr:lang() }}
+                </p>
+                <p class="text-xs text-text-muted mt-0.5" dir="ltr">
+                  {{ item.quantity }} {{ t('customers.publicLedger.qty') }} × {{ data.currency }} {{ item.unitPrice | number }}
+                </p>
+              </div>
+              <p class="text-sm font-semibold text-text-heading flex-shrink-0" dir="ltr">
+                {{ data.currency }} {{ item.lineTotal | number }}
+              </p>
+            </div>
+            }
+          </div>
+          }
+
+          @else if (entry.description) {
+          <div class="bg-bg-card mx-2 mb-2 rounded-lg px-3 py-2">
+            <p class="text-xs text-text-muted">
+              <span class="font-medium">{{ t('customers.publicLedger.noteLabel') }}:</span> {{ entry.description }}
+            </p>
+          </div>
+          }
+
+          <div class="flex items-center justify-between px-3 pb-2.5 pt-1">
+            @if (entry.items && entry.items.length > 0) {
+            <p class="text-[11px] text-text-muted" dir="ltr">
+              {{ t('customers.publicLedger.itemCount', { count: entry.items.length }) }}
+            </p>
+            } @else {
+            <span></span>
+            }
+            <p class="text-[11px] text-text-muted" dir="ltr">
+              {{ t('customers.khata.balance') }}: {{ data.currency }} {{ entry.runningBalance | number }}
+            </p>
+          </div>
+
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-border-table text-center">
+      <p class="text-xs text-text-muted">
+        {{ t('invoice.poweredBy') }} <span class="font-semibold text-primary-text">KhataFlow</span>
+      </p>
+    </div>
+
+  </div>
+  }
+
+</div>

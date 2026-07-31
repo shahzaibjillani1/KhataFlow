@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="KhataFlow.Core/KhataFlow.Core.csproj" />
+  <Project Path="KhataFlow.Infrastructure/KhataFlow.Infrastructure.csproj" />
+  <Project Path="KhataFlow.WebAPI/KhataFlow.WebAPI.csproj" />
+</Solution>

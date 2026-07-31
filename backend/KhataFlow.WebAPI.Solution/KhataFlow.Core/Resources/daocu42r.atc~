@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+	</resheader>
+
+	<data name="Validation.CustomerId.Required" xml:space="preserve"><value>Customer ID is required.</value></data>
+	<data name="Validation.Amount.GreaterThanZero" xml:space="preserve"><value>Amount must be greater than zero.</value></data>
+	<data name="Voice_UnknownCommand" xml:space="preserve"><value>Sorry, I couldn't understand that command. Please try again.</value></data>
+	<data name="Voice_UnsupportedCommand" xml:space="preserve"><value>This type of voice command isn't supported yet.</value></data>
+	<data name="Voice_NoCustomerName" xml:space="preserve"><value>No customer name was understood.</value></data>
+	<data name="Voice_NoValidUdharAmount" xml:space="preserve"><value>No valid udhar amount was understood.</value></data>
+	<data name="Voice_CustomerNotFound" xml:space="preserve"><value>No customer named '{0}' found.</value></data>
+	<data name="Voice_MultipleCustomersFound" xml:space="preserve"><value>Multiple customers named '{0}' found. Please specify by phone number.</value></data>
+	<data name="Voice_UdharRecorded" xml:space="preserve"><value>Udhar of Rs {0} recorded for {1}.</value></data>
+	<data name="Voice_NoProductsUnderstood" xml:space="preserve"><value>No products were understood in that command.</value></data>
+	<data name="Voice_CustomerRequiredForUdhar" xml:space="preserve"><value>A customer name is required for Udhar sales.</value></data>
+	<data name="Voice_ProductNotFound" xml:space="preserve"><value>No product matching '{0}' was found.</value></data>
+	<data name="Voice_ProductNotFoundWithSuggestions" xml:space="preserve"><value>No product matching '{0}' was found. Did you mean: {1}?</value></data>
+	<data name="Voice_MultipleProductsFound" xml:space="preserve"><value>Multiple products matching '{0}' were found. Please be more specific.</value></data>
+	<data name="Voice_UdharSaleRecorded" xml:space="preserve"><value>Udhar sale of {0} item(s) recorded.</value></data>
+	<data name="Voice_SaleRecorded" xml:space="preserve"><value>Sale of {0} item(s) recorded.</value></data>
+	<data name="Voice_NoValidPaymentAmount" xml:space="preserve"><value>No valid payment amount was understood.</value></data>
+	<data name="Voice_PaymentRecorded" xml:space="preserve"><value>Payment of Rs {0} recorded for {1}.</value></data>
+	<data name="Voice_NoValidExpenseAmount" xml:space="preserve"><value>No valid expense amount was understood.</value></data>
+	<data name="Voice_ExpenseRecorded" xml:space="preserve"><value>Expense of Rs {0} recorded under {1}.</value></data>
+	<data name="Voice_RecordedViaVoice" xml:space="preserve"><value>Recorded via voice command</value></data>
+	<data name="Validation.Notes.MaxLength" xml:space="preserve"><value>Notes must not exceed 500 characters.</value></data>
+	<data name="Validation.BusinessId.Required" xml:space="preserve"><value>Business ID is required.</value></data>
+	<data name="Subscription.BusinessId.Empty" xml:space="preserve">
+  <value>Business ID cannot be empty.</value>
+</data>
+	<data name="Subscription.Business.NotFound" xml:space="preserve">
+  <value>Business not found.</value>
+</data>
+	<data name="Subscription.Checkout.Success" xml:space="preserve">
+  <value>Checkout session created successfully.</value>
+</data>
+	<data name="Subscription.Notification.Upgraded.Title" xml:space="preserve">
+  <value>Subscription Upgraded</value>
+</data>
+	<data name="Subscription.Notification.Upgraded.Message" xml:space="preserve">
+  <value>{0} has been upgraded to the Premium plan.</value>
+</data>
+	<data name="Validation.BusinessName.Required" xml:space="preserve"><value>Business name is required.</value></data>
+	<data name="Validation.BusinessName.MinLength" xml:space="preserve"><value>Business name must be at least 2 characters.</value></data>
+	<data name="Validation.BusinessName.MaxLength" xml:space="preserve"><value>Business name must not exceed 100 characters.</value></data>
+	<data name="Validation.OwnerName.Required" xml:space="preserve"><value>Owner name is required.</value></data>
+	<data name="Validation.OwnerName.MinLength" xml:space="preserve"><value>Owner name must be at least 2 characters.</value></data>
+	<data name="Ledger.NoOutstandingBalance" xml:space="preserve">
+    <value>No outstanding balance found for this customer.</value>
+  </data>
+	<data name="Ledger.PaymentExceedsOutstanding" xml:space="preserve">
+    <value>Payment of Rs {0} exceeds outstanding balance of Rs {1}.</value>
+  </data>
+	<data name="Ledger.CustomerNotFound" xml:space="preserve">
+    <value>Customer was not found.</value>
+  </data>
+	<data name="Ledger.CustomerBusinessMismatch" xml:space="preserve">
+    <value>Customer does not belong to the specified business.</value>
+  </data>
+	<data name="Ledger.Notification.UdharRecorded.Title" xml:space="preserve">
+    <value>Udhar Recorded</value>
+  </data>
+	<data name="Ledger.Notification.UdharRecorded.Message" xml:space="preserve">
+    <value>Rs {0} udhar added for {1}. Outstanding: Rs {2}.</value>
+  </data>
+	<data name="Ledger.Notification.PaymentReceived.Title" xml:space="preserve">
+    <value>Payment Received</value>
+  </data>
+	<data name="Ledger.Notification.PaymentReceived.Message" xml:space="preserve">
+    <value>Rs {0} received from {1}. Remaining: Rs {2}.</value>
+  </data>
+	<data name="Validation.OwnerName.MaxLength" xml:space="preserve"><value>Owner name must not exceed 100 characters.</value></data>
+	<data name="Validation.Email.Required" xml:space="preserve"><value>Email is required.</value></data>
+	<data name="Validation.Email.Invalid" xml:space="preserve"><value>A valid email address is required.</value></data>
+	<data name="Validation.Email.MaxLength" xml:space="preserve"><value>Email must not exceed 200 characters.</value></data>
+	<data name="Validation.PhoneNumber.Required" xml:space="preserve"><value>Phone number is required.</value></data>
+	<data name="Validation.PhoneNumber.MaxLength" xml:space="preserve"><value>Phone number must not exceed 11 characters.</value></data>
+	<data name="Validation.PhoneNumber.Invalid" xml:space="preserve"><value>A valid phone number is required.</value></data>
+	<data name="Validation.PhoneNumber.InvalidPakistani" xml:space="preserve"><value>Phone number must be a valid Pakistani number, e.g. 0300-1234567 or +923001234567.</value></data>
+	<data name="Validation.PhoneNumber.InvalidGeneric" xml:space="preserve"><value>Phone number must be 7-15 digits and may start with '+'.</value></data>
+	<data name="Validation.Address.Required" xml:space="preserve"><value>Address is required.</value></data>
+	<data name="Validation.Address.MaxLength" xml:space="preserve"><value>Address must not exceed 200 characters.</value></data>
+	<data name="Validation.Address.MaxLength250" xml:space="preserve"><value>Address must not exceed 250 characters.</value></data>
+	<data name="User.NoPermissionToInvite" xml:space="preserve">
+  <value>Only the business owner can invite staff members.</value>
+</data>
+	<data name="User.Invite.InvalidRole" xml:space="preserve">
+  <value>Invited role must be Manager or Staff.</value>
+</data>
+	<data name="User.Notification.StaffInvited.Title" xml:space="preserve">
+  <value>New staff member added</value>
+</data>
+	<data name="User.Notification.StaffInvited.Message" xml:space="preserve">
+  <value>{0} has been added as {1}.</value>
+</data>
+	<data name="User.Invite.WhatsAppMessage" xml:space="preserve">
+  <value>Hi {0}, you've been added as staff at {1} on KhataFlow.
+Login: {2}
+Temporary password: {3}
+Please change it after logging in.</value>
+</data>
+	<data name="Plan.Limit.SalesExceeded" xml:space="preserve">
+  <value>You've reached your monthly sales limit of {0}. Upgrade to Premium for unlimited sales.</value>
+</data>
+	<data name="Plan.Limit.ProductsExceeded" xml:space="preserve">
+  <value>You've reached your product limit of {0}. Upgrade to Premium to add more.</value>
+</data>
+	<data name="Plan.Limit.CustomersExceeded" xml:space="preserve">
+  <value>You've reached your customer limit of {0}. Upgrade to Premium to add more.</value>
+</data>
+	<data name="Plan.Limit.StaffExceeded" xml:space="preserve">
+  <value>You've reached your staff limit of {0}. Upgrade to Premium to add more staff.</value>
+</data>
+	<data name="Plan.Limit.FeatureLocked" xml:space="preserve">
+  <value>{0} is a Premium feature. Upgrade to unlock it.</value>
+</data>
+	<data name="Validation.Plan.Invalid" xml:space="preserve"><value>A valid subscription plan must be selected.</value></data>
+	<data name="Validation.CategoryName.Required" xml:space="preserve"><value>Category name is required.</value></data>
+	<data name="Validation.CategoryName.MaxLength" xml:space="preserve"><value>Category name must not exceed 100 characters.</value></data>
+	<data name="Validation.CustomerName.Required" xml:space="preserve"><value>Customer name is required.</value></data>
+	<data name="Validation.CustomerName.MaxLength" xml:space="preserve"><value>Name must not exceed 100 characters.</value></data>
+	<data name="Validation.CustomerId.RequiredUpdate" xml:space="preserve"><value>Customer Id is required.</value></data>
+	<data name="Validation.LastVisit.Required" xml:space="preserve"><value>Last visit date is required.</value></data>
+	<data name="Validation.LastVisit.NotFuture" xml:space="preserve"><value>Last visit cannot be a future date.</value></data>
+	<data name="Auth.Register.Success" xml:space="preserve"><value>Account created successfully.</value></data>
+	<data name="Auth.Login.Success" xml:space="preserve"><value>Login successful.</value></data>
+	<data name="Auth.Login.InvalidCredentials" xml:space="preserve"><value>Invalid email or password.</value></data>
+	<data name="Auth.Refresh.Success" xml:space="preserve"><value>Token refreshed successfully.</value></data>
+	<data name="Auth.Logout.UserIdentityUnresolved" xml:space="preserve"><value>User identity could not be resolved.</value></data>
+	<data name="Auth.Logout.Success" xml:space="preserve"><value>Logged out successfully.</value></data>
+	<data name="Auth.ForgotPassword.LinkSent" xml:space="preserve"><value>If that email is registered, a reset link has been sent.</value></data>
+	<data name="Auth.ResetPassword.InvalidRequest" xml:space="preserve"><value>Invalid request.</value></data>
+	<data name="Auth.ResetPassword.Success" xml:space="preserve"><value>Password has been reset successfully.</value></data>
+	<data name="Auth.Email.ResetSubject" xml:space="preserve"><value>Reset Your Password</value></data>
+	<data name="Auth.Email.ResetHeading" xml:space="preserve"><value>Password Reset</value></data>
+	<data name="Auth.Email.ResetInstruction" xml:space="preserve"><value>Click the link below to reset your password:</value></data>
+	<data name="Auth.Email.ResetLinkText" xml:space="preserve"><value>Reset Password</value></data>
+	<data name="Auth.Email.ResetExpiry" xml:space="preserve"><value>This link will expire in 1 hour.</value></data>
+	<data name="Validation.TotalPurchases.NotNegative" xml:space="preserve"><value>Total purchases cannot be negative.</value></data>
+	<data name="Validation.UdharAmount.NotNegative" xml:space="preserve"><value>Udhar amount cannot be negative.</value></data>
+	<data name="Validation.DateFrom.Required" xml:space="preserve"><value>From date is required.</value></data>
+	<data name="Validation.DateTo.Required" xml:space="preserve"><value>To date is required.</value></data>
+	<data name="Validation.DateTo.MustBeAfterFrom" xml:space="preserve"><value>To date must be greater than or equal to From date.</value></data>
+	<data name="Validation.DateTo.NotFuture" xml:space="preserve"><value>To date cannot be a future date.</value></data>
+	<data name="Auth.UserIdentity.Undetermined" xml:space="preserve"><value>User identity could not be determined.</value></data>
+	<data name="Business.NotFoundForAccount" xml:space="preserve"><value>No business found for this account. Please create a business before performing this action.</value></data>
+	<data name="General.ValidationFailed" xml:space="preserve"><value>Validation failed.</value></data>
+	<data name="Validation.Expense.Title.Required" xml:space="preserve"><value>Title is required.</value></data>
+	<data name="Validation.Expense.Title.MaxLength" xml:space="preserve"><value>Title must not exceed 150 characters.</value></data>
+	<data name="Validation.Expense.Amount.GreaterThanZero" xml:space="preserve"><value>Amount must be greater than zero.</value></data>
+	<data name="Validation.Expense.Category.Invalid" xml:space="preserve"><value>A valid expense category must be selected.</value></data>
+	<data name="Domain.Product.InsufficientStock" xml:space="preserve"><value>Insufficient stock for product '{0}'.</value></data>
+	<data name="Domain.Product.RestockQuantity.GreaterThanZero" xml:space="preserve"><value>Restock quantity must be greater than zero.</value></data>
+	<data name="Validation.Product.Name.Required" xml:space="preserve"><value>Product name is required.</value></data>
+	<data name="Validation.Product.Name.MaxLength" xml:space="preserve"><value>Product name must not exceed 100 characters.</value></data>
+	<data name="Ai.Voice.NoAudioReceived" xml:space="preserve"><value>No audio file received.</value></data>
+	<data name="Ai.Voice.AudioTooLarge" xml:space="preserve"><value>Audio file too large.</value></data>
+	<data name="Ai.Voice.CommandProcessingFailed" xml:space="preserve"><value>Could not process command.</value></data>
+	<data name="Ai.Voice.CommandProcessed" xml:space="preserve"><value>Command processed.</value></data>
+	<data name="Ai.Receipt.NoTextProvided" xml:space="preserve"><value>No text provided.</value></data>
+	<data name="Invoice.Sale.NotFound" xml:space="preserve"><value>Sale '{0}' not found.</value></data>
+
+	<data name="Ledger.GetKhata.Success" xml:space="preserve"><value>Khata retrieved successfully.</value></data>
+	<data name="Ledger.CustomerId.Mismatch" xml:space="preserve"><value>Route customerId and body CustomerId do not match.</value></data>
+	<data name="Ledger.AddUdhar.Success" xml:space="preserve"><value>Udhar added successfully.</value></data>
+	<data name="Ledger.RecordPayment.Success" xml:space="preserve"><value>Payment recorded successfully.</value></data>
+
+	<data name="Notification.GetAll.Success" xml:space="preserve"><value>Notifications retrieved successfully.</value></data>
+	<data name="Notification.GetUnread.Success" xml:space="preserve"><value>Unread notifications retrieved successfully.</value></data>
+	<data name="Notification.GetUnreadCount.Success" xml:space="preserve"><value>Unread count retrieved successfully.</value></data>
+	<data name="Notification.GetById.Success" xml:space="preserve"><value>Notification retrieved successfully.</value></data>
+	<data name="Notification.MarkAsRead.Success" xml:space="preserve"><value>Notification marked as read.</value></data>
+	<data name="Notification.MarkAllAsRead.Success" xml:space="preserve"><value>All notifications marked as read.</value></data>
+	<data name="Notification.NotFound" xml:space="preserve"><value>Notification '{0}' not found.</value></data>
+	<data name="Notification.Delete.Success" xml:space="preserve"><value>Notification deleted successfully.</value></data>
+
+	<data name="PlatformReport.Get.Success" xml:space="preserve"><value>Platform report retrieved successfully.</value></data>
+
+	<data name="Product.GetAll.Success" xml:space="preserve"><value>Products retrieved successfully.</value></data>
+	<data name="Product.LowStockCount.Success" xml:space="preserve"><value>Low stock products count retrieved successfully.</value></data>
+	<data name="Product.LowStock.Success" xml:space="preserve"><value>Low stock products retrieved successfully.</value></data>
+	<data name="Product.InStock.Success" xml:space="preserve"><value>In stock products retrieved successfully.</value></data>
+	<data name="Product.OutOfStock.Success" xml:space="preserve"><value>Out of stock products retrieved successfully.</value></data>
+	<data name="Product.TopSales.Success" xml:space="preserve"><value>Top sales products retrieved successfully.</value></data>
+	<data name="Product.ByCategory.Success" xml:space="preserve"><value>Products by category retrieved successfully.</value></data>
+	<data name="Product.GetByName.Success" xml:space="preserve"><value>Product retrieved successfully.</value></data>
+	<data name="Product.Create.Success" xml:space="preserve"><value>Product added successfully.</value></data>
+	<data name="Product.Update.Success" xml:space="preserve"><value>Product updated successfully.</value></data>
+	<data name="Product.NotFound" xml:space="preserve"><value>Product '{0}' not found.</value></data>
+	<data name="Product.Delete.Success" xml:space="preserve"><value>Product deleted successfully.</value></data>
+
+	<data name="PublicLedger.NotFound" xml:space="preserve"><value>Ledger not found.</value></data>
+	<data name="PublicLedger.Success" xml:space="preserve"><value>Ledger retrieved.</value></data>
+
+	<data name="Reports.Financial.Success" xml:space="preserve"><value>Financial report generated successfully.</value></data>
+	<data name="Reports.GrossProfit.Success" xml:space="preserve"><value>Gross profit calculated successfully.</value></data>
+	<data name="Reports.TotalExpenses.Success" xml:space="preserve"><value>Total expenses calculated successfully.</value></data>
+	<data name="Business.GetAll.Success" xml:space="preserve"><value>Businesses retrieved successfully.</value></data>
+	<data name="Business.GetById.Success" xml:space="preserve"><value>Business retrieved successfully.</value></data>
+	<data name="Business.GetById.NotFound" xml:space="preserve"><value>Business not found.</value></data>
+	<data name="Business.PlatformSummary.Success" xml:space="preserve"><value>Platform summary retrieved successfully.</value></data>
+	<data name="Business.Create.Success" xml:space="preserve"><value>Business created successfully.</value></data>
+	<data name="Business.Update.Success" xml:space="preserve"><value>Business updated successfully.</value></data>
+	<data name="Business.Update.IdMismatch" xml:space="preserve"><value>ID mismatch.</value></data>
+	<data name="Business.Suspend.Success" xml:space="preserve"><value>Business suspended successfully.</value></data>
+	<data name="Business.Suspend.Failed" xml:space="preserve"><value>Failed to suspend business.</value></data>
+	<data name="Business.Reactivate.Success" xml:space="preserve"><value>Business reactivated successfully.</value></data>
+	<data name="Business.Reactivate.Failed" xml:space="preserve"><value>Failed to reactivate business.</value></data>
+	<data name="Business.RenewSubscription.Success" xml:space="preserve"><value>Subscription renewed successfully.</value></data>
+	<data name="Business.ChangeSubscription.Success" xml:space="preserve"><value>Subscription changed successfully.</value></data>
+	<data name="Category.GetAll.Success" xml:space="preserve"><value>Categories retrieved successfully.</value></data>
+	<data name="Category.GetById.Success" xml:space="preserve"><value>Category retrieved successfully.</value></data>
+	<data name="Category.NotFound" xml:space="preserve"><value>Category '{0}' not found.</value></data>
+	<data name="Category.Create.Success" xml:space="preserve"><value>Category created successfully.</value></data>
+	<data name="Category.Update.Success" xml:space="preserve"><value>Category updated successfully.</value></data>
+	<data name="Category.Update.IdMismatch" xml:space="preserve"><value>Route id and body id do not match.</value></data>
+	<data name="Category.Delete.Success" xml:space="preserve"><value>Category deleted successfully.</value></data>
+
+	<data name="Customer.GetAll.Success" xml:space="preserve"><value>Customers retrieved successfully.</value></data>
+	<data name="Customer.GetById.Success" xml:space="preserve"><value>Customer retrieved successfully.</value></data>
+	<data name="Customer.NotFoundById" xml:space="preserve"><value>Customer with id '{0}' not found.</value></data>
+	<data name="Customer.NotFoundByName" xml:space="preserve"><value>Customer with name '{0}' not found.</value></data>
+	<data name="Customer.Create.Success" xml:space="preserve"><value>Customer created successfully.</value></data>
+	<data name="Customer.Update.Success" xml:space="preserve"><value>Customer updated successfully.</value></data>
+	<data name="Customer.Update.IdMismatch" xml:space="preserve"><value>Route id and body id do not match.</value></data>
+	<data name="Customer.Delete.Success" xml:space="preserve"><value>Customer deleted successfully.</value></data>
+	<data name="Customer.Delete.Error" xml:space="preserve"><value>An error occurred while deleting the customer.</value></data>
+
+	<data name="Dashboard.Summary.Success" xml:space="preserve"><value>Dashboard summary generated successfully.</value></data>
+
+	<data name="Expense.GetAll.Success" xml:space="preserve"><value>Expenses retrieved successfully.</value></data>
+	<data name="Expense.Create.Success" xml:space="preserve"><value>Expense added successfully.</value></data>
+	<data name="Expense.Total.Success" xml:space="preserve"><value>Total expenses retrieved successfully.</value></data>
+	<data name="Expense.ByCategory.Success" xml:space="preserve"><value>Expense breakdown retrieved successfully.</value></data>
+	<data name="Expense.Delete.Success" xml:space="preserve"><value>Expense deleted successfully.</value></data>
+
+	<data name="Sale.GetAll.Success" xml:space="preserve"><value>Sales retrieved successfully.</value></data>
+	<data name="Sale.GetById.Success" xml:space="preserve"><value>Sale retrieved successfully.</value></data>
+	<data name="Sale.NotFound" xml:space="preserve"><value>Sale '{0}' not found.</value></data>
+	<data name="Sale.Search.Success" xml:space="preserve"><value>Sales retrieved successfully.</value></data>
+	<data name="Sale.Today.Success" xml:space="preserve"><value>Today's sales retrieved successfully.</value></data>
+	<data name="Sale.TotalMonthlyRevenue.Success" xml:space="preserve"><value>Total monthly revenue retrieved successfully.</value></data>
+	<data name="Sale.TotalSales.Success" xml:space="preserve"><value>Total sales retrieved successfully.</value></data>
+	<data name="Sale.Create.Success" xml:space="preserve"><value>Sale added successfully.</value></data>
+	<data name="Sale.CreateBulk.Success" xml:space="preserve"><value>Sales added successfully.</value></data>
+	<data name="Sale.Delete.Success" xml:space="preserve"><value>Sale deleted successfully.</value></data>
+	<data name="Sale.WeeklyGraph.Success" xml:space="preserve"><value>Weekly sales graph data retrieved successfully.</value></data>
+	<data name="Sale.MonthlyRevenueGraph.Success" xml:space="preserve"><value>Monthly revenue graph data for {0} retrieved successfully.</value></data>
+
+	<data name="SubscriptionPlan.GetAll.Success" xml:space="preserve"><value>Subscription plans retrieved successfully.</value></data>
+	<data name="SubscriptionPlan.NotFound" xml:space="preserve"><value>Subscription plan not found.</value></data>
+	<data name="SubscriptionPlan.GetById.Success" xml:space="preserve"><value>Subscription plan retrieved successfully.</value></data>
+	<data name="SubscriptionPlan.UserCount.Success" xml:space="preserve"><value>User count retrieved successfully.</value></data>
+	<data name="SubscriptionPlan.Revenue.Success" xml:space="preserve"><value>Revenue retrieved successfully.</value></data>
+	<data name="SubscriptionPlan.Create.Success" xml:space="preserve"><value>Subscription plan created successfully.</value></data>
+	<data name="SubscriptionPlan.Update.Success" xml:space="preserve"><value>Subscription plan updated successfully.</value></data>
+	<data name="SubscriptionPlan.Update.IdMismatch" xml:space="preserve"><value>ID mismatch.</value></data>
+	<data name="SubscriptionPlan.Delete.Success" xml:space="preserve"><value>Subscription plan deleted successfully.</value></data>
+
+	<data name="User.NotFound" xml:space="preserve"><value>Users not found.</value></data>
+	<data name="User.GetAll.Success" xml:space="preserve"><value>Users retrieved successfully.</value></data>
+	<data name="User.Update.Success" xml:space="preserve"><value>User updated successfully.</value></data>
+	<data name="Invoice.Label.InvoiceNumber" xml:space="preserve"><value>INVOICE #</value></data>
+	<data name="Invoice.Label.Date" xml:space="preserve"><value>DATE</value></data>
+	<data name="Product.Notification.NewLowStock.Title" xml:space="preserve"><value>New Product Added With Low Stock</value></data>
+	<data name="Product.Notification.NewLowStock.Message" xml:space="preserve"><value>'{0}' was added with only {1} in stock.</value></data>
+	<data name="SubscriptionPlan.PlanName.Empty" xml:space="preserve"><value>Plan name cannot be empty.</value></data>
+	<data name="User.EmailAlreadyExists" xml:space="preserve"><value>An account with this email already exists.</value></data>
+	<data name="User.NoPermissionToEdit" xml:space="preserve"><value>You do not have permission to edit this user.</value></data>
+	<data name="User.EmailInUse" xml:space="preserve"><value>Email '{0}' is already in use.</value></data>
+	<data name="User.Notification.Welcome.Title" xml:space="preserve"><value>Welcome to KhataFlow!</value></data>
+	<data name="User.Notification.Welcome.Message" xml:space="preserve"><value>Hi {0}, '{1}' is set up. Your trial runs until {2:MMM dd, yyyy}.</value></data>
+	<data name="User.Notification.NewBusinessRegistered.Title" xml:space="preserve"><value>New Business Registered</value></data>
+	<data name="User.Notification.NewBusinessRegistered.Message" xml:space="preserve"><value>'{0}' ({1}) just signed up.</value></data>
+	<data name="SubscriptionPlan.MonthlyPrice.Negative" xml:space="preserve"><value>Monthly price cannot be negative.</value></data>
+	<data name="SubscriptionPlan.AlreadyExists" xml:space="preserve"><value>A plan named '{0}' already exists.</value></data>
+	<data name="SubscriptionPlan.NotFoundById" xml:space="preserve"><value>Subscription plan '{0}' not found.</value></data>
+	<data name="SubscriptionPlan.Id.Empty" xml:space="preserve"><value>Id must not be empty.</value></data>
+	<data name="SubscriptionPlan.PlanId.Empty" xml:space="preserve"><value>Plan id must not be empty.</value></data>
+	<data name="SubscriptionPlan.Notification.Created.Title" xml:space="preserve"><value>New Subscription Plan Created</value></data>
+	<data name="SubscriptionPlan.Notification.Created.Message" xml:space="preserve"><value>Plan '{0}' created at Rs {1:N0}/month.</value></data>
+	<data name="SubscriptionPlan.Notification.PriceChanged.Title" xml:space="preserve"><value>Subscription Plan Price Changed</value></data>
+	<data name="SubscriptionPlan.Notification.PriceChanged.Message" xml:space="preserve"><value>'{0}' price changed from Rs {1:N0} to Rs {2:N0}.</value></data>
+	<data name="SubscriptionPlan.Notification.Deactivated.Title" xml:space="preserve"><value>Subscription Plan Deactivated</value></data>
+	<data name="SubscriptionPlan.Notification.Deactivated.Message" xml:space="preserve"><value>'{0}' has been deactivated.</value></data>
+	<data name="SubscriptionPlan.Notification.Reactivated.Title" xml:space="preserve"><value>Subscription Plan Reactivated</value></data>
+	<data name="SubscriptionPlan.Notification.Reactivated.Message" xml:space="preserve"><value>'{0}' has been reactivated.</value></data>
+	<data name="SubscriptionPlan.Notification.Deleted.Title" xml:space="preserve"><value>Subscription Plan Deleted</value></data>
+	<data name="SubscriptionPlan.Notification.Deleted.Message" xml:space="preserve"><value>Plan '{0}' was deleted.</value></data>
+	<data name="Product.Notification.OutOfStock.Title" xml:space="preserve"><value>Product Out of Stock</value></data>
+	<data name="Product.Notification.OutOfStock.Message" xml:space="preserve"><value>'{0}' is now out of stock.</value></data>
+	<data name="Product.Notification.LowStock.Title" xml:space="preserve"><value>Low Stock Alert</value></data>
+	<data name="Product.Notification.LowStock.Message" xml:space="preserve"><value>'{0}' stock is low ({1} left).</value></data>
+	<data name="Product.Notification.Restocked.Title" xml:space="preserve"><value>Product Restocked</value></data>
+	<data name="Product.Notification.Restocked.Message" xml:space="preserve"><value>'{0}' is back in stock ({1} units).</value></data>
+	<data name="Product.ReloadFailed.Add" xml:space="preserve"><value>Product created but reload failed.</value></data>
+	<data name="Product.ReloadFailed.Update" xml:space="preserve"><value>Product updated but reload failed.</value></data>
+	<data name="Product.PageNumber.Invalid" xml:space="preserve"><value>Page number must be at least 1.</value></data>
+	<data name="Product.PageSize.Invalid" xml:space="preserve"><value>Page size must be between 1 and 100.</value></data>
+	<data name="Product.TopN.Invalid" xml:space="preserve"><value>topN must be greater than zero.</value></data>
+	<data name="Invoice.Label.Customer" xml:space="preserve"><value>CUSTOMER</value></data>
+	<data name="Invoice.Label.Status" xml:space="preserve"><value>STATUS</value></data>
+	<data name="Notification.UserIdRequired" xml:space="preserve"><value>UserId is required when Target is User.</value></data>
+	<data name="Notification.BusinessIdRequired" xml:space="preserve"><value>BusinessId is required when Target is Business.</value></data>
+	<data name="Invoice.WalkInCustomer" xml:space="preserve"><value>Walk-in Customer</value></data>
+	<data name="Invoice.Column.Number" xml:space="preserve"><value>#</value></data>
+	<data name="Invoice.Column.Item" xml:space="preserve"><value>ITEM</value></data>
+	<data name="Invoice.Column.Qty" xml:space="preserve"><value>QTY</value></data>
+	<data name="Invoice.Column.UnitPrice" xml:space="preserve"><value>UNIT PRICE</value></data>
+	<data name="Invoice.Column.Total" xml:space="preserve"><value>TOTAL</value></data>
+	<data name="Invoice.Label.Subtotal" xml:space="preserve"><value>Subtotal</value></data>
+	<data name="Invoice.Label.Discount" xml:space="preserve"><value>Discount</value></data>
+	<data name="Invoice.Label.GrandTotal" xml:space="preserve"><value>Grand Total</value></data>
+	<data name="Invoice.Label.Payment" xml:space="preserve"><value>Payment</value></data>
+	<data name="Invoice.PaymentReceived.Prefix" xml:space="preserve"><value>Payment of</value></data>
+	<data name="Invoice.PaymentReceived.Suffix" xml:space="preserve"><value>received via {0}.</value></data>
+	<data name="Invoice.ThankYou" xml:space="preserve"><value>Thank you for your business! 🙏</value></data>
+	<data name="Invoice.PoweredBy" xml:space="preserve"><value>Powered by </value></data>
+	<data name="User.GetById.Success" xml:space="preserve"><value>User retrieved successfully.</value></data>
+	<data name="Customer.PhoneAlreadyExists" xml:space="preserve"><value>A customer with phone '{0}' already exists. Please use a different phone number.</value></data>
+	<data name="Expense.NotFound" xml:space="preserve"><value>Expense '{0}' not found.</value></data>
+	<data name="Customer.PhoneInUseByAnother" xml:space="preserve"><value>Phone '{0}' is already in use by another customer.</value></data>
+	<data name="Business.AlreadyRegistered" xml:space="preserve"><value>You already have a registered business.</value></data>
+	<data name="Business.EmailInUse" xml:space="preserve"><value>Email '{0}' is already in use.</value></data>
+	<data name="Business.NoPermissionToUpdate" xml:space="preserve"><value>You do not have permission to update this business.</value></data>
+	<data name="Business.NoPermissionToDelete" xml:space="preserve"><value>You do not have permission to delete this business.</value></data>
+	<data name="Business.AlreadyOnPlan" xml:space="preserve"><value>Business is already on the '{0}' plan.</value></data>
+	<data name="Business.InvalidPlanChange" xml:space="preserve"><value>Cannot change plan from '{0}' to '{1}'.</value></data>
+	<data name="User.GetById.NotFound" xml:space="preserve"><value>User '{0}' not found.</value></data>
+	<data name="Business.Impersonation.Success" xml:space="preserve"><value>Impersonation token generated successfully.</value></data>
+	<data name="General.PageNumber.Invalid" xml:space="preserve">
+  <value>Page number must be 1 or greater.</value>
+</data>
+	<data name="General.PageSize.Invalid" xml:space="preserve">
+  <value>Page size must be between 1 and 100.</value>
+</data>
+	<data name="Ai.Receipt.ProcessingFailed" xml:space="preserve"><value>Could not process input.</value></data>
+	<data name="Ai.Receipt.ParsedSuccessfully" xml:space="preserve"><value>Text parsed successfully.</value></data>
+	<data name="Validation.Product.CategoryId.Required" xml:space="preserve"><value>Category is required.</value></data>
+	<data name="Validation.Product.Price.GreaterThanZero" xml:space="preserve"><value>Price must be greater than zero.</value></data>
+	<data name="Validation.Product.Price.TooHigh" xml:space="preserve"><value>Price is unrealistically high.</value></data>
+	<data name="Validation.Product.Stock.NotNegative" xml:space="preserve"><value>Stock cannot be negative.</value></data>
+	<data name="Validation.Product.Id.Required" xml:space="preserve"><value>Product ID is required.</value></data>
+
+	<data name="Validation.Sale.PaymentStatus.Invalid" xml:space="preserve"><value>Invalid payment status.</value></data>
+	<data name="Validation.Sale.Items.Required" xml:space="preserve"><value>A sale must have at least one item.</value></data>
+	<data name="Validation.SaleItem.ProductId.Required" xml:space="preserve"><value>Product is required.</value></data>
+	<data name="Validation.SaleItem.Quantity.GreaterThanZero" xml:space="preserve"><value>Quantity must be at least 1.</value></data>
+</root>

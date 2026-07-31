@@ -1,0 +1,264 @@
+﻿using AutoMapper;
+using FluentValidation;
+using KhataFlow.Core.Domain.Entities;
+using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Core.DTO.Request;
+using KhataFlow.Core.DTO.Response;
+using KhataFlow.Core.Enums;
+using KhataFlow.Core.ServiceContracts;
+
+namespace KhataFlow.Core.Services;
+
+public class SaleService : ISaleService
+{
+    private readonly ISaleRepository _saleRepository;
+    private readonly IProductRepository _productRepository;
+    private readonly INotificationService _notificationService;
+    private readonly ILedgerRepository _ledgerRepository;
+    private readonly IPlanLimitService _planLimitService;
+    private readonly IMapper _mapper;
+    private readonly IValidator<SaleAddRequest> _addValidator;
+
+    private const int LowStockThreshold = 5;
+
+    public SaleService(
+        ISaleRepository saleRepository,
+        IProductRepository productRepository,
+        INotificationService notificationService,
+        ILedgerRepository ledgerRepository,
+        IMapper mapper,
+        IValidator<SaleAddRequest> addValidator, IPlanLimitService planLimitService)
+    {
+        _saleRepository = saleRepository;
+        _productRepository = productRepository;
+        _notificationService = notificationService;
+        _ledgerRepository = ledgerRepository;
+        _planLimitService = planLimitService;
+        _mapper = mapper;
+        _addValidator = addValidator;
+    }
+
+    public async Task<SaleResponse> AddSaleAsync(SaleAddRequest saleAddRequest, Guid businessId)
+    {
+        await _planLimitService.EnsureCanAddProductAsync(businessId);
+        ArgumentNullException.ThrowIfNull(saleAddRequest);
+
+        var validation = await _addValidator.ValidateAsync(saleAddRequest);
+
+        if (!validation.IsValid)
+            throw new ValidationException(validation.Errors);
+
+        Sale sale = _mapper.Map<Sale>(saleAddRequest);
+        sale.Date = DateTime.UtcNow;
+
+        sale.Items = await BuildSaleItemsAsync(saleAddRequest.Items, businessId);
+
+        Sale added = await _saleRepository.AddAsync(sale, businessId);
+
+        if (added.CustomerId.HasValue)
+            await RecordLedgerEntriesForSaleAsync(added, businessId);
+
+        return _mapper.Map<SaleResponse>(added);
+    }
+
+    public async Task<List<SaleResponse>> AddSalesAsync(IEnumerable<SaleAddRequest> saleAddRequests, Guid businessId)
+    {
+        ArgumentNullException.ThrowIfNull(saleAddRequests);
+
+        var requestList = saleAddRequests.ToList();
+        var sales = new List<Sale>();
+
+        foreach (var request in requestList)
+        {
+            var validation = await _addValidator.ValidateAsync(request);
+            if (!validation.IsValid)
+                throw new ValidationException(validation.Errors);
+
+            Sale sale = _mapper.Map<Sale>(request);
+            sale.Date = DateTime.UtcNow;
+            sale.Items = await BuildSaleItemsAsync(request.Items, businessId);
+
+            sales.Add(sale);
+        }
+
+        List<Sale> addedSales = await _saleRepository.AddRangeAsync(sales, businessId);
+
+        foreach (var sale in addedSales.Where(s => s.CustomerId.HasValue))
+            await RecordLedgerEntriesForSaleAsync(sale, businessId);
+
+        return _mapper.Map<List<SaleResponse>>(addedSales);
+    }
+
+    private async Task RecordLedgerEntriesForSaleAsync(Sale sale, Guid businessId)
+    {
+        var now = DateTime.UtcNow;
+
+        await _ledgerRepository.AddAsync(new LedgerEntry
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = sale.CustomerId!.Value,
+            BusinessId = businessId,
+            EntryType = LedgerEntryType.Udhar,
+            Amount = sale.TotalAmount,
+            Notes = $"Sale {sale.InvoiceNumber}",
+            CreatedAt = now,
+            SaleId = sale.Id
+        });
+
+        if (sale.PaymentStatus == PaymentStatus.Paid)
+        {
+            var settlementType = sale.PaymentMethod == PaymentMethod.Card
+                ? LedgerEntryType.Card
+                : LedgerEntryType.Cash;
+
+            await _ledgerRepository.AddAsync(new LedgerEntry
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = sale.CustomerId!.Value,
+                BusinessId = businessId,
+                EntryType = settlementType,
+                Amount = sale.TotalAmount,
+                Notes = $"Payment for {sale.InvoiceNumber}",
+                CreatedAt = now,
+                SaleId = sale.Id
+            });
+        }
+    }
+
+    private async Task<List<SaleItem>> BuildSaleItemsAsync(List<SaleItemRequest> items, Guid businessId)
+    {
+        if (items is null || items.Count == 0)
+            throw new ValidationException("A sale must have at least one item.");
+
+        var saleItems = new List<SaleItem>();
+
+        foreach (var itemRequest in items)
+        {
+            var product = await _productRepository.GetByIdAsync(itemRequest.ProductId)
+                ?? throw new KeyNotFoundException($"Product '{itemRequest.ProductId}' not found.");
+
+            if (product.BusinessId != businessId)
+                throw new KeyNotFoundException($"Product '{itemRequest.ProductId}' not found.");
+
+            if (product.Stock < itemRequest.Quantity)
+                throw new ValidationException($"Insufficient stock for '{product.ProductName}'.");
+
+            saleItems.Add(new SaleItem
+            {
+                Id = Guid.NewGuid(),
+                ProductId = product.Id,
+                Quantity = itemRequest.Quantity,
+                UnitPrice = product.Price
+            });
+
+            var previousStock = product.Stock;
+            product.Stock -= itemRequest.Quantity;
+            await _productRepository.UpdateAsync(product);
+
+            await NotifyIfStockThresholdCrossedAsync(product, previousStock, businessId);
+        }
+
+        return saleItems;
+    }
+
+    private async Task NotifyIfStockThresholdCrossedAsync(Product product, int previousStock, Guid businessId)
+    {
+        if (product.Stock <= 0 && previousStock > 0)
+        {
+            await TryNotifyAsync(new CreateNotificationRequest(
+                Target: NotificationTarget.Business,
+                Title: "Product Out of Stock",
+                Message: $"'{product.ProductName}' just sold out.",
+                Type: NotificationType.OutOfStock,
+                BusinessId: businessId,
+                ReferenceId: product.Id));
+        }
+        else if (product.Stock <= LowStockThreshold && previousStock > LowStockThreshold)
+        {
+            await TryNotifyAsync(new CreateNotificationRequest(
+                Target: NotificationTarget.Business,
+                Title: "Low Stock Alert",
+                Message: $"'{product.ProductName}' is running low ({product.Stock} left).",
+                Type: NotificationType.LowStock,
+                BusinessId: businessId,
+                ReferenceId: product.Id));
+        }
+    }
+
+    private async Task TryNotifyAsync(CreateNotificationRequest request)
+    {
+        try
+        {
+            await _notificationService.CreateNotificationAsync(request);
+        }
+        catch
+        {
+        }
+    }
+
+    public async Task<bool> DeleteSaleAsync(Guid businessId, Guid saleId)
+    {
+        Sale? existing = await _saleRepository.GetByIdAsync(businessId, saleId);
+
+        if (existing is null)
+            throw new KeyNotFoundException($"Sale with id '{saleId}' not found.");
+
+        return await _saleRepository.DeleteAsync(saleId);
+    }
+
+    public async Task<List<SaleResponse>> GetAllSalesAsync(Guid businessId)
+    {
+        List<Sale> sales = await _saleRepository.GetByBusinessIdAsync(businessId);
+
+        if (sales == null || !sales.Any())
+            return new List<SaleResponse>();
+
+        return _mapper.Map<List<SaleResponse>>(sales);
+    }
+
+    public async Task<decimal> GetMonthlyRevenueAsync(Guid businessId)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var from = new DateOnly(today.Year, today.Month, 1);
+
+        return await _saleRepository.GetTotalRevenueAsync(businessId, from, today);
+    }
+
+    public async Task<List<MonthlyRevenueResponse>> GetMonthlyRevenueAsync(Guid businessId, int year)
+    {
+        return await _saleRepository.GetMonthlyRevenueAsync(businessId, year);
+    }
+
+    public async Task<SaleResponse?> GetSaleByIdAsync(Guid businessId, Guid saleId)
+    {
+        var sale = await _saleRepository.GetByIdAsync(businessId, saleId);
+        return sale == null ? null : _mapper.Map<SaleResponse>(sale);
+    }
+
+    public async Task<SaleResponse> GetSaleByProductNameAsync(string productName, Guid businessId)
+    {
+        var sale = await _saleRepository.GetByProductNameAsync(productName, businessId);
+
+        if (sale == null)
+            return null;
+
+        return _mapper.Map<SaleResponse>(sale);
+    }
+
+    public async Task<List<SaleResponse>> GetTodaySalesAsync(Guid businessId)
+    {
+        List<Sale> sales = await _saleRepository.GetTodaySalesAsync(businessId);
+
+        return _mapper.Map<List<SaleResponse>>(sales);
+    }
+
+    public async Task<int> GetTotalOrdersAsync(Guid businessId)
+    {
+        return await _saleRepository.GetSaleCountAsync(businessId);
+    }
+
+    public async Task<List<WeeklySalesResponse>> GetWeeklySalesAsync(Guid businessId)
+    {
+        return await _saleRepository.GetWeeklySalesAsync(businessId);
+    }
+}

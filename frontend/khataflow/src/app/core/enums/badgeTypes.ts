@@ -1,0 +1,1 @@
+export const badgeTypes = ["up", "down", "neutral"] as const;

@@ -1,0 +1,172 @@
+<div *transloco="let t" class="max-w-2xl mx-auto">
+  <div class="bg-bg-card border border-border-card rounded-xl shadow-sm overflow-hidden">
+    <div class="px-6 pt-6 pb-5 sm:px-8 sm:pt-8 border-b border-border-card">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-11 h-11 rounded-full bg-primary-soft flex items-center justify-center">
+          <svg class="w-5 h-5 text-primary-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.75"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3M4 19.5a6 6 0 0 1 8.5-5.5M4 19.5V21h9v-1.5M11 8.5a3.25 3.25 0 1 1-6.5 0 3.25 3.25 0 0 1 6.5 0Z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-text-heading">{{ t('staffInvite.title') }}</h2>
+          <p class="mt-0.5 text-sm text-text-muted">{{ t('staffInvite.subtitle') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-6 py-6 sm:px-8">
+      @if (successMessage()) {
+      <div
+        class="mb-5 rounded-lg bg-status-success-bg border border-status-success-border px-4 py-3 text-sm text-status-success-text animate-[fadeIn_0.2s_ease-out]">
+        <div class="flex items-start gap-2.5">
+          <svg class="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <span>{{ successMessage() }}</span>
+        </div>
+        @if (whatsAppUrl()) {
+        <button type="button" (click)="openWhatsApp()"
+          class="mt-3 inline-flex items-center gap-2 rounded-lg bg-btn-primary hover:bg-btn-primary-hover text-white px-3.5 py-2 text-xs font-medium transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M20.52 3.48A11.94 11.94 0 0 0 12.06 0C5.5 0 .18 5.32.18 11.88c0 2.1.55 4.15 1.6 5.96L0 24l6.32-1.66a11.86 11.86 0 0 0 5.73 1.46h.01c6.55 0 11.87-5.32 11.87-11.88 0-3.17-1.24-6.15-3.41-8.44ZM12.06 21.6a9.7 9.7 0 0 1-4.94-1.35l-.35-.21-3.68.97.98-3.58-.23-.37a9.72 9.72 0 1 1 8.22 4.54Z" />
+          </svg>
+          {{ t('staffInvite.sendViaWhatsApp') }} — {{ invitedName() }}
+        </button>
+        }
+      </div>
+      }
+
+      @if (errorMessage()) {
+      <div
+        class="mb-5 flex items-start gap-2.5 rounded-lg bg-danger-soft border border-danger-border px-4 py-3 text-sm text-danger-text animate-[fadeIn_0.2s_ease-out]">
+        <svg class="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 9v3.75m0 3.75h.008M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-text-label mb-1.5">
+              {{ t('staffInvite.fields.fullName.label') }}
+            </label>
+            <div class="relative">
+              <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-icon-muted"
+                fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+              <input id="fullName" type="text" formControlName="fullName"
+                class="block w-full rounded-lg bg-input-bg border border-input-border text-text-body placeholder:text-input-placeholder pl-10 pr-3 py-2.5 text-sm transition-colors focus:bg-input-bg-focus focus:border-primary focus:outline-none focus:ring-2 focus:ring-focus-ring/40"
+                [class.border-input-border-error]="fullName.invalid && fullName.touched" />
+            </div>
+            @if (fullName.invalid && fullName.touched) {
+            <p class="mt-1.5 text-xs text-text-danger">{{ t('staffInvite.fields.fullName.error') }}</p>
+            }
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-text-label mb-1.5">
+              {{ t('staffInvite.fields.email.label') }}
+            </label>
+            <div class="relative">
+              <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-icon-muted"
+                fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              </svg>
+              <input id="email" type="email" formControlName="email"
+                class="block w-full rounded-lg bg-input-bg border border-input-border text-text-body placeholder:text-input-placeholder pl-10 pr-3 py-2.5 text-sm transition-colors focus:bg-input-bg-focus focus:border-primary focus:outline-none focus:ring-2 focus:ring-focus-ring/40"
+                [class.border-input-border-error]="email.invalid && email.touched" />
+            </div>
+            @if (email.invalid && email.touched) {
+            <p class="mt-1.5 text-xs text-text-danger">{{ t('staffInvite.fields.email.error') }}</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="phoneNumber" class="block text-sm font-medium text-text-label mb-1.5">
+            {{ t('staffInvite.fields.phoneNumber.label') }}
+          </label>
+          <div class="relative">
+            <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-icon-muted"
+              fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 6.75c0 8.284 6.716 15 15 15h1.5a2.25 2.25 0 0 0 2.25-2.25v-1.372a1.5 1.5 0 0 0-1.245-1.478l-4.117-.686a1.5 1.5 0 0 0-1.532.696l-.517.828a.75.75 0 0 1-1.007.283 12.03 12.03 0 0 1-5.61-5.61.75.75 0 0 1 .283-1.007l.828-.517a1.5 1.5 0 0 0 .696-1.532l-.686-4.117a1.5 1.5 0 0 0-1.478-1.245H4.5A2.25 2.25 0 0 0 2.25 6.75Z" />
+            </svg>
+            <input id="phoneNumber" type="tel" formControlName="phoneNumber"
+              [placeholder]="t('staffInvite.fields.phoneNumber.placeholder')"
+              class="block w-full rounded-lg bg-input-bg border border-input-border text-text-body placeholder:text-input-placeholder pl-10 pr-3 py-2.5 text-sm transition-colors focus:bg-input-bg-focus focus:border-primary focus:outline-none focus:ring-2 focus:ring-focus-ring/40"
+              [class.border-input-border-error]="phoneNumber.invalid && phoneNumber.touched" />
+          </div>
+          @if (phoneNumber.invalid && phoneNumber.touched) {
+          <p class="mt-1.5 text-xs text-text-danger">{{ t('staffInvite.fields.phoneNumber.error') }}</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-text-label mb-1.5">
+            {{ t('staffInvite.fields.role.label') }}
+          </label>
+          <div class="grid grid-cols-2 gap-3" role="radiogroup">
+            @for (r of assignableRoles; track r) {
+            <button type="button" role="radio" [attr.aria-checked]="form.controls.role.value === r"
+              (click)="form.controls.role.setValue(r)"
+              class="flex items-center gap-2.5 rounded-lg border px-3.5 py-3 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-focus-ring/40"
+              [class.border-primary-border]="form.controls.role.value === r"
+              [class.bg-primary-soft]="form.controls.role.value === r"
+              [class.border-input-border]="form.controls.role.value !== r">
+              <span class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                [class.bg-white]="form.controls.role.value === r" [class.bg-input-bg]="form.controls.role.value !== r">
+                @if (r === 'Manager') {
+                <svg class="w-4 h-4" [class.text-primary-icon]="form.controls.role.value === r"
+                  [class.text-icon-muted]="form.controls.role.value !== r" fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.75" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.653v-2.914a2.25 2.25 0 0 0-1.276-2.027l-6.375-2.836a2.25 2.25 0 0 0-1.798 0l-6.375 2.836A2.25 2.25 0 0 0 3 9.583v2.914c0 .652.286 1.24.75 1.653m16.5 0a2.23 2.23 0 0 1-.75.653m-15.75-.653a2.23 2.23 0 0 0 .75.653" />
+                </svg>
+                } @else {
+                <svg class="w-4 h-4" [class.text-primary-icon]="form.controls.role.value === r"
+                  [class.text-icon-muted]="form.controls.role.value !== r" fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.75" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                }
+              </span>
+              <span class="text-sm font-medium" [class.text-primary-text]="form.controls.role.value === r"
+                [class.text-text-body]="form.controls.role.value !== r">
+                {{ t('staffInvite.fields.role.options.' + r) }}
+              </span>
+            </button>
+            }
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isSubmitting()"
+          class="w-full flex items-center justify-center gap-2 rounded-lg bg-btn-primary hover:bg-btn-primary-hover text-white px-4 py-2.5 text-sm font-medium transition-colors disabled:bg-btn-disabled-bg disabled:cursor-not-allowed">
+          @if (isSubmitting()) {
+          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Z" />
+          </svg>
+          } @else {
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12H3m0 0 8-8m-8 8 8 8" />
+          </svg>
+          }
+          {{ isSubmitting() ? t('staffInvite.submit.loading') : t('staffInvite.submit.default') }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

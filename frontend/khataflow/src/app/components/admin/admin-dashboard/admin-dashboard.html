@@ -1,0 +1,76 @@
+<div class="p-3 sm:p-5 lg:p-6 space-y-5 bg-bg-page min-h-screen">
+
+    @if (error()) {
+    <div class="rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 flex items-center justify-between">
+        <span>{{ error() }}</span>
+        <button (click)="loadDashboard()" class="text-red-700 font-medium underline">Retry</button>
+    </div>
+    }
+
+    <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+        @for (stat of stats(); track stat.title) {
+        <app-stat-card [icon]="stat.icon" [iconBg]="stat.iconBg" [iconColor]="stat.iconColor" [title]="stat.title"
+            [value]="stat.value" [badgeText]="stat.badgeText" [badgeType]="stat.badgeType" />
+        }
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-5 sm:p-6">
+            <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-chart-line text-primary-icon"></i>
+                User Growth
+            </h2>
+            <div class="relative h-44 sm:h-52">
+                <canvas #userGrowthChart></canvas>
+                @if (loading()) {
+                <div class="absolute inset-0 flex items-center justify-center bg-bg-card/60 text-xs text-text-muted">
+                    Loading...
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-5 sm:p-6">
+            <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-chart-pie text-primary-icon"></i>
+                Plan Distribution
+            </h2>
+
+            @if (!loading() && !plans().length) {
+            <p class="text-sm text-text-muted">No subscription plans found.</p>
+            } @else {
+            <div class="flex flex-col sm:flex-row items-center gap-6">
+
+                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex-shrink-0">
+                    <canvas #planChart></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <p class="text-xl font-semibold text-text-heading">{{ totalPlans }}</p>
+                        <p class="text-xs text-text-muted">Total</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 w-full sm:flex-1">
+                    @for (plan of plans(); track plan.id) {
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" [style.background]="plan.color"></span>
+                            <span class="text-sm text-text-body">{{ plan.label }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-semibold text-text-heading">{{ plan.value }}</span>
+                            <span class="text-xs text-text-muted">
+                                ({{ totalPlans > 0 ? ((plan.value / totalPlans) * 100).toFixed(0) : 0 }}%)
+                            </span>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+            </div>
+            }
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,469 @@
+﻿using KhataFlow.Core.Domain.RepositoryContracts;
+using KhataFlow.Core.DTO;
+using KhataFlow.Core.DTO.Request;
+using KhataFlow.Core.DTO.Response;
+using KhataFlow.Core.Enums;
+using KhataFlow.Core.Resources;
+using KhataFlow.Core.ServiceContracts;
+using Microsoft.Extensions.Localization;
+
+namespace KhataFlow.Core.Services;
+
+public class VoiceOrchestrationService : IVoiceOrchestrationService
+{
+    private readonly VoiceIntentExtractor _extractor;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IProductRepository _productRepository;
+    private readonly ILedgerService _ledgerService;
+    private readonly IExpenseService _expenseService;
+    private readonly ISaleService _saleService;
+    private readonly IStringLocalizer<SharedResource> _localizer;
+
+    public VoiceOrchestrationService(
+        VoiceIntentExtractor extractor,
+        ICustomerRepository customerRepository,
+        IProductRepository productRepository,
+        ILedgerService ledgerService,
+        IExpenseService expenseService,
+        ISaleService saleService,
+        IStringLocalizer<SharedResource> localizer)
+    {
+        _extractor = extractor;
+        _customerRepository = customerRepository;
+        _productRepository = productRepository;
+        _ledgerService = ledgerService;
+        _expenseService = expenseService;
+        _saleService = saleService;
+        _localizer = localizer;
+    }
+
+    public async Task<VoiceCommandResponse> ProcessVoiceCommandAsync(
+        byte[] audioBytes, string mimeType, Guid businessId, CancellationToken ct = default)
+    {
+        var intentResult = await _extractor.ExtractAsync(audioBytes, mimeType, ct);
+
+        if (intentResult is null || intentResult.Intent == VoiceIntent.Unknown)
+        {
+            return Fail(VoiceIntent.Unknown, _localizer["Voice_UnknownCommand"]);
+        }
+
+        return intentResult.Intent switch
+        {
+            VoiceIntent.RecordPayment => await HandleRecordPaymentAsync(intentResult, businessId, ct),
+            VoiceIntent.CreateExpense => await HandleCreateExpenseAsync(intentResult, businessId, ct),
+            VoiceIntent.CreateSale => await HandleCreateSaleAsync(intentResult, businessId, forceUdhar: false, ct),
+            VoiceIntent.AddUdhar => await HandleAddUdharAsync(intentResult, businessId, ct),
+            _ => Fail(intentResult.Intent, _localizer["Voice_UnsupportedCommand"])
+        };
+    }
+
+    /// <summary>
+    /// AddUdhar covers two distinct real-world actions that voice needs to tell apart:
+    ///   1. "Sell 2 soaps to Ahmed on udhar"     -> a credit SALE (has products)   -> product-sale pipeline
+    ///   2. "Give Ahmed 500 rupees udhar"        -> a plain LEDGER DEBT (no products) -> straight ledger entry
+    /// Previously both were forced through the product-sale pipeline, which always failed
+    /// for case 2 with "No products were understood in that command."
+    /// </summary>
+    private async Task<VoiceCommandResponse> HandleAddUdharAsync(
+        VoiceIntentResult intent, Guid businessId, CancellationToken ct)
+    {
+        var hasProducts = intent.Items is not null && intent.Items.Count > 0;
+
+        if (hasProducts)
+        {
+            return await HandleCreateSaleAsync(intent, businessId, forceUdhar: true, ct);
+        }
+
+        // No products spoken -> treat as a plain ledger debt entry (same as the "+ Udhar" button).
+        if (string.IsNullOrWhiteSpace(intent.CustomerName))
+            return Fail(intent.Intent, _localizer["Voice_NoCustomerName"]);
+
+        if (intent.Amount is null || intent.Amount <= 0)
+            return Fail(intent.Intent, _localizer["Voice_NoValidUdharAmount"]);
+
+        var matchedCustomer = await ResolveCustomerAsync(intent.CustomerName, businessId);
+
+        if (matchedCustomer is null)
+            return Fail(intent.Intent, _localizer["Voice_CustomerNotFound", intent.CustomerName]);
+
+        if (matchedCustomer.Ambiguous)
+            return Fail(intent.Intent, _localizer["Voice_MultipleCustomersFound", intent.CustomerName]);
+
+        try
+        {
+            var request = new AddUdharRequest
+            {
+                CustomerId = matchedCustomer.Customer!.Id,
+                Amount = intent.Amount.Value,
+                Notes = _localizer["Voice_RecordedViaVoice"]
+            };
+
+            var entry = await _ledgerService.AddUdharAsync(businessId, request);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = _localizer["Voice_UdharRecorded", intent.Amount.Value.ToString("N0"), matchedCustomer.Customer.Name],
+                Data = entry
+            };
+        }
+        catch (Exception ex) when (ex is KhataFlow.Core.Exceptions.DomainException
+                                       or FluentValidation.ValidationException
+                                       or KhataFlow.Core.Exceptions.NotFoundException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<VoiceCommandResponse> HandleCreateSaleAsync(
+    VoiceIntentResult intent, Guid businessId, bool forceUdhar, CancellationToken ct)
+    {
+        if (intent.Items is null || intent.Items.Count == 0)
+            return Fail(intent.Intent, _localizer["Voice_NoProductsUnderstood"]);
+
+        var wantsUdhar = forceUdhar ||
+            string.Equals(intent.PaymentMethod, "Udhar", StringComparison.OrdinalIgnoreCase);
+
+        Guid? customerId = null;
+
+        if (!string.IsNullOrWhiteSpace(intent.CustomerName))
+        {
+            var matchedCustomer = await ResolveCustomerAsync(intent.CustomerName, businessId);
+
+            if (matchedCustomer is null)
+                return Fail(intent.Intent, _localizer["Voice_CustomerNotFound", intent.CustomerName]);
+
+            if (matchedCustomer.Ambiguous)
+                return Fail(intent.Intent, _localizer["Voice_MultipleCustomersFound", intent.CustomerName]);
+
+            customerId = matchedCustomer.Customer!.Id;
+        }
+
+        if (wantsUdhar && customerId is null)
+            return Fail(intent.Intent, _localizer["Voice_CustomerRequiredForUdhar"]);
+
+        // Fetch full catalog for this business using the confirmed repository method.
+        var (products, _) = await _productRepository.GetPagedAsync(businessId, pageNumber: 1, pageSize: 1000);
+
+        var resolvedItems = new List<SaleItemRequest>();
+
+        foreach (var spokenItem in intent.Items)
+        {
+            var match = ResolveProduct(spokenItem.ProductName, products);
+
+            if (match is null)
+                return Fail(intent.Intent, _localizer["Voice_ProductNotFound", spokenItem.ProductName]);
+
+            if (match.Ambiguous)
+                return Fail(intent.Intent, _localizer["Voice_MultipleProductsFound", spokenItem.ProductName]);
+
+            if (match.Product is null)
+            {
+                // Nothing crossed the acceptance threshold, but we may still have
+                // near-miss candidates worth suggesting to the user.
+                var message = match.Suggestions.Count > 0
+                    ? _localizer["Voice_ProductNotFoundWithSuggestions", spokenItem.ProductName, string.Join(", ", match.Suggestions)]
+                    : _localizer["Voice_ProductNotFound", spokenItem.ProductName];
+
+                return Fail(intent.Intent, message);
+            }
+
+            var quantity = (int)spokenItem.Quantity;
+            if (quantity <= 0) quantity = 1;
+
+            resolvedItems.Add(new SaleItemRequest(match.Product!.Id, quantity));
+        }
+
+        try
+        {
+            var request = new SaleAddRequest(
+                CustomerId: customerId,
+                PaymentStatus: wantsUdhar ? PaymentStatus.Udhar : PaymentStatus.Paid,
+                Note: _localizer["Voice_RecordedViaVoice"],
+                Items: resolvedItems
+            );
+
+            var sale = await _saleService.AddSaleAsync(request, businessId);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = wantsUdhar
+                    ? _localizer["Voice_UdharSaleRecorded", resolvedItems.Count]
+                    : _localizer["Voice_SaleRecorded", resolvedItems.Count],
+                Data = sale
+            };
+        }
+        catch (Exception ex) when (ex is FluentValidation.ValidationException
+                                       or KeyNotFoundException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<VoiceCommandResponse> HandleRecordPaymentAsync(
+        VoiceIntentResult intent, Guid businessId, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(intent.CustomerName))
+            return Fail(intent.Intent, _localizer["Voice_NoCustomerName"]);
+
+        if (intent.Amount is null || intent.Amount <= 0)
+            return Fail(intent.Intent, _localizer["Voice_NoValidPaymentAmount"]);
+
+        var matchedCustomer = await ResolveCustomerAsync(intent.CustomerName, businessId);
+
+        if (matchedCustomer is null)
+            return Fail(intent.Intent, _localizer["Voice_CustomerNotFound", intent.CustomerName]);
+
+        if (matchedCustomer.Ambiguous)
+            return Fail(intent.Intent, _localizer["Voice_MultipleCustomersFound", intent.CustomerName]);
+
+        try
+        {
+            var request = new RecordPaymentRequest
+            {
+                CustomerId = matchedCustomer.Customer!.Id,
+                Amount = intent.Amount.Value,
+                Notes = _localizer["Voice_RecordedViaVoice"]
+            };
+
+            var entry = await _ledgerService.RecordPaymentAsync(businessId, request);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = _localizer["Voice_PaymentRecorded", intent.Amount.Value.ToString("N0"), matchedCustomer.Customer.Name],
+                Data = entry
+            };
+        }
+        catch (Exception ex) when (ex is KhataFlow.Core.Exceptions.DomainException
+                                       or FluentValidation.ValidationException
+                                       or KhataFlow.Core.Exceptions.NotFoundException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<VoiceCommandResponse> HandleCreateExpenseAsync(
+        VoiceIntentResult intent, Guid businessId, CancellationToken ct)
+    {
+        if (intent.Amount is null || intent.Amount <= 0)
+            return Fail(intent.Intent, _localizer["Voice_NoValidExpenseAmount"]);
+
+        if (!Enum.TryParse<ExpenseCategory>(intent.ExpenseCategory, ignoreCase: true, out var category))
+            category = ExpenseCategory.Miscellaneous;
+
+        try
+        {
+            var request = new ExpenseAddRequest
+            {
+                Title = !string.IsNullOrWhiteSpace(intent.Description)
+                    ? intent.Description
+                    : (intent.ExpenseCategory ?? "Voice expense"),
+                Amount = intent.Amount.Value,
+                Category = category,
+                Note = _localizer["Voice_RecordedViaVoice"]
+            };
+
+            var expense = await _expenseService.AddExpenseAsync(businessId, request);
+
+            return new VoiceCommandResponse
+            {
+                Intent = intent.Intent,
+                Success = true,
+                Message = _localizer["Voice_ExpenseRecorded", intent.Amount.Value.ToString("N0"), category],
+                Data = expense
+            };
+        }
+        catch (Exception ex) when (ex is FluentValidation.ValidationException)
+        {
+            return Fail(intent.Intent, ex.Message);
+        }
+    }
+
+    private async Task<CustomerMatchResult?> ResolveCustomerAsync(string spokenName, Guid businessId)
+    {
+        var customers = await _customerRepository.GetByBusinessIdAsync(businessId);
+
+        var matches = customers
+            .Where(c => c.Name.Trim().Equals(spokenName.Trim(), StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (matches.Count == 0)
+            return null;
+
+        if (matches.Count > 1)
+            return new CustomerMatchResult { Ambiguous = true };
+
+        return new CustomerMatchResult { Customer = matches[0] };
+    }
+
+    private static ProductMatchResult? ResolveProduct(string spokenName, IEnumerable<Domain.Entities.Product> products)
+    {
+        var normalized = NormalizeForMatch(spokenName);
+        var productList = products.ToList();
+
+        if (productList.Count == 0) return null;
+
+        // --- Tier 1: exact full-string match ---
+        var exact = productList
+            .Where(p => NormalizeForMatch(p.ProductName) == normalized)
+            .ToList();
+
+        if (exact.Count == 1) return new ProductMatchResult { Product = exact[0] };
+        if (exact.Count > 1) return new ProductMatchResult { Ambiguous = true };
+
+        // --- Tier 2: whole-string substring containment ---
+        var contains = productList
+            .Where(p =>
+            {
+                var pn = NormalizeForMatch(p.ProductName);
+                return pn.Contains(normalized) || normalized.Contains(pn);
+            })
+            .ToList();
+
+        if (contains.Count == 1) return new ProductMatchResult { Product = contains[0] };
+        if (contains.Count > 1) return new ProductMatchResult { Ambiguous = true };
+
+        // --- Tier 3: token-level similarity ---
+        const double similarityThreshold = 0.65;
+        const double suggestionThreshold = 0.35; // lower bar just for "did you mean" hints
+        const int maxSuggestions = 3;
+
+        var spokenTokens = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        var allScored = productList
+            .Select(p => new
+            {
+                Product = p,
+                Score = TokenSimilarityScore(
+                    spokenTokens,
+                    NormalizeForMatch(p.ProductName).Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            })
+            .OrderByDescending(x => x.Score)
+            .ToList();
+
+        var accepted = allScored.Where(x => x.Score >= similarityThreshold).ToList();
+
+        if (accepted.Count > 0)
+        {
+            var topScore = accepted[0].Score;
+            var topMatches = accepted.Where(x => Math.Abs(x.Score - topScore) < 0.01).ToList();
+
+            if (topMatches.Count == 1) return new ProductMatchResult { Product = topMatches[0].Product };
+
+            return new ProductMatchResult { Ambiguous = true };
+        }
+
+        // Nothing crossed the acceptance bar — offer the closest candidates as
+        // suggestions instead of just saying "not found".
+        var suggestions = allScored
+            .Where(x => x.Score >= suggestionThreshold)
+            .Take(maxSuggestions)
+            .Select(x => x.Product.ProductName)
+            .ToList();
+
+        return new ProductMatchResult { Product = null, Suggestions = suggestions };
+    }
+
+    private static double TokenSimilarityScore(string[] spokenTokens, string[] productTokens)
+    {
+        if (spokenTokens.Length == 0 || productTokens.Length == 0) return 0.0;
+
+        double total = 0;
+
+        foreach (var spoken in spokenTokens)
+        {
+            double best = 0;
+
+            foreach (var product in productTokens)
+            {
+                var score = TokenScore(spoken, product);
+                if (score > best) best = score;
+            }
+
+            total += best;
+        }
+
+        return total / spokenTokens.Length;
+    }
+
+    private static double TokenScore(string a, string b)
+    {
+        if (a == b) return 1.0;
+        if (a.Length == 0 || b.Length == 0) return 0.0;
+
+        if (a.Contains(b) || b.Contains(a))
+        {
+            var shorter = Math.Min(a.Length, b.Length);
+            var longer = Math.Max(a.Length, b.Length);
+            return 0.7 + 0.3 * ((double)shorter / longer);
+        }
+
+        return SimilarityScore(a, b);
+    }
+
+    private static double SimilarityScore(string a, string b)
+    {
+        if (a == b) return 1.0;
+        if (a.Length == 0 || b.Length == 0) return 0.0;
+
+        var distance = LevenshteinDistance(a, b);
+        var maxLen = Math.Max(a.Length, b.Length);
+        return 1.0 - ((double)distance / maxLen);
+    }
+
+    private static int LevenshteinDistance(string a, string b)
+    {
+        var costs = new int[b.Length + 1];
+
+        for (var j = 0; j <= b.Length; j++)
+            costs[j] = j;
+
+        for (var i = 1; i <= a.Length; i++)
+        {
+            costs[0] = i;
+            var previousDiagonal = i - 1;
+
+            for (var j = 1; j <= b.Length; j++)
+            {
+                var previousDiagonalSave = costs[j];
+                costs[j] = a[i - 1] == b[j - 1]
+                    ? previousDiagonal
+                    : 1 + Math.Min(previousDiagonal, Math.Min(costs[j], costs[j - 1]));
+                previousDiagonal = previousDiagonalSave;
+            }
+        }
+
+        return costs[b.Length];
+    }
+
+    private static string NormalizeForMatch(string input) =>
+    string.Join(" ", input
+        .ToLowerInvariant()
+        .Split(new[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries))
+        .Trim();
+
+    private static VoiceCommandResponse Fail(VoiceIntent intent, string message) => new()
+    {
+        Intent = intent,
+        Success = false,
+        ErrorMessage = message
+    };
+
+    private class CustomerMatchResult
+    {
+        public Domain.Entities.Customer? Customer { get; set; }
+        public bool Ambiguous { get; set; }
+    }
+
+    private class ProductMatchResult
+    {
+        public Domain.Entities.Product? Product { get; set; }
+        public bool Ambiguous { get; set; }
+        public List<string> Suggestions { get; set; } = new();
+    }
+}

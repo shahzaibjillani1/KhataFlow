@@ -1,0 +1,172 @@
+<div class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen space-y-5">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+            <h1 class="text-xl font-semibold text-text-heading">Admin Settings</h1>
+            <p class="text-sm text-text-muted mt-0.5">Manage your account</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+            <div class="h-1 bg-primary"></div>
+
+            <div class="px-5 py-4 border-b border-border-card">
+                <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-primary-icon"></i>
+                    Admin Account
+                </h2>
+                <p class="text-xs text-text-muted mt-0.5">Update your credentials and profile</p>
+            </div>
+
+            @if (accountLoading()) {
+            <div class="px-5 py-8 flex items-center justify-center gap-2 text-text-muted text-sm">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                Loading account...
+            </div>
+            } @else {
+
+            <div class="px-5 py-5 space-y-4">
+
+                @if (accountError()) {
+                <div class="rounded-xl border border-red-200 bg-red-50 text-red-600 text-xs px-3 py-2.5">
+                    {{ accountError() }}
+                </div>
+                }
+
+                <div class="flex items-center gap-4 pb-4 border-b border-border-card">
+                    <div class="w-14 h-14 rounded-2xl bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-xl font-semibold">
+                            {{ account.fullName ? account.fullName.charAt(0) : '?' }}
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-text-heading">{{ account.fullName || '—' }}</p>
+                        <p class="text-xs text-text-label">{{ account.email || '—' }}</p>
+                        <span
+                            class="inline-flex items-center gap-1 text-xs font-medium text-primary-text bg-primary-soft border border-primary-border px-2 py-0.5 rounded-full mt-1">
+                            <i class="fa-solid fa-shield-halved text-[9px]"></i>
+                            Super Admin
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label uppercase tracking-wide mb-1.5">
+                        Admin Name
+                    </label>
+                    <input type="text" [(ngModel)]="account.fullName"
+                        class="w-full px-4 py-2.5 border border-input-border rounded-xl bg-input-bg text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring focus:bg-input-bg-focus transition" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label uppercase tracking-wide mb-1.5">
+                        Email
+                    </label>
+                    <input type="email" [(ngModel)]="account.email"
+                        class="w-full px-4 py-2.5 border border-input-border rounded-xl bg-input-bg text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring focus:bg-input-bg-focus transition" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label uppercase tracking-wide mb-1.5">
+                        Phone Number
+                    </label>
+                    <input type="tel" [(ngModel)]="account.phoneNumber" placeholder="Optional"
+                        class="w-full px-4 py-2.5 border border-input-border rounded-xl bg-input-bg text-sm text-text-label placeholder-input-placeholder focus:outline-none focus:ring-2 focus:ring-focus-ring focus:bg-input-bg-focus transition" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label uppercase tracking-wide mb-1.5">
+                        Password
+                    </label>
+                    <button (click)="sendPasswordResetEmail()" [disabled]="resetSendingEmail() || !account.email"
+                        class="flex items-center gap-2 text-xs font-semibold text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 rounded-xl transition w-full sm:w-auto">
+                        @if (resetSendingEmail()) {
+                        <i class="fa-solid fa-circle-notch fa-spin text-xs"></i>
+                        Sending...
+                        } @else {
+                        <i class="fa-solid fa-key text-xs"></i>
+                        Send Password Reset Email
+                        }
+                    </button>
+                    @if (resetEmailSent()) {
+                    <p class="text-xs text-status-success-text mt-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i>
+                        Reset link sent to {{ account.email }}
+                    </p>
+                    }
+                </div>
+
+                <div class="pt-2 border-t border-border-card flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                    <button (click)="saveAccount()" [disabled]="accountSaving()"
+                        class="flex-1 sm:flex-none bg-btn-primary hover:bg-btn-primary-hover disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                        @if (accountSaving()) {
+                        <i class="fa-solid fa-circle-notch fa-spin text-xs"></i>
+                        Saving...
+                        } @else {
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        Save Changes
+                        }
+                    </button>
+                    <button (click)="resetAccount()" [disabled]="accountSaving()"
+                        class="flex-1 sm:flex-none border border-btn-reset-border bg-btn-reset-bg hover:bg-btn-reset-bg-hover disabled:opacity-60 text-btn-reset-text text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-left text-xs"></i>
+                        Reset
+                    </button>
+                    @if (accountSaved()) {
+                    <span class="text-xs text-status-success-text flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i>
+                        Saved
+                    </span>
+                    }
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+            <div class="h-1 bg-primary"></div>
+
+            <div class="px-5 py-4 border-b border-border-card">
+                <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-primary-icon"></i>
+                    Recent Admin Activity
+                </h2>
+            </div>
+
+            <div class="divide-y divide-border-card overflow-y-auto max-h-96">
+                @if (activityLoading() && activityLog().length === 0) {
+                <div class="px-5 py-6 flex items-center justify-center gap-2 text-text-muted text-sm">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    Loading activity...
+                </div>
+                }
+                @for (log of activityLog(); track log.id) {
+                <div class="flex items-start gap-3 px-5 py-3.5">
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                        [ngClass]="log.iconBg">
+                        <i [class]="log.icon + ' text-xs ' + log.iconColor"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-medium text-text-heading leading-snug">{{ log.message }}</p>
+                        <p class="text-xs text-text-muted mt-0.5">{{ log.time }}</p>
+                    </div>
+                </div>
+                } @empty {
+                @if (!activityLoading()) {
+                <p class="text-xs text-text-muted px-5 py-4">No recent activity.</p>
+                }
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

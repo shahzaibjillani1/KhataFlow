@@ -1,0 +1,81 @@
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'"
+  class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" (click)="onClose()">
+  <div class="bg-bg-card rounded-2xl border border-border-card shadow-lg w-full max-w-md overflow-hidden"
+    (click)="$event.stopPropagation()">
+
+    <div class="flex items-center justify-between px-6 py-4 border-b border-border-card">
+      <h2 class="text-base font-semibold text-text-heading">
+        {{ isEditMode ? t('productModal.editTitle') : t('productModal.addTitle') }}
+      </h2>
+      <button (click)="onClose()" [disabled]="isSaving"
+        class="text-text-muted hover:text-text-heading transition disabled:opacity-40 disabled:cursor-not-allowed">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <div class="px-6 py-5 space-y-4">
+
+      <div>
+        <label class="block text-sm text-text-label mb-1.5">{{ t('productModal.productName') }}</label>
+        <input type="text" [(ngModel)]="form.productName" [placeholder]="t('productModal.productNamePlaceholder')"
+          [dir]="lang() === 'ur' ? 'rtl' : 'ltr'" [disabled]="isSaving"
+          class="w-full px-3 py-2.5 border rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition disabled:opacity-60"
+          [ngClass]="isNameInvalid ? 'border-danger-border' : 'border-input-border'" />
+        @if (isNameInvalid) {
+        <p class="text-xs text-danger-text mt-1">{{ t('productModal.nameRequired') }}</p>
+        }
+      </div>
+
+      <div>
+        <label class="block text-sm text-text-label mb-1.5">{{ t('productModal.category') }}</label>
+        <select [(ngModel)]="form.categoryId" [disabled]="isSaving"
+          class="w-full px-3 py-2.5 border rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition disabled:opacity-60"
+          [ngClass]="isCategoryInvalid ? 'border-danger-border' : 'border-input-border'">
+          <option value="" disabled>{{ t('productModal.selectCategory') }}</option>
+          @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.categoryName | localizedText:cat.categoryNameUr:lang() }}</option>
+          }
+        </select>
+        @if (isCategoryInvalid) {
+        <p class="text-xs text-danger-text mt-1">{{ t('productModal.categoryRequired') }}</p>
+        }
+        @if (categories().length === 0) {
+        <p class="text-xs text-text-muted mt-1">{{ t('productModal.noCategories') }}</p>
+        }
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm text-text-label mb-1.5">{{ t('productModal.price') }}</label>
+          <input type="number" min="0" [(ngModel)]="form.price" [disabled]="isSaving"
+            class="w-full px-3 py-2.5 border rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition disabled:opacity-60"
+            [ngClass]="isPriceInvalid ? 'border-danger-border' : 'border-input-border'" />
+        </div>
+        <div>
+          <label class="block text-sm text-text-label mb-1.5">{{ t('productModal.stock') }}</label>
+          <input type="number" min="0" [(ngModel)]="form.stock" [disabled]="isSaving"
+            class="w-full px-3 py-2.5 border rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition disabled:opacity-60"
+            [ngClass]="isStockInvalid ? 'border-danger-border' : 'border-input-border'" />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex justify-end gap-2 px-6 py-4 border-t border-border-card">
+      <button (click)="onClose()" [disabled]="isSaving"
+        class="text-sm px-4 py-2 rounded-xl border border-input-border text-text-body hover:bg-hover-bg transition disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ t('productModal.cancel') }}
+      </button>
+      <button (click)="onSave()" [disabled]="isSaving"
+        class="text-sm px-4 py-2 rounded-xl bg-btn-primary hover:bg-btn-primary-hover text-white transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        @if (isSaving) {
+        <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+        } @else {
+        <i class="fa-solid fa-check text-xs"></i>
+        }
+        {{ isSaving ? t('productModal.saving') : t('productModal.save') }}
+      </button>
+    </div>
+
+  </div>
+</div>

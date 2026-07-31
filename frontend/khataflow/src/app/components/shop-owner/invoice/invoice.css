@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@media print {
+  body * { visibility: hidden; }
+  #invoice-print,
+  #invoice-print * { visibility: visible; }
+  #invoice-print { position: absolute; left: 0; top: 0; width: 100%; }
+}

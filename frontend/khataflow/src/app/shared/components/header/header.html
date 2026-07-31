@@ -1,0 +1,127 @@
+<header *transloco="let t"
+  class="sticky top-0 z-30 h-14 bg-bg-card border-b border-border-table flex items-center justify-between px-4 sm:px-6">
+
+  <div class="flex items-center gap-3">
+
+    <button
+      class="sm:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-border-table bg-bg-card hover:bg-hover-bg transition"
+      (click)="toggleSidebar()">
+      <i class="fa-solid fa-bars text-text-label text-base"></i>
+    </button>
+
+    <span class="text-md font-bold text-text-heading">
+      {{ t(activeTitle) }}
+    </span>
+
+  </div>
+
+  <div class="flex items-center gap-3">
+
+    <div
+      class="hidden sm:flex items-center gap-2 bg-table-header-bg border border-border-table rounded-xl px-3 py-2 w-56">
+      <i class="fa-solid fa-magnifying-glass text-primary-icon text-sm"></i>
+      <input type="text" [placeholder]="t('header.searchPlaceholder')"
+        class="bg-transparent text-sm text-text-label placeholder:text-text-muted outline-none w-full" />
+    </div>
+
+    <div class="relative">
+      <button
+        class="w-9 h-9 flex items-center justify-center rounded-lg border border-border-table bg-bg-card hover:bg-hover-bg transition"
+        (click)="toggleNotifications(); $event.stopPropagation()">
+        <i class="fa-solid fa-bell text-warning-text text-base"></i>
+        @if (unreadCount() > 0) {
+        <span class="absolute top-1 end-1.5 w-2 h-2 bg-danger-btn rounded-full border-2 border-white"></span>
+        }
+      </button>
+
+      @if (isNotifOpen) {
+      <div
+        class="absolute end-0 top-12 w-72 bg-bg-card rounded-xl shadow-lg border border-border-table overflow-hidden z-50">
+
+        <div class="flex items-center justify-between px-4 py-3 border-b border-border-table">
+          <span class="text-sm font-semibold text-text-heading">
+            {{ t('header.notifications') }}
+            @if (unreadCount() > 0) {
+            <span class="ms-1.5 bg-primary-soft text-primary-text text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ unreadCount() }}
+            </span>
+            }
+          </span>
+          <button class="text-xs text-primary-text hover:underline" (click)="markAllRead()">
+            {{ t('header.markAllRead') }}
+          </button>
+        </div>
+
+        <div class="max-h-80 overflow-y-auto">
+          @for (notif of notifications(); track notif.id) {
+          <div
+            class="flex items-start gap-3 px-4 py-3 border-b border-border-table cursor-pointer hover:bg-hover-bg transition last:border-0"
+            [class.bg-primary-soft]="!notif.isRead" (click)="markRead(notif.id)">
+
+            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm"
+              [ngClass]="notificationService.iconFor(notif.type).iconBg">
+              <i [class]="notificationService.iconFor(notif.type).icon"></i>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-text-heading">{{ notif.title | localizedText:notif.titleUr:lang() }}
+              </p>
+              <p class="text-xs text-text-muted mt-0.5 leading-relaxed">{{ notif.message |
+                localizedText:notif.messageUr:lang() }}</p>
+              <p class="text-xs text-text-muted mt-1" dir="ltr">{{ notificationService.timeAgo(notif.sentAt) }}</p>
+            </div>
+
+            @if (!notif.isRead) {
+            <span class="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1.5"></span>
+            }
+          </div>
+          } @empty {
+          <div class="px-4 py-8 text-center text-sm text-text-muted">
+            {{ t('header.noNotifications') }}
+          </div>
+          }
+        </div>
+
+        <div class="px-4 py-2.5 border-t border-border-table text-center">
+          <button class="text-xs text-primary-text hover:underline" [routerLink]="['/notifications']"
+            (click)="isNotifOpen = false">
+            {{ t('header.viewAllNotifications') }}
+          </button>
+        </div>
+
+      </div>
+      }
+    </div>
+
+
+    <div class="relative">
+      <button
+        class="w-9 h-9 bg-primary-icon text-white flex items-center justify-center rounded-full font-semibold text-sm hover:bg-btn-primary-hover transition"
+        (click)="toggleDropdown(); $event.stopPropagation()">
+        {{ avatarInitial() }}
+      </button>
+
+      @if (isDropdownOpen) {
+      <div
+        class="absolute end-0 top-12 w-56 bg-bg-card rounded-xl shadow-lg border border-border-table overflow-hidden z-50">
+
+        <a class="flex items-center gap-3 px-4 py-3 text-text-body hover:bg-table-header-bg cursor-pointer">
+          <i class="fa-solid fa-shop"></i>
+          {{ t('header.businessInfo') }}
+        </a>
+
+        <div class="border-t border-border-table"></div>
+
+        <button (click)="logout()"
+          class="flex items-center gap-3 px-4 py-3 text-danger-text hover:bg-table-header-bg w-full text-left">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          {{ t('header.logout') }}
+        </button>
+
+      </div>
+      }
+    </div>
+
+  </div>
+
+</header>

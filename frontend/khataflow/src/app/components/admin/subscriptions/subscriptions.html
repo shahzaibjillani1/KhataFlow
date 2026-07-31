@@ -1,0 +1,494 @@
+<div class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen space-y-6">
+
+  <div>
+    <h1 class="text-2xl font-semibold text-text-heading">Subscriptions</h1>
+    <p class="text-sm text-text-muted mt-1">Manage plans and subscription activity</p>
+  </div>
+
+  @if (error()) {
+  <div class="rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 flex items-center justify-between">
+    <span>{{ error() }}</span>
+    <button (click)="load()" class="text-red-700 font-medium underline">Retry</button>
+  </div>
+  }
+
+  @if (loading()) {
+  <div class="text-sm text-text-muted px-1">Loading subscriptions...</div>
+  }
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+
+    @for (plan of plans(); track plan.id) {
+    <div class="relative flex flex-col rounded-2xl border transition" [ngClass]="isPopular(plan)
+          ? 'bg-primary-soft border-2 border-primary shadow-lg pt-6'
+          : 'bg-bg-card border-border-card shadow-sm pt-5'">
+
+      @if (isPopular(plan)) {
+      <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+        <span class="bg-primary text-white text-xs font-semibold px-4 py-1.5 rounded-full whitespace-nowrap shadow">
+          Most Popular
+        </span>
+      </div>
+      }
+
+      <div class="px-5 pb-5 flex flex-col flex-1">
+
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-semibold text-text-heading">{{ plan.planName }}</h2>
+          <span class="text-xs font-medium px-2.5 py-1 rounded-full" [ngClass]="isPopular(plan)
+                ? 'bg-warning-soft text-warning-text'
+                : 'bg-hover-bg text-text-muted'">
+            <i class="text-[9px] mr-1" [ngClass]="isPopular(plan)
+                  ? 'fa-solid fa-crown text-warning-text'
+                  : 'fa-solid fa-circle text-icon-muted'">
+            </i>
+            {{ plan.userCount }} users
+          </span>
+        </div>
+
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="text-3xl sm:text-4xl font-bold text-text-heading">
+            Rs {{ plan.monthlyPrice | number }}
+          </span>
+          <span class="text-sm text-text-muted">/ month</span>
+        </div>
+
+        <p class="text-xs text-text-muted mb-4">
+          Rs {{ plan.totalRevenue | number }} total revenue
+        </p>
+
+        <hr class="border-border-table mb-4">
+
+        <ul class="space-y-2.5 flex-1">
+          @for (feature of plan.features; track feature) {
+          <li class="flex items-start gap-2.5 text-sm text-text-body">
+            <i class="fa-solid fa-circle-check text-success mt-0.5 flex-shrink-0 text-xs"></i>
+            {{ feature }}
+          </li>
+          }
+        </ul>
+
+        <button (click)="editPlan(plan)" [disabled]="actionPending() === plan.id"
+          class="mt-5 w-full py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2 disabled:opacity-60"
+          [ngClass]="isPopular(plan)
+              ? 'bg-btn-primary hover:bg-btn-primary-hover text-white'
+              : 'border border-border-table bg-bg-card hover:bg-hover-bg text-text-body'">
+          <i class="fa-solid fa-pen-to-square text-xs"></i>
+          Edit Plan
+        </button>
+
+      </div>
+    </div>
+    }
+
+  </div>
+
+
+  <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+    <div class="h-1 bg-primary"></div>
+
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 py-4 border-b border-border-card">
+      <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+        <i class="fa-solid fa-receipt text-primary-icon"></i>
+        Subscription Activity
+      </h2>
+      <div class="flex gap-2">
+        <select [(ngModel)]="filterStatus"
+          class="border border-border-table rounded-xl px-3 py-2 text-sm bg-bg-page text-text-body focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Expired">Expired</option>
+          <option value="Suspended">Suspended</option>
+        </select>
+        <button (click)="exportActivity()"
+          class="flex items-center gap-1.5 border border-primary-border text-primary-text bg-bg-card hover:bg-primary-soft text-sm font-medium px-3 py-2 rounded-xl transition">
+          <i class="fa-solid fa-file-arrow-down text-xs"></i>
+          Export
+        </button>
+      </div>
+    </div>
+
+
+    <div class="hidden md:block overflow-x-auto">
+      <table class="w-full min-w-[700px]">
+
+        <thead>
+          <tr class="bg-table-header-bg border-b border-border-card">
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Business</th>
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Plan</th>
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Expiry</th>
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Amount</th>
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Status</th>
+            <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (sub of filteredActivity; track sub.businessId) {
+          <tr class="border-b border-border-card last:border-none hover:bg-hover-bg transition">
+
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
+                  [style.background]="sub.avatarColor">
+                  {{ sub.business.charAt(0) }}
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-text-heading">{{ sub.business }}</p>
+                  <p class="text-xs text-text-muted">{{ sub.owner }}</p>
+                </div>
+              </div>
+            </td>
+
+            <td class="px-5 py-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" [ngClass]="{
+                    'bg-hover-bg text-text-body': sub.plan === 'Free',
+                    'bg-warning-soft text-warning-text border border-warning-border': sub.plan === 'Premium'
+                  }">
+                <i class="text-[9px]" [ngClass]="{
+                      'fa-solid fa-circle text-icon-muted': sub.plan === 'Free',
+                      'fa-solid fa-crown text-warning-text': sub.plan === 'Premium'
+                    }">
+                </i>
+                {{ sub.plan }}
+              </span>
+            </td>
+
+            <td class="px-5 py-4">
+              <p class="text-sm text-text-body">{{ sub.expiry }}</p>
+              @if (sub.status === 'Active') {
+              <p class="text-xs text-success">{{ sub.daysLeft }} days left</p>
+              }
+              @if (sub.status === 'Expired') {
+              <p class="text-xs text-error">Expired</p>
+              }
+            </td>
+
+            <td class="px-5 py-4 text-sm font-medium text-text-heading">
+              Rs {{ sub.amount | number }}
+            </td>
+
+            <td class="px-5 py-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" [ngClass]="{
+                    'bg-status-success-bg text-status-success-text border border-status-success-border': sub.status === 'Active',
+                    'bg-danger-soft text-danger-text border border-danger-border': sub.status === 'Expired',
+                    'bg-hover-bg text-text-muted': sub.status === 'Suspended'
+                  }">
+                <i class="fa-solid text-[9px]" [ngClass]="{
+                      'fa-circle text-status-success-dot': sub.status === 'Active',
+                      'fa-circle-xmark text-error': sub.status === 'Expired',
+                      'fa-ban text-icon-muted': sub.status === 'Suspended'
+                    }">
+                </i>
+                {{ sub.status }}
+              </span>
+            </td>
+
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-2">
+                <button (click)="renewSub(sub)" [disabled]="actionPending() === sub.businessId"
+                  class="text-xs font-semibold px-3 py-1.5 rounded-lg transition whitespace-nowrap disabled:opacity-60" [ngClass]="sub.status === 'Expired'
+                      ? 'text-white bg-btn-primary hover:bg-btn-primary-hover'
+                      : 'text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover'">
+                  <i class="fa-solid fa-rotate-right mr-1 text-[10px]"></i>
+                  Renew
+                </button>
+                <button (click)="changePlan(sub)" [disabled]="actionPending() === sub.businessId"
+                  class="text-xs font-semibold text-text-label border border-border-table bg-bg-card hover:bg-hover-bg px-3 py-1.5 rounded-lg transition whitespace-nowrap disabled:opacity-60">
+                  Change
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          }
+
+          @if (filteredActivity.length === 0) {
+          <tr>
+            <td colspan="6" class="px-5 py-12 text-center">
+              <i class="fa-solid fa-receipt text-3xl text-icon-muted block mb-3"></i>
+              <p class="text-sm text-text-muted">No subscriptions found.</p>
+            </td>
+          </tr>
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="md:hidden divide-y divide-border-card">
+      @for (sub of filteredActivity; track sub.businessId) {
+      <div class="px-4 py-4">
+
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
+              [style.background]="sub.avatarColor">
+              {{ sub.business.charAt(0) }}
+            </div>
+            <div>
+              <p class="text-sm font-medium text-text-heading">{{ sub.business }}</p>
+              <p class="text-xs text-text-muted">{{ sub.owner }}</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full" [ngClass]="{
+                'bg-status-success-bg text-status-success-text border border-status-success-border': sub.status === 'Active',
+                'bg-danger-soft text-danger-text border border-danger-border': sub.status === 'Expired',
+                'bg-hover-bg text-text-muted': sub.status === 'Suspended'
+              }">
+            {{ sub.status }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mb-3">
+          <div>
+            <p class="text-xs text-text-muted mb-0.5">Plan</p>
+            <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" [ngClass]="{
+                  'bg-hover-bg text-text-body': sub.plan === 'Free',
+                  'bg-warning-soft text-warning-text border border-warning-border': sub.plan === 'Premium'
+                }">
+              {{ sub.plan }}
+            </span>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted mb-0.5">Amount</p>
+            <p class="text-sm font-medium text-text-heading">Rs {{ sub.amount | number }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted mb-0.5">Expiry</p>
+            <p class="text-sm text-text-body">{{ sub.expiry }}</p>
+            @if (sub.status === 'Active') {
+            <p class="text-xs text-success">{{ sub.daysLeft }}d left</p>
+            }
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button (click)="renewSub(sub)" [disabled]="actionPending() === sub.businessId"
+            class="flex-1 text-xs font-semibold py-2 rounded-lg transition text-center disabled:opacity-60"
+            [ngClass]="sub.status === 'Expired'
+                ? 'text-white bg-btn-primary hover:bg-btn-primary-hover'
+                : 'text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover'">
+            <i class="fa-solid fa-rotate-right mr-1 text-[10px]"></i>
+            Renew
+          </button>
+          <button (click)="changePlan(sub)" [disabled]="actionPending() === sub.businessId"
+            class="flex-1 text-xs font-semibold text-text-label border border-border-table bg-bg-card hover:bg-hover-bg py-2 rounded-lg transition disabled:opacity-60">
+            Change Plan
+          </button>
+        </div>
+
+      </div>
+      }
+
+      @if (filteredActivity.length === 0) {
+      <div class="px-5 py-12 text-center">
+        <i class="fa-solid fa-receipt text-2xl text-icon-muted block mb-2"></i>
+        <p class="text-sm text-text-muted">No subscriptions found.</p>
+      </div>
+      }
+    </div>
+
+    <div
+      class="px-5 py-3.5 bg-table-header-bg border-t border-border-card flex flex-wrap items-center justify-between gap-2">
+      <p class="text-xs text-text-muted">{{ filteredActivity.length }} subscriptions</p>
+      <p class="text-xs text-text-muted">
+        <span class="text-success">{{ activeCount }} active</span> ·
+        <span class="text-error">{{ expiredCount }} expired</span> ·
+        <span class="text-text-muted">{{ suspendedCount }} suspended</span>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ── Edit Plan Modal ─────────────────────────── -->
+  @if (showEditModal && editingPlan) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showEditModal = false">
+    <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-md"
+      (click)="$event.stopPropagation()">
+
+      <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-primary-icon text-sm"></i>
+          <h3 class="text-sm font-semibold text-text-heading">Edit {{ editingPlan.planName }} Plan</h3>
+        </div>
+        <button (click)="showEditModal = false"
+          class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="px-5 py-4 space-y-4">
+
+        <div>
+          <label class="block text-xs font-medium text-text-label mb-1.5">Monthly Price (Rs)</label>
+          <input type="number" [(ngModel)]="editForm.price"
+            class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-text-label mb-1.5">
+            Features
+            <span class="text-text-muted font-normal ml-1">(one per line)</span>
+          </label>
+          <textarea [(ngModel)]="editForm.features" rows="5"
+            class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition resize-none"></textarea>
+        </div>
+
+        <div class="bg-bg-page rounded-xl p-3 border border-border-card">
+          <p class="text-xs font-medium text-text-muted mb-2">Preview</p>
+          <p class="text-xl font-bold text-text-heading">
+            Rs {{ editForm.price | number }}
+            <span class="text-xs font-normal text-text-muted">/ month</span>
+          </p>
+          <ul class="mt-2 space-y-1">
+            @for (f of editForm.features.split('\n'); track f) {
+            @if (f.trim()) {
+            <li class="flex items-center gap-2 text-xs text-text-body">
+              <i class="fa-solid fa-circle-check text-success text-[10px]"></i>
+              {{ f.trim() }}
+            </li>
+            }
+            }
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+        <button (click)="showEditModal = false"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+          Cancel
+        </button>
+        <button (click)="saveEditPlan()" [disabled]="actionPending() === editingPlan.id"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-btn-primary hover:bg-btn-primary-hover text-white transition disabled:opacity-60">
+          {{ actionPending() === editingPlan.id ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+  }
+
+  @if (showChangeModal && changingSub) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showChangeModal = false">
+    <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-md"
+      (click)="$event.stopPropagation()">
+
+      <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right-arrow-left text-primary-icon text-sm"></i>
+          <h3 class="text-sm font-semibold text-text-heading">Change Plan</h3>
+        </div>
+        <button (click)="showChangeModal = false"
+          class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="px-5 py-4 space-y-3">
+
+        <div class="bg-bg-page rounded-xl px-4 py-3 border border-border-card flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-semibold"
+            [style.background]="changingSub.avatarColor">
+            {{ changingSub.business.charAt(0) }}
+          </div>
+          <div>
+            <p class="text-sm font-medium text-text-heading">{{ changingSub.business }}</p>
+            <p class="text-xs text-text-muted">Current: <span class="font-semibold text-text-body">{{ changingSub.plan }}</span></p>
+          </div>
+        </div>
+
+        <p class="text-xs font-medium text-text-label">Select new plan:</p>
+
+        @for (plan of plans(); track plan.id) {
+        <label class="flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition" [class]="selectedPlanId === plan.id
+          ? 'border-primary bg-primary-soft'
+          : 'border-border-card bg-bg-card hover:bg-hover-bg'">
+          <div class="flex items-center gap-3">
+            <input type="radio" [value]="plan.id" [(ngModel)]="selectedPlanId" class="accent-primary" />
+            <div>
+              <p class="text-sm font-semibold text-text-heading flex items-center gap-1.5">
+                <i class="text-[10px]" [ngClass]="isPopular(plan)
+                  ? 'fa-solid fa-crown text-warning-text'
+                  : 'fa-solid fa-circle text-icon-muted'"></i>
+                {{ plan.planName }}
+                @if (isPopular(plan)) {
+                <span class="text-[10px] font-medium bg-primary text-white px-1.5 py-0.5 rounded-full">Popular</span>
+                }
+              </p>
+              <p class="text-xs text-text-muted mt-0.5">{{ plan.features[0] }}</p>
+            </div>
+          </div>
+          <p class="text-sm font-bold text-text-heading">
+            @if (plan.monthlyPrice === 0) { Free } @else { Rs {{ plan.monthlyPrice | number }} }
+          </p>
+        </label>
+        }
+
+      </div>
+
+      <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+        <button (click)="showChangeModal = false"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+          Cancel
+        </button>
+        <button (click)="saveChangePlan()" [disabled]="actionPending() === changingSub.businessId"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-btn-primary hover:bg-btn-primary-hover text-white transition disabled:opacity-60">
+          {{ actionPending() === changingSub.businessId ? 'Changing...' : 'Confirm Change' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+  }
+
+  @if (showRenewModal && renewingSub) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showRenewModal = false">
+    <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+      (click)="$event.stopPropagation()">
+
+      <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-rotate-right text-primary-icon text-sm"></i>
+          <h3 class="text-sm font-semibold text-text-heading">Renew Subscription</h3>
+        </div>
+        <button (click)="showRenewModal = false"
+          class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="px-5 py-5 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-primary-soft flex items-center justify-center mx-auto">
+          <i class="fa-solid fa-rotate-right text-primary-icon text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-text-heading">{{ renewingSub.business }}</p>
+          <p class="text-xs text-text-muted mt-0.5">{{ renewingSub.plan }} plan · Rs {{ renewingSub.amount | number }}/month</p>
+        </div>
+        <p class="text-xs text-text-label leading-relaxed">
+          This will renew the subscription and set the status back to Active.
+        </p>
+      </div>
+
+      <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+        <button (click)="showRenewModal = false"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+          Cancel
+        </button>
+        <button (click)="confirmRenew()" [disabled]="actionPending() === renewingSub.businessId"
+          class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-btn-primary hover:bg-btn-primary-hover text-white transition disabled:opacity-60">
+          {{ actionPending() === renewingSub.businessId ? 'Renewing...' : 'Confirm Renew' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+  }
+</div>

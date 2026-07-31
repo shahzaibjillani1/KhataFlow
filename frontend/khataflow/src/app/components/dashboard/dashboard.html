@@ -1,0 +1,25 @@
+<div class="flex h-screen" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'">
+    @if (isMobileOpen) {
+    <div class="fixed inset-0 bg-black/40 z-40 sm:hidden" (click)="isMobileOpen=false">
+    </div>
+    }
+    <app-sidebar [collapsed]="isCollapsed" [mobileOpen]="isMobileOpen"
+        (tabSelected)="onTabSelected($event)"></app-sidebar>
+
+    <div class="flex-1 flex flex-col">
+
+        <app-header [activeTitle]="activeTitleKey" (toggle)="toggleSidebar()"></app-header>
+
+        <main class="flex-1 bg-bg-page overflow-y-auto">
+
+            <div class="bg-bg-page max-w-7xl mx-auto p-6 space-y-6">
+
+                <router-outlet></router-outlet>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>

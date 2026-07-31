@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:host {
+  /* ---- Design tokens -------------------------------------------------
+     Matched to the existing app UI (Dashboard / Sales-POS / Customers):
+     indigo brand accent, white cards on a soft gray page background,
+     amber for udhar/pending, green for paid. No ledger/paper motif —
+     the in-app screens are flat, white-card, soft-shadow. ------------ */
+  --brand: #4f46e5;      /* indigo-600 */
+  --brand-dark: #4338ca; /* indigo-700 */
+  --brand-tint: #eef2ff; /* indigo-50 */
+  --bg: #f8f9fc;
+  --surface: #ffffff;
+  --border: #f3f4f6;     /* gray-100 */
+  --text: #111827;       /* gray-900 */
+  --text-soft: #6b7280;  /* gray-500 */
+  --amber: #d97706;      /* udhar / pending */
+  --green: #16a34a;      /* paid */
+
+  display: block;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Small "recording" / "logging sale" indicator dot on the hero + voice mocks */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+/* FAQ accordion chevron rotation */
+.faq-chevron {
+  transition: transform 0.2s ease;
+}
+.faq-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Visible keyboard-focus ring in the brand color, only for keyboard nav
+   (mouse clicks don't trigger :focus-visible), so it doesn't add visual
+   noise for pointer users but still gives keyboard users a clear ring
+   against both the white cards and the indigo CTA strip. */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot {
+    animation: none !important;
+  }
+  * {
+    transition: none !important;
+  }
+}

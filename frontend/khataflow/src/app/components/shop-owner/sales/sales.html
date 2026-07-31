@@ -1,0 +1,803 @@
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'" class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen">
+
+    @if (!isOnline()) {
+    <div
+        class="mb-4 flex items-center gap-2 rounded-xl border border-warning-border bg-warning-soft px-4 py-2.5 text-sm text-warning-text">
+        <i class="fa-solid fa-wifi-slash"></i>
+        {{ t('sales.offline.banner') }}
+        @if (pendingSales().length) {
+        <span class="ml-auto text-xs font-medium">{{ t('sales.offline.pendingCount', { count: pendingSales().length })
+            }}</span>
+        }
+    </div>
+    }
+
+    @if (offlineNotice()) {
+    <div
+        class="mb-4 flex items-center justify-between gap-2 rounded-xl border border-warning-border bg-warning-soft px-4 py-2.5 text-sm text-warning-text">
+        <span>{{ offlineNotice() }}</span>
+        <button (click)="offlineNotice.set(null)" class="hover:opacity-70">&times;</button>
+    </div>
+    }
+
+    @if (loadError()) {
+    <div class="mb-4 px-4 py-3 rounded-xl bg-danger-soft border border-danger-border text-sm text-danger-text">
+        {{ loadError() }}
+    </div>
+    }
+
+    @if (isRecording) {
+    <div
+        class="mb-4 flex items-center gap-2 rounded-xl border border-danger-border bg-danger-soft px-4 py-2.5 text-sm text-danger-text">
+        <span class="w-2 h-2 rounded-full bg-danger-btn animate-pulse"></span>
+        {{ t('sales.banners.listening') }}
+    </div>
+    }
+    @if (voiceError()) {
+    <div
+        class="mb-4 flex items-center justify-between gap-2 rounded-xl border border-danger-border bg-danger-soft px-4 py-2.5 text-sm text-danger-text">
+        <span>{{ voiceError() }}</span>
+        <button (click)="voiceError.set(null)" class="hover:opacity-70">&times;</button>
+    </div>
+    }
+    @if (voiceSuccessMessage()) {
+    <div
+        class="mb-4 flex items-center justify-between gap-2 rounded-xl border border-status-success-border bg-status-success-bg px-4 py-2.5 text-sm text-status-success-text">
+        <span>{{ voiceSuccessMessage() }}</span>
+        <button (click)="voiceSuccessMessage.set(null)" class="hover:opacity-70">&times;</button>
+    </div>
+    }
+
+    @if (pendingSales().length || conflictSales().length) {
+    <div class="mb-5 bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+        <div class="px-4 sm:px-5 py-3 border-b border-border-card bg-table-header-bg">
+            <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-udhar-value"></i>
+                {{ t('sales.offline.pendingSection') }}
+            </h2>
+        </div>
+        <div class="divide-y divide-border-table">
+            @for (sale of conflictSales(); track sale.id) {
+            <div class="p-4 flex items-start justify-between gap-3 bg-danger-soft">
+                <div class="min-w-0">
+                    <p class="text-sm font-medium text-danger-text">Rs {{ sale.displayTotal | number }}</p>
+                    <p class="text-xs text-danger-text/80 mt-0.5">{{ sale.conflictMessage ||
+                        t('sales.offline.conflictGeneric') }}</p>
+                </div>
+                <button (click)="cancelPendingSale(sale.id)" [disabled]="cancellingSaleId() === sale.id"
+                    class="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-danger-border text-danger-text hover:bg-danger-divider transition disabled:opacity-50">
+                    {{ t('sales.offline.dismiss') }}
+                </button>
+            </div>
+            }
+            @for (sale of pendingSales(); track sale.id) {
+            <div class="p-4 flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="text-sm font-medium text-text-heading flex items-center gap-2">
+                        Rs {{ sale.displayTotal | number }}
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-udhar-bg px-2 py-0.5 text-[10px] font-medium text-udhar-value">
+                            <i class="fa-solid fa-clock-rotate-left"></i> {{ t('sales.offline.pendingBadge') }}
+                        </span>
+                    </p>
+                    <p class="text-xs text-text-muted mt-0.5">{{ sale.request.items.length }} {{ t('sales.stats.items',
+                        { count: sale.request.items.length }) }}</p>
+                </div>
+                <button (click)="cancelPendingSale(sale.id)" [disabled]="cancellingSaleId() === sale.id"
+                    class="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-border-table text-text-label hover:bg-hover-bg transition disabled:opacity-50">
+                    @if (cancellingSaleId() === sale.id) { <i class="fa-solid fa-spinner fa-spin"></i> } @else { {{
+                    t('sales.offline.cancel') }} }
+                </button>
+            </div>
+            }
+        </div>
+    </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-4 py-3 min-w-0">
+            <p class="text-xs text-text-muted mb-1">{{ t('sales.stats.todaySales') }}</p>
+            <p class="text-lg font-bold text-text-heading truncate">Rs {{ todaySalesTotal() | number }}</p>
+            <p class="text-xs text-text-muted mt-0.5">{{ t('sales.stats.transactions', { count: todaySalesCount() }) }}
+            </p>
+        </div>
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-4 py-3 min-w-0">
+            <p class="text-xs text-text-muted mb-1">{{ t('sales.stats.udharPending') }}</p>
+            <p class="text-lg font-bold text-udhar-value truncate">Rs {{ udharTotal() | number }}</p>
+            <p class="text-xs text-text-muted mt-0.5">{{ t('sales.stats.salesCount', { count: totalCount() }) }}</p>
+        </div>
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-4 py-3 min-w-0">
+            <p class="text-xs text-text-muted mb-1">{{ t('sales.stats.cartTotal') }}</p>
+            <p class="text-lg font-bold text-primary-text truncate">Rs {{ totalAmount | number }}</p>
+            <p class="text-xs text-text-muted mt-0.5">{{ t('sales.stats.items', { count: totalItems }) }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+
+        <div class="lg:col-span-2 space-y-4 min-w-0">
+
+            <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-primary-icon"></i>
+                        {{ t('sales.newSale.title') }}
+                    </h2>
+
+                    <!-- Voice command button -->
+                    @if (isPremium()) {
+                    <button (click)="toggleRecording()" [disabled]="isProcessingVoice || !isOnline()"
+                        [title]="!isOnline() ? t('sales.voice.errors.unsupported') : (isRecording ? t('sales.newSale.stopRecording') : t('sales.newSale.addByVoice'))"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-colors disabled:opacity-50"
+                        [class.bg-danger-soft]="isRecording" [class.border-danger-border]="isRecording"
+                        [class.text-danger-text]="isRecording" [class.bg-bg-card]="!isRecording"
+                        [class.border-input-border]="!isRecording" [class.text-text-label]="!isRecording">
+                        @if (isProcessingVoice) {
+                        <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+                        } @else if (isRecording) {
+                        <i class="fa-solid fa-stop text-sm"></i>
+                        } @else {
+                        <i class="fa-solid fa-microphone text-sm"></i>
+                        }
+                    </button>
+                    } @else {
+                    <button disabled [title]="t('sales.premiumFeature')"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed">
+                        <i class="fa-solid fa-crown text-sm"></i>
+                    </button>
+                    }
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1 min-w-0">
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-input-placeholder text-xs"></i>
+                        <input [(ngModel)]="search" type="text" [placeholder]="t('sales.newSale.searchPlaceholder')"
+                            (keyup.enter)="addToCart()"
+                            class="w-full pl-9 pr-4 py-2.5 border border-input-border rounded-xl bg-input-bg text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring focus:bg-input-bg-focus transition" />
+
+                        @if (search.trim() && filteredProducts.length > 0) {
+                        <div
+                            class="absolute top-full start-0 end-0 mt-1 bg-bg-card border border-border-card rounded-xl shadow-lg z-20 overflow-hidden max-h-52 overflow-y-auto">
+                            @for (p of filteredProducts.slice(0, 6); track p.id) {
+                            <button (click)="selectProduct(p)"
+                                class="w-full flex items-center justify-between px-4 py-2.5 hover:bg-hover-bg transition text-start border-b border-border-table last:border-0">
+                                <div class="min-w-0">
+                                    <p class="text-sm text-text-heading truncate ps-1">{{ p.productName |
+                                        localizedText:p.productNameUr:lang() }}</p>
+                                    <p class="text-xs text-text-muted truncate">{{ p.categoryName |
+                                        localizedText:p.categoryNameUr:lang() }} · {{ t('sales.newSale.inStock', {
+                                        count: p.stock }) }}</p>
+                                </div>
+                                <span dir="ltr" class="text-sm font-semibold text-primary-text flex-shrink-0 ms-3">Rs {{
+                                    p.price }}</span>
+                            </button>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Qty / Browse / Add -->
+                    <div class="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-3">
+                        <div
+                            class="flex items-center justify-center border border-input-border rounded-xl overflow-hidden bg-input-bg sm:flex-none">
+                            <button (click)="decrease()"
+                                class="px-2.5 sm:px-4 py-2.5 text-text-label hover:bg-hover-bg text-base font-medium transition">−</button>
+                            <span
+                                class="px-2 sm:px-4 text-sm font-medium text-text-heading min-w-[26px] sm:min-w-[32px] text-center">{{
+                                quantity
+                                }}</span>
+                            <button (click)="increase()"
+                                class="px-2.5 sm:px-4 py-2.5 text-text-label hover:bg-hover-bg text-base font-medium transition">+</button>
+                        </div>
+
+                        <button (click)="showProductPicker = true"
+                            class="border border-primary-border text-primary-text bg-primary-soft hover:bg-primary-soft-hover px-2 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition sm:flex-none whitespace-nowrap">
+                            <i class="fa-solid fa-grip text-xs mr-1 sm:mr-1.5"></i>{{ t('sales.newSale.browse') }}
+                        </button>
+
+                        <button (click)="addToCart()"
+                            class="bg-btn-primary hover:bg-btn-primary-hover text-white px-2 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition sm:flex-none">
+                            {{ t('sales.newSale.add') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-5 py-4 border-b border-border-card">
+                    <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice text-primary-icon"></i>
+                        {{ t('sales.history.title') }}
+                    </h2>
+                    <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+                        <input type="date" [(ngModel)]="filterDate"
+                            class="flex-1 sm:flex-none border border-input-border rounded-xl px-3 py-2 text-sm bg-input-bg text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                        <select [(ngModel)]="selectedStatus"
+                            class="flex-1 sm:flex-none border border-input-border rounded-xl px-3 py-2 text-sm bg-input-bg text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                            <option value="">{{ t('sales.history.allStatus') }}</option>
+                            <option value="Paid">{{ t('sales.status.paid') }}</option>
+                            <option value="Udhar">{{ t('sales.status.udhar') }}</option>
+                            <option value="Pending">{{ t('sales.status.pending') }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                @if (!isLoading() && filteredSales.length > 0) {
+                <div
+                    class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-border-card bg-table-header-bg">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="w-4 h-4 rounded border-input-border" [checked]="allSelected"
+                            (change)="toggleSelectAll($any($event.target).checked)" />
+                        <span class="text-xs text-text-muted">{{ t('sales.selectAll') }}</span>
+                    </div>
+                    <button (click)="requestBulkDelete()"
+                        [disabled]="selectedIds.size === 0 || isDeleting() || !isOnline()"
+                        [title]="!isOnline() ? t('sales.offline.deleteRequiresConnection') : ''"
+                        class="text-xs px-3 py-1.5 rounded-lg border border-danger-border text-danger-text hover:bg-danger-soft transition flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed">
+                        @if (isDeleting()) {
+                        <i class="fa-solid fa-spinner fa-spin text-[10px]"></i>
+                        } @else {
+                        <i class="fa-solid fa-trash text-[10px]"></i>
+                        }
+                        {{ t('sales.delete') }}
+                    </button>
+                </div>
+                }
+
+                @if (bulkDeleteConfirmOpen()) {
+                <div
+                    class="px-4 sm:px-5 py-3 bg-danger-soft border-b border-danger-border flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-sm text-danger-text font-medium">{{ t('sales.bulkDeleteConfirm', { count:
+                        selectedIds.size }) }}</span>
+                    <div class="flex gap-2">
+                        <button (click)="bulkDelete()" [disabled]="isDeleting()"
+                            class="px-3 py-1 text-xs bg-danger-btn text-white rounded disabled:opacity-50">
+                            @if (isDeleting()) { <i class="fa-solid fa-spinner fa-spin"></i> } @else { {{ t('sales.yes')
+                            }} }
+                        </button>
+                        <button (click)="cancelBulkDelete()" [disabled]="isDeleting()"
+                            class="px-3 py-1 text-xs border rounded disabled:opacity-50">{{ t('sales.cancel')
+                            }}</button>
+                    </div>
+                </div>
+                }
+
+                @if (isLoading()) {
+                <div class="flex items-center justify-center py-12 text-sm text-text-muted">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i> {{ t('sales.history.loading') }}
+                </div>
+                } @else {
+
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="w-full text-xs sm:text-sm min-w-[750px]">
+                        <thead>
+                            <tr class="bg-table-header-bg border-b border-border-table">
+                                <th class="px-5 py-3.5">
+                                    <input type="checkbox" class="w-4 h-4 rounded border-input-border"
+                                        [checked]="allSelected"
+                                        (change)="toggleSelectAll($any($event.target).checked)" />
+                                </th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.invoiceCol') }}</th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.dateCol') }}</th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.customerCol') }}</th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.itemsCol') }}</th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.amountCol') }}</th>
+                                <th class="px-3 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.statusCol') }}</th>
+                                <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label">{{
+                                    t('sales.history.actionCol') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (sale of filteredSales; track sale.id) {
+                            <tr class="border-b border-border-table last:border-none hover:bg-hover-bg transition">
+                                <td class="px-5 py-3.5">
+                                    <input type="checkbox" class="w-4 h-4 rounded border-input-border"
+                                        [checked]="selectedIds.has(sale.id)" (change)="toggleSelect(sale.id)" />
+                                </td>
+                                <td class="px-3 py-3.5 text-sm font-medium text-primary-text">
+                                    {{ sale.invoiceNumber || ('#' + sale.id.slice(0, 8)) }}
+                                </td>
+                                <td class="px-3 py-3.5 text-xs text-text-muted">{{ sale.date | date:'medium' }}</td>
+                                <td class="px-3 py-3.5 text-sm text-text-body">{{ sale.customerName |
+                                    localizedText:sale.customerNameUr:lang() }}</td>
+                                <td class="px-3 py-3.5 text-sm text-text-label">{{ sale.itemCount }}</td>
+                                <td class="px-3 py-3.5">
+                                    <p class="text-sm font-medium text-text-heading">Rs {{ sale.totalAmount | number }}
+                                    </p>
+                                </td>
+                                <td class="px-3 py-3.5">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+                                        [ngClass]="paymentStatusClass(sale.paymentStatus)">
+                                        {{ t(paymentStatusKey(sale.paymentStatus)) }}
+                                    </span>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <div class="flex items-center gap-2">
+                                        <button (click)="router.navigate(['/shop-owner-dashboard/invoice', sale.id])"
+                                            class="text-xs font-medium text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover px-3 py-1.5 rounded-lg transition">
+                                            <i class="fa-solid fa-eye mr-1 text-[10px]"></i>{{
+                                            t('sales.history.invoiceBtn') }}
+                                        </button>
+                                        <button (click)="confirmDelete(sale.id)" [disabled]="!isOnline()"
+                                            [title]="!isOnline() ? t('sales.offline.deleteRequiresConnection') : ''"
+                                            class="text-xs font-medium text-danger-text border border-danger-border hover:bg-danger-soft px-3 py-1.5 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                            <i class="fa-solid fa-trash text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            @if (deleteConfirmId() === sale.id) {
+                            <tr>
+                                <td colspan="8"
+                                    class="px-5 py-3 bg-danger-soft text-center border-b border-danger-border">
+                                    <span class="text-sm text-danger-text font-medium">{{
+                                        t('sales.history.deleteConfirm') }}</span>
+                                    <button (click)="deleteSale(sale.id)" [disabled]="isDeleting()"
+                                        class="ml-3 px-3 py-1 text-xs bg-danger-btn text-white rounded disabled:opacity-50">
+                                        @if (isDeleting()) { <i class="fa-solid fa-spinner fa-spin"></i> } @else { {{
+                                        t('sales.history.yesDelete') }} }
+                                    </button>
+                                    <button (click)="cancelDelete()" [disabled]="isDeleting()"
+                                        class="ml-2 px-3 py-1 text-xs border rounded disabled:opacity-50">{{
+                                        t('sales.history.cancel') }}</button>
+                                </td>
+                            </tr>
+                            }
+                            }
+
+                            @if (filteredSales.length === 0) {
+                            <tr>
+                                <td colspan="8" class="px-5 py-12 text-center">
+                                    <i
+                                        class="fa-solid fa-file-circle-xmark text-2xl text-input-placeholder block mb-2"></i>
+                                    <p class="text-sm text-text-muted">{{ t('sales.history.noSales') }}</p>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="md:hidden divide-y divide-border-table">
+                    @for (sale of filteredSales; track sale.id) {
+                    <div class="p-4">
+                        <div class="flex items-start justify-between gap-3 mb-2">
+                            <div class="flex items-start gap-3 min-w-0">
+                                <input type="checkbox" class="w-4 h-4 rounded border-input-border mt-0.5 flex-shrink-0"
+                                    [checked]="selectedIds.has(sale.id)" (change)="toggleSelect(sale.id)" />
+                                <div class="min-w-0">
+                                    <p class="text-sm font-medium text-primary-text truncate">
+                                        {{ sale.invoiceNumber || ('#' + sale.id.slice(0, 8)) }}
+                                    </p>
+                                    <p class="text-xs text-text-muted mt-0.5">{{ sale.date | date:'medium' }}</p>
+                                </div>
+                            </div>
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border flex-shrink-0"
+                                [ngClass]="paymentStatusClass(sale.paymentStatus)">
+                                {{ t(paymentStatusKey(sale.paymentStatus)) }}
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                            <div class="flex gap-4">
+                                <div class="min-w-0">
+                                    <p class="text-xs text-text-muted mb-0.5">{{ t('sales.history.customerLabel') }}</p>
+                                    <p class="text-sm text-text-body truncate max-w-[120px] xs:max-w-[140px]">{{
+                                        sale.customerName | localizedText:sale.customerNameUr:lang()}}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-text-muted mb-0.5">{{ t('sales.history.itemsLabel') }}</p>
+                                    <p class="text-sm text-text-label">{{ sale.itemCount }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right flex-shrink-0">
+                                <p class="text-xs text-text-muted mb-0.5">{{ t('sales.history.amountLabel') }}</p>
+                                <p class="text-sm font-semibold text-text-heading">Rs {{ sale.totalAmount | number }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button (click)="router.navigate(['/shop-owner-dashboard/invoice', sale.id])"
+                                class="flex-1 text-xs font-medium text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover px-3 py-2 rounded-lg transition">
+                                <i class="fa-solid fa-eye mr-1 text-[10px]"></i>{{ t('sales.history.invoiceBtn') }}
+                            </button>
+                            <button (click)="confirmDelete(sale.id)" [disabled]="!isOnline()"
+                                [title]="!isOnline() ? t('sales.offline.deleteRequiresConnection') : ''"
+                                class="flex-1 text-xs font-medium text-danger-text border border-danger-border hover:bg-danger-soft px-3 py-2 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-trash mr-1 text-[10px]"></i>{{ t('sales.history.deleteBtn') }}
+                            </button>
+                        </div>
+
+                        @if (deleteConfirmId() === sale.id) {
+                        <div class="mt-3 px-3 py-3 bg-danger-soft border border-danger-border rounded-xl text-center">
+                            <p class="text-sm text-danger-text font-medium mb-2">{{
+                                t('sales.history.deleteConfirmShort') }}</p>
+                            <div class="flex gap-2 justify-center">
+                                <button (click)="deleteSale(sale.id)" [disabled]="isDeleting()"
+                                    class="px-3 py-1.5 text-xs bg-danger-btn text-white rounded-lg disabled:opacity-50">
+                                    @if (isDeleting()) { <i class="fa-solid fa-spinner fa-spin"></i> } @else { {{
+                                    t('sales.history.yesDelete') }} }
+                                </button>
+                                <button (click)="cancelDelete()" [disabled]="isDeleting()"
+                                    class="px-3 py-1.5 text-xs border rounded-lg disabled:opacity-50">{{
+                                    t('sales.history.cancel') }}</button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    @if (filteredSales.length === 0) {
+                    <div class="px-5 py-12 text-center">
+                        <i class="fa-solid fa-file-circle-xmark text-2xl text-input-placeholder block mb-2"></i>
+                        <p class="text-sm text-text-muted">{{ t('sales.history.noSales') }}</p>
+                    </div>
+                    }
+                </div>
+
+                @if (totalCount() > 0) {
+                <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-t border-border-card">
+                    <p class="text-xs text-text-muted">
+                        {{ t('sales.history.pagination.pageInfo', { page: pageNumber(), total: totalPages() }) }}
+                    </p>
+                    <div class="flex gap-2">
+                        <button (click)="goToPage(pageNumber() - 1)" [disabled]="!hasPreviousPage() || !isOnline()"
+                            class="px-3 py-1.5 text-xs font-medium border border-border-table rounded-lg text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                            {{ t('sales.history.pagination.prev') }}
+                        </button>
+                        <button (click)="goToPage(pageNumber() + 1)" [disabled]="!hasNextPage() || !isOnline()"
+                            class="px-3 py-1.5 text-xs font-medium border border-border-table rounded-lg text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                            {{ t('sales.history.pagination.next') }}
+                        </button>
+                    </div>
+                </div>
+                }
+
+                }
+            </div>
+        </div>
+
+        <div
+            class="bg-bg-card rounded-2xl border border-border-card shadow-sm p-4 sm:p-5 flex flex-col h-fit lg:sticky lg:top-6 min-w-0">
+
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-primary-icon"></i>
+                    {{ t('sales.cart.title') }}
+                </h2>
+                <span
+                    class="bg-primary text-white text-xs font-medium px-2.5 py-0.5 rounded-full min-w-[24px] text-center">
+                    {{ totalItems }}
+                </span>
+            </div>
+
+            <div class="relative mb-3">
+                <button type="button" (click)="cartPickerOpen.set(!cartPickerOpen())"
+                    class="w-full flex items-center justify-between gap-2 px-3 py-2.5 border border-input-border rounded-xl bg-input-bg text-sm text-text-heading hover:bg-hover-bg transition">
+                    <span class="truncate flex items-center gap-1.5">
+                        <i class="fa-solid fa-user text-xs text-text-muted"></i>
+                        @if (selectedCustomer) {
+                        {{ selectedCustomer.name | localizedText:selectedCustomer.nameUr:lang() }}
+                        } @else {
+                        {{ t('sales.cart.walkIn') }}
+                        }
+                    </span>
+                    <i class="fa-solid fa-chevron-down text-xs text-text-muted flex-shrink-0"
+                        [class.rotate-180]="cartPickerOpen()"></i>
+                </button>
+
+                @if (cartPickerOpen()) {
+                <div class="absolute top-full left-0 right-0 mt-1 bg-bg-card border border-border-card rounded-xl shadow-lg z-20 max-h-64 overflow-hidden flex flex-col"
+                    (click)="$event.stopPropagation()">
+                    <div class="p-2 border-b border-border-card">
+                        <input type="text" [placeholder]="t('sales.customerPicker.searchPlaceholder')"
+                            (input)="customerSearch$.next($any($event.target).value)"
+                            class="w-full px-3 py-1.5 text-sm border border-input-border rounded-lg bg-input-bg text-text-heading focus:outline-none focus:ring-1 focus:ring-focus-ring transition" />
+                    </div>
+                    <div class="overflow-y-auto">
+                        <button (click)="clearSelectedCustomer(); cartPickerOpen.set(false)"
+                            class="w-full text-left px-4 py-2.5 text-sm text-text-muted hover:bg-hover-bg transition border-b border-border-table">
+                            {{ t('sales.cart.walkIn') }}
+                        </button>
+                        @if (isSearchingCustomers()) {
+                        <div class="px-4 py-3 text-xs text-text-muted"><i
+                                class="fa-solid fa-spinner fa-spin mr-1.5"></i>{{
+                            t('sales.customerPicker.searching') }}</div>
+                        }
+                        @for (c of customerOptions(); track c.id) {
+                        <button (click)="selectedCustomerId = c.id; cartPickerOpen.set(false)"
+                            class="w-full text-left px-4 py-2.5 text-sm hover:bg-hover-bg transition border-b border-border-table last:border-0">
+                            <p class="text-text-heading truncate">{{ c.name | localizedText:c.nameUr:lang() }}</p>
+                            <p class="text-xs text-text-muted">{{ c.phone }}</p>
+                        </button>
+                        }
+                        @if (customerOptions().length === 0 && !isSearchingCustomers()) {
+                        <p class="px-4 py-3 text-xs text-text-muted">{{ t('sales.customerPicker.noResults') }}</p>
+                        }
+                    </div>
+                </div>
+                }
+
+                @if (selectedCustomer && selectedCustomer.outstanding > 0) {
+                <p class="text-xs text-udhar-label mt-1 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i>
+                    {{ t('sales.cart.outstanding', { amount: selectedCustomer.outstanding }) }}
+                </p>
+                }
+            </div>
+
+            @if (cart.length === 0) {
+            <div class="flex flex-col items-center justify-center py-10 text-center">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-input-bg border border-border-card flex items-center justify-center mb-3">
+                    <i class="fa-solid fa-cart-shopping text-xl text-input-placeholder"></i>
+                </div>
+                <p class="text-sm font-medium text-text-muted">{{ t('sales.cart.empty') }}</p>
+                <p class="text-xs text-input-placeholder mt-0.5">{{ t('sales.cart.emptyHint') }}</p>
+            </div>
+            }
+
+            @if (cart.length > 0) {
+            <div class="space-y-2 overflow-y-auto max-h-64 pr-1 mb-1">
+                @for (item of cart; track item.productId) {
+                <div class="flex items-center gap-2 py-2 border-b border-border-table last:border-none">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-medium text-text-heading truncate">{{ item.name |
+                            localizedText:item.nameUr:lang() }}</p>
+                        <p class="text-xs text-text-muted">Rs {{ item.price }}</p>
+                    </div>
+                    <div class="flex items-center border border-input-border rounded-lg overflow-hidden flex-shrink-0">
+                        <button (click)="updateQty(item, -1)"
+                            class="px-2 py-1 text-text-label hover:bg-hover-bg text-xs transition">−</button>
+                        <span class="px-2 text-xs font-medium text-text-heading">{{ item.quantity }}</span>
+                        <button (click)="updateQty(item, 1)"
+                            class="px-2 py-1 text-text-label hover:bg-hover-bg text-xs transition">+</button>
+                    </div>
+                    <span class="text-xs font-semibold text-text-heading w-16 text-right flex-shrink-0">
+                        Rs {{ item.quantity * item.price | number }}
+                    </span>
+                    <button (click)="removeFromCart(item.productId)"
+                        class="text-text-muted hover:text-danger-text transition flex-shrink-0">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+                }
+            </div>
+            }
+
+            <div class="mt-3 border-t border-border-table pt-3 space-y-2.5">
+
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-text-muted flex-shrink-0">{{ t('sales.cart.discount') }}</label>
+                    <input type="number" [(ngModel)]="discount" min="0" [max]="subtotal" placeholder="0"
+                        class="flex-1 min-w-0 border border-input-border rounded-lg px-2.5 py-1.5 text-xs bg-input-bg text-text-heading focus:outline-none focus:ring-1 focus:ring-focus-ring transition" />
+                </div>
+
+                <div class="flex justify-between text-xs text-text-muted">
+                    <span>{{ t('sales.cart.subtotal') }}</span>
+                    <span>Rs {{ subtotal | number }}</span>
+                </div>
+
+                @if (discount > 0) {
+                <div class="flex justify-between text-xs text-status-success-text">
+                    <span>{{ t('sales.cart.discountLabel') }}</span>
+                    <span>− Rs {{ discount | number }}</span>
+                </div>
+                }
+
+                <div class="flex justify-between items-baseline gap-2">
+                    <span class="text-sm font-semibold text-text-body">{{ t('sales.cart.total') }}</span>
+                    <span class="text-xl font-bold text-primary-text truncate">Rs {{ totalAmount | number }}</span>
+                </div>
+
+                <button (click)="openCheckout()" [disabled]="cart.length === 0"
+                    class="w-full bg-success hover:bg-success-hover text-white py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    {{ t('sales.cart.completeSale') }}
+                </button>
+
+                <button (click)="clearCart()" [disabled]="cart.length === 0"
+                    class="w-full border border-btn-reset-border hover:bg-btn-reset-bg-hover text-btn-reset-text py-2 rounded-xl text-sm font-medium transition disabled:opacity-40">
+                    {{ t('sales.cart.clearCart') }}
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (showProductPicker) {
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40"
+    (click)="showProductPicker = false">
+    <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-2xl max-h-[85vh] flex flex-col"
+        (click)="$event.stopPropagation()">
+
+        <div class="flex items-center justify-between px-4 sm:px-5 py-4 border-b border-border-card flex-shrink-0">
+            <h3 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                <i class="fa-solid fa-boxes-stacked text-primary-icon"></i>
+                {{ t('sales.productPicker.title') }}
+            </h3>
+            <button (click)="showProductPicker = false"
+                class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted flex-shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <div class="px-4 sm:px-5 py-3 border-b border-border-card flex-shrink-0 space-y-2">
+            <div class="relative">
+                <i
+                    class="fa-solid fa-magnifying-glass absolute start-3 top-1/2 -translate-y-1/2 text-input-placeholder text-xs"></i>
+                <input [(ngModel)]="search" type="text" [placeholder]="t('sales.productPicker.searchPlaceholder')"
+                    class="w-full ps-9 pe-4 py-2 border border-input-border rounded-xl bg-input-bg text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+            </div>
+            <div class="flex gap-2 flex-wrap overflow-x-auto">
+                <button (click)="selectedCategory = ''"
+                    class="text-xs px-3 py-1 rounded-lg border transition flex-shrink-0" [ngClass]="selectedCategory === ''
+            ? 'bg-primary text-white border-primary'
+            : 'border-border-table text-text-label hover:bg-hover-bg'">
+                    {{ t('sales.productPicker.all') }}
+                </button>
+                @for (cat of productCategories; track cat) {
+                <button (click)="selectedCategory = cat"
+                    class="text-xs px-3 py-1 rounded-lg border transition flex-shrink-0" [ngClass]="selectedCategory === cat
+              ? 'bg-primary text-white border-primary'
+              : 'border-border-table text-text-label hover:bg-hover-bg'">
+                    {{ cat | localizedText:categoryUrMap[cat]:lang() }}
+                </button>
+                }
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-3 sm:p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                @for (p of pickerProducts; track p.id) {
+                <button (click)="selectProduct(p)" [disabled]="p.stock === 0"
+                    class="flex items-center justify-between p-3 rounded-xl border transition text-left w-full min-w-0"
+                    [ngClass]="p.stock === 0
+              ? 'border-border-card bg-hover-bg opacity-50 cursor-not-allowed'
+              : 'border-border-card bg-bg-card hover:border-primary hover:bg-primary-soft'">
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-text-heading truncate">{{ p.productName |
+                            localizedText:p.productNameUr:lang() }}</p>
+                        <p class="text-xs text-text-muted mt-0.5">
+                            {{ p.stock > 0 ? t('sales.productPicker.inStock', { count: p.stock }) :
+                            t('sales.productPicker.outOfStock') }}
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 ms-3 text-end">
+                        <p class="text-sm font-bold text-primary-text">Rs {{ p.price }}</p>
+                    </div>
+                </button>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+}
+
+
+@if (showCheckoutModal) {
+<div *transloco="let t" [dir]="lang() === 'ur' ? 'rtl' : 'ltr'"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40"
+    (click)="showCheckoutModal = false">
+    <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-md max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()">
+
+        <div class="flex items-center justify-between px-4 sm:px-5 py-4 border-b border-border-card">
+            <h3 class="text-sm font-semibold text-text-heading flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-success text-sm"></i>
+                {{ t('sales.checkout.title') }}
+            </h3>
+            <button (click)="showCheckoutModal = false"
+                class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted flex-shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <div class="px-4 sm:px-5 py-4 space-y-4">
+
+            @if (!isOnline()) {
+            <div class="rounded-lg border border-warning-border bg-warning-soft px-3 py-2 text-xs text-warning-text">
+                {{ t('sales.offline.checkoutWillQueue') }}
+            </div>
+            }
+
+            <div class="bg-bg-page rounded-xl border border-border-card p-4 space-y-2">
+                <p class="text-xs font-semibold text-text-muted uppercase tracking-wide mb-2">{{
+                    t('sales.checkout.orderSummary') }}</p>
+                @for (item of cart; track item.productId) {
+                <div class="flex justify-between text-xs text-text-body gap-2">
+                    <span class="truncate">{{ item.name | localizedText:item.nameUr:lang() }} × {{ item.quantity
+                        }}</span>
+                    <span class="font-medium text-text-heading flex-shrink-0">Rs {{ item.quantity * item.price | number
+                        }}</span>
+                </div>
+                }
+                <div class="border-t border-border-table pt-2 mt-2">
+                    @if (discount > 0) {
+                    <div class="flex justify-between text-xs text-status-success-text mb-1">
+                        <span>{{ t('sales.checkout.discount') }}</span><span>− Rs {{ discount | number }}</span>
+                    </div>
+                    }
+                    <div class="flex justify-between text-sm font-bold gap-2">
+                        <span class="text-text-heading">{{ t('sales.checkout.total') }}</span>
+                        <span class="text-primary-text truncate">Rs {{ totalAmount | number }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-text-label mb-1.5">{{ t('sales.checkout.customer')
+                    }}</label>
+                <select [(ngModel)]="selectedCustomerId"
+                    class="w-full border border-input-border rounded-xl px-3 py-2.5 text-sm bg-input-bg text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    <option [ngValue]="''">{{ t('sales.checkout.walkIn') }}</option>
+                    @for (c of customers(); track c.id) {
+                    <option [ngValue]="c.id">{{ c.name | localizedText:c.nameUr:lang() }}</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-text-label mb-2">{{ t('sales.checkout.paymentMethod')
+                    }}</label>
+                <div class="grid grid-cols-1 xs:grid-cols-3 gap-2">
+                    @for (method of methods; track method) {
+                    <button (click)="paymentMethod = method"
+                        class="py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition capitalize" [ngClass]="paymentMethod === method
+                ? method === 'udhar'
+                  ? 'bg-udhar-bg border-udhar-border text-udhar-label'
+                  : 'bg-primary text-white border-primary'
+                : 'border-border-table bg-bg-card text-text-label hover:bg-hover-bg'">
+                        <i class="text-xs mr-1 sm:mr-1.5 fa-solid" [ngClass]="{
+                  'fa-money-bill-wave': method === 'cash',
+                  'fa-credit-card': method === 'card',
+                  'fa-handshake': method === 'udhar'
+                }"></i>
+                        {{ t(methodKey(method)) }}
+                    </button>
+                    }
+                </div>
+                @if (paymentMethod === 'udhar' && !selectedCustomerId) {
+                <p class="text-xs text-udhar-label mt-1.5 flex items-center gap-1">
+                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                    {{ t('sales.checkout.udharWarning') }}
+                </p>
+                }
+            </div>
+
+        </div>
+
+        <div class="flex gap-2 px-4 sm:px-5 py-4 border-t border-border-card">
+            <button (click)="showCheckoutModal = false"
+                class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                {{ t('sales.checkout.cancel') }}
+            </button>
+            <button (click)="completeSale()"
+                [disabled]="isSubmitting() || (paymentMethod === 'udhar' && !selectedCustomerId)"
+                class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-success hover:bg-success-hover text-white transition disabled:opacity-50 disabled:cursor-not-allowed">
+                @if (isSubmitting()) {
+                <i class="fa-solid fa-spinner fa-spin mr-1.5 text-xs"></i>{{ t('sales.checkout.processing') }}
+                } @else {
+                <i class="fa-solid fa-check mr-1.5 text-xs"></i>{{ t('sales.checkout.confirmSale') }}
+                }
+            </button>
+        </div>
+
+    </div>
+</div>
+}

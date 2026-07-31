@@ -1,0 +1,994 @@
+{
+  "sidebar": {
+    "brandPart1": "کھاتہ",
+    "brandPart2": "فلو",
+    "staffInvite": "عملے کو دعوت",
+    "menu": "مینو",
+    "dashboard": "ڈیش بورڈ",
+    "sales": "سیلز / پی او ایس",
+    "products": "پروڈکٹس",
+    "invoiceSettings": "انوائس کی ترتیبات",
+    "customers": "کسٹمرز",
+    "expenses": "اخراجات",
+    "reports": "رپورٹس",
+    "settings": "سیٹنگز",
+    "usersAndBusinesses": "صارفین اور کاروبار",
+    "subscriptions": "سبسکرپشنز",
+    "analytics": "تجزیات",
+    "systemSettings": "سسٹم سیٹنگز",
+    "logout": "لاگ آؤٹ",
+    "noMenuItems": "کوئی مینو آئٹم نہیں"
+  },
+  "productModal": {
+    "editTitle": "پروڈکٹ میں ترمیم کریں",
+    "addTitle": "پروڈکٹ شامل کریں",
+    "saving": "محفوظ ہو رہا ہے...",
+    "productName": "پروڈکٹ کا نام",
+    "productNamePlaceholder": "پروڈکٹ کا نام درج کریں",
+    "nameRequired": "پروڈکٹ کا نام درکار ہے",
+    "category": "قسم",
+    "selectCategory": "ایک قسم منتخب کریں",
+    "categoryRequired": "قسم درکار ہے",
+    "noCategories": "ابھی تک کوئی قسم دستیاب نہیں۔",
+    "price": "قیمت",
+    "stock": "اسٹاک",
+    "cancel": "منسوخ کریں",
+    "save": "محفوظ کریں"
+  },
+  "header": {
+    "searchPlaceholder": "تلاش کریں...",
+    "notifications": "اطلاعات",
+    "markAllRead": "سب کو پڑھا ہوا نشان زد کریں",
+    "noNotifications": "ابھی تک کوئی اطلاع نہیں۔",
+    "viewAllNotifications": "تمام اطلاعات دیکھیں",
+    "businessInfo": "کاروباری معلومات",
+    "logout": "لاگ آؤٹ",
+    "timeAgo": {
+      "justNow": "ابھی ابھی",
+      "minuteAgo": "{{count}} منٹ پہلے",
+      "minutesAgo": "{{count}} منٹ پہلے",
+      "hourAgo": "{{count}} گھنٹہ پہلے",
+      "hoursAgo": "{{count}} گھنٹے پہلے",
+      "yesterday": "کل",
+      "daysAgo": "{{count}} دن پہلے"
+    }
+  },
+  "actions": {
+    "khata": "کھاتہ",
+    "addUdhar": "+ ادھار",
+    "pay": "ادائیگی",
+    "edit": "ترمیم کریں",
+    "share": "واٹس ایپ پر شیئر کریں"
+  },
+  "shareMessage": "السلام علیکم {{name}}، یہ آپ کا کھاتہ ہے۔ آپ اپنا بیلنس اور تاریخ کسی بھی وقت یہاں دیکھ سکتے ہیں: {{link}}",
+  "notificationsPage": {
+    "title": "اطلاعات",
+    "unreadSuffix": "غیر پڑھی ہوئی",
+    "markAllRead": "سب کو پڑھا ہوا نشان زد کریں",
+    "markAll": "سب",
+    "loading": "اطلاعات لوڈ ہو رہی ہیں",
+    "loadError": "اطلاعات لوڈ نہیں ہو سکیں۔",
+    "empty": "یہاں کوئی اطلاع نہیں",
+    "delete": "حذف کریں",
+    "filters": {
+      "all": "تمام",
+      "unread": "غیر پڑھی ہوئی",
+      "payment": "ادائیگیاں",
+      "alert": "الرٹس",
+      "info": "معلومات"
+    }
+  },
+  "customerModal": {
+    "editTitle": "کسٹمر میں ترمیم کریں",
+    "addTitle": "کسٹمر شامل کریں",
+    "customerName": "کسٹمر کا نام",
+    "saving": "محفوظ ہو رہا ہے...",
+    "address": "پتہ",
+    "addressPlaceholder": "مثلاً دکان 12، مین بازار",
+    "addressRequired": "پتہ درکار ہے۔",
+    "phoneInvalid": "درست پاکستانی نمبر درج کریں، مثلاً 0300-1234567۔",
+    "customerNamePlaceholder": "کسٹمر کا نام درج کریں",
+    "nameRequired": "نام درکار ہے",
+    "phone": "فون",
+    "phonePlaceholder": "03XX-XXXXXXX",
+    "phoneRequired": "فون نمبر درکار ہے",
+    "totalPurchases": "کل خریداری",
+    "outstanding": "باقی رقم (ادھار)",
+    "lastVisit": "آخری وزٹ",
+    "lastVisitPlaceholder": "مثلاً آج / مارچ 20",
+    "cancel": "منسوخ کریں",
+    "save": "محفوظ کریں"
+  },
+  "sales": {
+    "banners": {
+      "listening": "سن رہا ہے... روکنے کے لیے دوبارہ مائیک دبائیں۔"
+    },
+    "offline": {
+      "banner": "آپ آف لائن ہیں — نئی سیلز محفوظ ہو جائیں گی اور آن لائن آنے پر خود بخود سِنک ہو جائیں گی۔",
+      "pendingSection": "سِنک باقی",
+      "pendingCount": "{{count}} سِنک باقی",
+      "pendingBadge": "سِنک باقی",
+      "conflictGeneric": "یہ سیل تنازع کی وجہ سے سِنک نہیں ہو سکی۔",
+      "dismiss": "نظرانداز کریں",
+      "cancel": "منسوخ کریں",
+      "alreadySyncing": "یہ سیل پہلے ہی سِنک ہو رہی ہے — تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+      "saleQueued": "سیل آف لائن محفوظ ہو گئی — آن لائن آنے پر سِنک ہو جائے گی۔",
+      "deleteRequiresConnection": "سیل حذف کرنے کے لیے انٹرنیٹ کنکشن درکار ہے۔",
+      "checkoutWillQueue": "آپ آف لائن ہیں — یہ سیل مقامی طور پر محفوظ ہو جائے گی اور آن لائن آنے پر سِنک ہو گی۔"
+    },
+    "selectAll": "سب منتخب کریں",
+    "delete": "حذف کریں",
+    "bulkDeleteConfirm": "{{count}} منتخب سیلز حذف کریں؟",
+    "yes": "ہاں",
+    "cancel": "منسوخ کریں",
+    "premiumFeature": "پریمیم فیچر — اَپ گریڈ کریں",
+    "stats": {
+      "todaySales": "آج کی سیلز",
+      "transactions": "{{count}} لین دین",
+      "udharPending": "باقی ادھار",
+      "salesCount": "{{count}} سیلز",
+      "cartTotal": "کارٹ کل رقم",
+      "items": "{{count}} اشیاء"
+    },
+    "newSale": {
+      "title": "نئی سیل",
+      "searchPlaceholder": "پروڈکٹ تلاش کریں...",
+      "inStock": "{{count}} اسٹاک میں",
+      "browse": "براؤز کریں",
+      "add": "شامل کریں",
+      "stopRecording": "ریکارڈنگ روکیں",
+      "addByVoice": "آواز سے سیل شامل کریں"
+    },
+    "errors": {
+      "loadProducts": "پروڈکٹس لوڈ نہیں ہو سکیں۔ براہ کرم دوبارہ کوشش کریں۔",
+      "loadSales": "سیلز کی تاریخ لوڈ نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔"
+    },
+    "voice": {
+      "errors": {
+        "unsupported": "اس ڈیوائس پر آواز کی سہولت دستیاب نہیں ہے۔",
+        "permissionDenied": "مائیکروفون تک رسائی مسترد کر دی گئی۔ آواز کے کمانڈز استعمال کرنے کے لیے اجازت دیں۔",
+        "processFailed": "ریکارڈنگ پر کارروائی نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+        "notUnderstood": "معذرت، یہ سمجھ نہیں آیا۔ دوبارہ کوشش کریں۔",
+        "notASale": "یہ سیل نہیں لگتی۔ دوبارہ کوشش کریں یا خود شامل کریں۔"
+      },
+      "saleRecorded": "سیل کامیابی سے ریکارڈ ہو گئی۔"
+    },
+    "customerPicker": {
+      "searchPlaceholder": "کسٹمرز تلاش کریں...",
+      "searching": "تلاش ہو رہا ہے...",
+      "noResults": "کوئی کسٹمر نہیں ملا۔"
+    },
+    "history": {
+      "title": "سیلز کی تاریخ",
+      "allStatus": "تمام حیثیت",
+      "loading": "سیلز لوڈ ہو رہی ہیں…",
+      "invoiceCol": "انوائس",
+      "dateCol": "تاریخ",
+      "customerCol": "کسٹمر",
+      "itemsCol": "اشیاء",
+      "amountCol": "رقم",
+      "statusCol": "حیثیت",
+      "actionCol": "عمل",
+      "invoiceBtn": "انوائس",
+      "deleteBtn": "حذف کریں",
+      "deleteConfirm": "یہ سیل ریکارڈ حذف کریں؟ یہ واپس نہیں ہو سکتا۔",
+      "deleteConfirmShort": "یہ سیل ریکارڈ حذف کریں؟",
+      "yesDelete": "ہاں، حذف کریں",
+      "cancel": "منسوخ کریں",
+      "noSales": "کوئی سیل نہیں ملی۔",
+      "customerLabel": "کسٹمر",
+      "itemsLabel": "اشیاء",
+      "amountLabel": "رقم",
+      "pagination": {
+        "prev": "پچھلا",
+        "next": "اگلا",
+        "pageInfo": "صفحہ {{page}} از {{total}}"
+      }
+    },
+    "status": {
+      "paid": "ادا شدہ",
+      "udhar": "ادھار",
+      "pending": "زیر التوا"
+    },
+    "paymentMethods": {
+      "cash": "نقد",
+      "card": "کارڈ",
+      "udhar": "ادھار"
+    },
+    "cart": {
+      "title": "کارٹ",
+      "walkIn": "واک اِن کسٹمر",
+      "outstanding": "باقی رقم: Rs {{amount}}",
+      "empty": "کارٹ خالی ہے",
+      "emptyHint": "اوپر سے پروڈکٹ تلاش کریں یا براؤز کریں",
+      "discount": "رعایت (روپے)",
+      "subtotal": "ذیلی مجموعہ",
+      "discountLabel": "رعایت",
+      "total": "کل رقم",
+      "completeSale": "سیل مکمل کریں",
+      "clearCart": "کارٹ خالی کریں"
+    },
+    "productPicker": {
+      "title": "پروڈکٹ منتخب کریں",
+      "searchPlaceholder": "پروڈکٹس تلاش کریں...",
+      "all": "تمام",
+      "inStock": "{{count}} اسٹاک میں",
+      "outOfStock": "اسٹاک ختم"
+    },
+    "checkout": {
+      "title": "سیل مکمل کریں",
+      "orderSummary": "آرڈر کا خلاصہ",
+      "discount": "رعایت",
+      "total": "کل رقم",
+      "customer": "کسٹمر",
+      "walkIn": "واک اِن کسٹمر",
+      "paymentMethod": "ادائیگی کا طریقہ",
+      "udharWarning": "براہ کرم ادھار کے لیے کسٹمر منتخب کریں",
+      "cancel": "منسوخ کریں",
+      "processing": "کارروائی جاری ہے…",
+      "confirmSale": "سیل کی تصدیق کریں"
+    }
+  },
+  "settings": {
+    "loading": "آپ کی سیٹنگز لوڈ ہو رہی ہیں…",
+    "business": {
+      "title": "کاروباری معلومات",
+      "name": "کاروبار کا نام",
+      "ownerName": "مالک کا نام",
+      "phone": "فون",
+      "address": "پتہ",
+      "saving": "محفوظ ہو رہا ہے...",
+      "saved": "محفوظ ہو گیا!",
+      "saveChanges": "تبدیلیاں محفوظ کریں"
+    },
+    "profile": {
+      "title": "پروفائل",
+      "email": "ای میل",
+      "newPassword": "نیا پاس ورڈ",
+      "newPasswordPlaceholder": "موجودہ رکھنے کے لیے خالی چھوڑیں",
+      "passwordNote": "پاس ورڈ کی تبدیلی ابھی دستیاب نہیں ہے۔",
+      "updating": "اپڈیٹ ہو رہا ہے...",
+      "updated": "اپڈیٹ ہو گیا!",
+      "update": "اپڈیٹ کریں"
+    },
+    "preferences": {
+      "title": "ترجیحات",
+      "language": "زبان"
+    },
+    "subscription": {
+      "title": "سبسکرپشن",
+      "renews": "تجدید {{date}}",
+      "locationsUsed": "استعمال شدہ مقامات",
+      "locationsFooter": "{{total}} میں سے {{used}} کاروباری مقامات استعمال ہوئے",
+      "onPremium": "آپ پریمیم پر ہیں — تمام فیچرز سے لطف اٹھائیں!",
+      "upgrade": "پریمیم میں اپ گریڈ کریں",
+      "basicPlan": "بیسک پلان",
+      "premiumPlan": "پریمیم پلان"
+    },
+    "upgradeModal": {
+      "title": "پریمیم میں اپ گریڈ کریں",
+      "subtitle": "اپنے کاروبار کے لیے تمام فیچرز کھولیں",
+      "step": "مرحلہ {{step}} از 3",
+      "recommended": "تجویز کردہ",
+      "upgradingTo": "اپ گریڈ کر رہے ہیں",
+      "perMonth": "/ماہ",
+      "firstMonthOff": "پہلا مہینہ 20% رعایت",
+      "useCode": "کوڈ استعمال کریں",
+      "atCheckout": "چیک آؤٹ پر",
+      "maybeLater": "بعد میں",
+      "continue": "جاری رکھیں",
+      "paymentDetails": "ادائیگی کی تفصیلات",
+      "cardholderName": "کارڈ ہولڈر کا نام",
+      "cardNumber": "کارڈ نمبر",
+      "expiry": "میعاد ختم",
+      "cvv": "سی وی وی",
+      "promoCode": "پرومو کوڈ",
+      "apply": "لاگو کریں",
+      "promoApplied": "20% رعایت لاگو ہو گئی — Rs 1,999/ماہ",
+      "promoInvalid": "غلط پرومو کوڈ۔ PREMIUM20 آزمائیں۔",
+      "premiumPlanLine": "پریمیم پلان",
+      "perMonthPrice": "/ ماہ",
+      "promoLine": "پرومو (PREMIUM20)",
+      "totalToday": "آج کی کل رقم",
+      "secured": "256-bit SSL خفیہ کاری کے ساتھ محفوظ",
+      "back": "واپس",
+      "processing": "کارروائی جاری ہے...",
+      "payAndUpgrade": "ادائیگی کریں اور اپ گریڈ کریں",
+      "onPremiumTitle": "آپ پریمیم پر ہیں!",
+      "upgradedSuccess": "آپ کا اکاؤنٹ کامیابی سے اپ گریڈ ہو گیا ہے۔",
+      "nextBilling": "اگلا بل:",
+      "startUsing": "پریمیم استعمال شروع کریں"
+    },
+    "planFeatures": {
+      "unlimitedProducts": "لامحدود پروڈکٹس",
+      "udharSystem": "ادھار / کھاتہ سسٹم",
+      "whatsappInvoices": "واٹس ایپ انوائسز",
+      "reportsAnalytics": "رپورٹس اور تجزیات",
+      "oneLocation": "1 کاروباری مقام",
+      "everythingInBasic": "بیسک کی ہر چیز",
+      "multiBranch": "ملٹی برانچ سپورٹ",
+      "staffAccounts": "اسٹاف اکاؤنٹس",
+      "prioritySupport": "ترجیحی سپورٹ 24/7",
+      "customBranding": "حسب ضرورت برانڈنگ",
+      "advancedAnalytics": "ایڈوانسڈ تجزیات"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "todaySales": "آج کی سیلز",
+      "monthlyRevenue": "ماہانہ آمدنی",
+      "totalProducts": "کل پروڈکٹس",
+      "lowStockAlerts": "کم اسٹاک الرٹس"
+    },
+    "weeklySales": {
+      "title": "ہفتہ وار سیلز",
+      "bar": "بار",
+      "line": "لائن",
+      "loading": "چارٹ لوڈ ہو رہا ہے…"
+    },
+    "recentSales": {
+      "title": "حالیہ سیلز",
+      "viewAll": "سب دیکھیں",
+      "invoiceCol": "انوائس",
+      "customerCol": "کسٹمر",
+      "itemsCol": "اشیاء",
+      "amountCol": "رقم",
+      "statusCol": "حیثیت",
+      "noSales": "ابھی تک کوئی سیل نہیں۔"
+    },
+    "quickActions": {
+      "title": "فوری اقدامات",
+      "newSale": "نئی سیل",
+      "addProduct": "پروڈکٹ شامل کریں",
+      "addCustomer": "کسٹمر شامل کریں",
+      "newInvoice": "نئی انوائس"
+    },
+    "topProducts": {
+      "title": "ٹاپ پروڈکٹس",
+      "noData": "ابھی تک کوئی سیلز ڈیٹا نہیں۔"
+    },
+    "status": {
+      "paid": "ادا شدہ",
+      "udhar": "ادھار",
+      "unknown": "حیثیت {{status}}"
+    }
+  },
+  "expense": {
+    "totalExpenses": "کل اخراجات",
+    "entriesCount": "{{count}} اندراجات • پچھلے 30 دن",
+    "export": "ایکسپورٹ",
+    "retry": "دوبارہ کوشش کریں",
+    "yes": "ہاں",
+    "cancel": "منسوخ کریں",
+    "pagination": {
+      "prev": "پچھلا",
+      "next": "اگلا"
+    },
+    "bulk": {
+      "selectAll": "سب منتخب کریں",
+      "selectedCount": "{{count}} منتخب",
+      "clearSelection": "انتخاب صاف کریں",
+      "deleteSelected": "منتخب شدہ حذف کریں",
+      "confirmMessage": "کیا آپ واقعی {{count}} منتخب شدہ خرچ حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں ہو سکتا۔",
+      "yesDelete": "ہاں، حذف کریں"
+    },
+    "searchPlaceholder": "اخراجات تلاش کریں...",
+    "allCategories": "تمام اقسام",
+    "language": "زبان",
+    "premiumFeature": "پریمیم فیچر — اَپ گریڈ کریں",
+    "catalogTruncatedWarning": "جزوی فہرست دکھائی جا رہی ہے — آپ کے اخراجات کی فہرست اس صفحے کی گنجائش سے بڑی ہے۔ اگر تلاش یا ترتیب کے نتائج نامکمل لگیں تو سپورٹ سے رابطہ کریں۔",
+    "deleteConfirm": "یہ خرچہ حذف کریں؟ یہ واپس نہیں ہو سکتا۔",
+    "errors": {
+      "loadFailed": "اخراجات لوڈ نہیں ہو سکے۔ دوبارہ کوشش کریں۔",
+      "addFailed": "خرچہ محفوظ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "alreadySyncing": "یہ خرچہ پہلے ہی سِنک ہو رہا ہے — تھوڑی دیر بعد دوبارہ کوشش کریں۔"
+    },
+    "offline": {
+      "banner": "آپ آف لائن ہیں — نئے اخراجات محفوظ ہو جائیں گے اور آن لائن آنے پر خود بخود سِنک ہو جائیں گے۔",
+      "pendingCount": "{{count}} سِنک باقی",
+      "pendingBadge": "سِنک باقی",
+      "willQueue": "آپ آف لائن ہیں — یہ خرچہ مقامی طور پر محفوظ ہو جائے گا اور آن لائن آنے پر سِنک ہو گا۔"
+    },
+    "voice": {
+      "premiumOnly": "وائس کمانڈز صرف پریمیم فیچر ہیں",
+      "errors": {
+        "unsupported": "اس ڈیوائس پر آواز کی سہولت دستیاب نہیں ہے۔",
+        "permissionDenied": "مائیکروفون تک رسائی مسترد کر دی گئی۔ آواز کے کمانڈز استعمال کرنے کے لیے اجازت دیں۔",
+        "processFailed": "ریکارڈنگ پر کارروائی نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+        "notUnderstood": "معذرت، یہ سمجھ نہیں آیا۔ دوبارہ کوشش کریں۔",
+        "notAnExpense": "یہ خرچہ نہیں لگتا۔ دوبارہ کوشش کریں یا خود شامل کریں۔"
+      },
+      "expenseRecorded": "خرچہ کامیابی سے ریکارڈ ہو گیا۔"
+    },
+    "categories": {
+      "rent": "کرایہ",
+      "electricity": "بجلی",
+      "gas": "گیس",
+      "internet": "انٹرنیٹ",
+      "salary": "تنخواہ",
+      "transport": "آمد و رفت",
+      "maintenance": "مرمت",
+      "stationery": "اسٹیشنری",
+      "tax": "ٹیکس",
+      "refreshment": "چائے ناشتہ",
+      "miscellaneous": "متفرق"
+    },
+    "stopRecording": "ریکارڈنگ روکیں",
+    "addByVoice": "آواز سے خرچہ شامل کریں",
+    "addExpense": "خرچہ شامل کریں",
+    "add": "شامل کریں",
+    "listening": "سن رہا ہے... روکنے کے لیے دوبارہ مائیک دبائیں۔",
+    "table": {
+      "title": "عنوان",
+      "category": "قسم",
+      "note": "نوٹ",
+      "date": "تاریخ",
+      "amount": "رقم",
+      "actions": "اعمال",
+      "loading": "اخراجات لوڈ ہو رہے ہیں...",
+      "noExpenses": "کوئی اخراجات نہیں ملے۔",
+      "delete": "حذف کریں",
+      "deleting": "حذف ہو رہا ہے..."
+    },
+    "totalLabel": "کل",
+    "expensesCount": "{{count}} اخراجات",
+    "modal": {
+      "title": "خرچہ شامل کریں",
+      "titleLabel": "عنوان",
+      "titlePlaceholder": "مثلاً بجلی کا بل",
+      "titleRequired": "عنوان درکار ہے۔",
+      "amountLabel": "رقم",
+      "amountRequired": "ایک درست رقم درج کریں۔",
+      "categoryLabel": "قسم",
+      "noteLabel": "نوٹ (اختیاری)",
+      "notePlaceholder": "اضافی تفصیلات...",
+      "cancel": "منسوخ کریں",
+      "save": "خرچہ محفوظ کریں",
+      "saving": "محفوظ ہو رہا ہے..."
+    }
+  },
+  "customers": {
+    "listening": "سن رہا ہے... روکنے کے لیے دوبارہ مائیک دبائیں۔",
+    "totalOutstanding": "کل باقی رقم (ادھار/کھاتہ)",
+    "premiumFeature": "پریمیم فیچر — اَپ گریڈ کریں",
+    "fromCustomers": "{{count}} کسٹمرز سے • ابھی اپڈیٹ ہوا",
+    "shareMessage": "،{{name}} السلام علیکم\nآپ کا کھاتہ یہاں دیکھیں:\n{{link}}",
+    "invalidPhone": "اس کسٹمر کا نمبر درست نہیں ہے۔",
+    "export": "ایکسپورٹ",
+    "retry": "دوبارہ کوشش کریں",
+    "offline": {
+      "banner": "آپ آف لائن ہیں — کسٹمرز میں تبدیلی یا نیا کسٹمر شامل کرنے کے لیے انٹرنیٹ درکار ہے۔",
+      "addRequiresConnection": "کسٹمر شامل کرنے کے لیے انٹرنیٹ کنکشن درکار ہے۔",
+      "deleteRequiresConnection": "کسٹمر حذف کرنے کے لیے انٹرنیٹ کنکشن درکار ہے۔"
+    },
+    "bulk": {
+      "selectAll": "سب منتخب کریں",
+      "selectedCount": "{{count}} منتخب",
+      "clearSelection": "انتخاب ختم کریں",
+      "deleteSelected": "منتخب حذف کریں",
+      "confirmTitle": "کسٹمرز حذف کریں؟",
+      "confirmMessage": "کیا آپ واقعی {{count}} منتخب کسٹمرز کو حذف کرنا چاہتے ہیں؟ یہ واپس نہیں ہو سکتا۔",
+      "deleting": "حذف ہو رہا ہے...",
+      "yesDelete": "ہاں، حذف کریں"
+    },
+    "exportPageOnly": "صرف موجودہ صفحہ ایکسپورٹ کریں",
+    "viewAllUdhar": "تمام ادھار دیکھیں",
+    "searchPlaceholder": "کسٹمرز تلاش کریں...",
+    "publicLedger": {
+      "linkInvalidTitle": "یہ لنک اب کام نہیں کر رہا۔",
+      "linkInvalidSubtitle": "براہ کرم دکان سے نیا لنک منگوائیں۔",
+      "errorTitle": "یہ صفحہ لوڈ نہیں ہو سکا۔",
+      "errorSubtitle": "براہ کرم تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+      "youOwe": "آپ پر واجب الادا رقم",
+      "allClear": "آپ کا حساب صاف ہے",
+      "recentActivity": "حالیہ سرگرمی",
+      "noActivity": "ابھی تک کچھ نہیں۔",
+      "tookCredit": "آپ نے ادھار پر سامان لیا",
+      "youPaid": "آپ نے ادائیگی کی",
+      "more": "+{{count}} مزید",
+      "qty": "تعداد",
+      "each": "فی عدد",
+      "itemCount": "{{count}} آئٹم",
+      "itemCount_plural": "{{count}} آئٹمز",
+      "noteLabel": "نوٹ"
+    },
+    "filters": {
+      "all": "تمام کسٹمرز",
+      "hasUdhar": "ادھار والے",
+      "clear": "کلیئر"
+    },
+    "sort": {
+      "label": "ترتیب دیں",
+      "nameAsc": "نام A–Z",
+      "nameDesc": "نام Z–A",
+      "outstandingDesc": "زیادہ ادھار",
+      "outstandingAsc": "کم ادھار",
+      "purchasesDesc": "زیادہ خریداری",
+      "lastVisitDesc": "حالیہ وزٹ"
+    },
+    "stopRecording": "ریکارڈنگ روکیں",
+    "addByVoice": "آواز سے ادھار شامل کریں یا ادائیگی ریکارڈ کریں",
+    "addCustomer": "کسٹمر شامل کریں",
+    "loading": "کسٹمرز لوڈ ہو رہے ہیں…",
+    "table": {
+      "customer": "کسٹمر",
+      "phone": "فون",
+      "totalPurchases": "کل خریداری",
+      "outstanding": "باقی رقم (ادھار)",
+      "lastVisit": "آخری وزٹ",
+      "actions": "اعمال"
+    },
+    "noAddress": "کوئی پتہ نہیں",
+    "clear": "کلیئر",
+    "actions": {
+      "khata": "کھاتہ",
+      "addUdhar": "+ ادھار",
+      "pay": "ادائیگی",
+      "edit": "ترمیم کریں"
+    },
+    "deleteConfirm": "{{name}} کو حذف کریں؟ یہ واپس نہیں ہو سکتا۔",
+    "deleteConfirmShort": "{{name}} کو حذف کریں؟",
+    "yesDelete": "ہاں، حذف کریں",
+    "yes": "ہاں",
+    "cancel": "منسوخ کریں",
+    "close": "بند کریں",
+    "noCustomers": "کوئی کسٹمر نہیں ملا۔",
+    "pagination": {
+      "prev": "پچھلا",
+      "next": "اگلا"
+    },
+    "customersCount": "{{count}} کسٹمرز",
+    "totalOutstandingLabel": "کل باقی رقم",
+    "outstandingLabel": "باقی رقم",
+    "mobile": {
+      "purchases": "خریداری",
+      "lastVisit": "آخری وزٹ",
+      "address": "پتہ"
+    },
+    "khata": {
+      "loading": "کھاتہ لوڈ ہو رہا ہے…",
+      "totalPurchases": "کل خریداری",
+      "outstanding": "باقی رقم",
+      "totalPaid": "کل ادائیگی",
+      "noEntries": "ابھی تک کوئی اندراج نہیں",
+      "udhar": "ادھار",
+      "payment": "ادائیگی",
+      "balance": "بیلنس",
+      "recordPayment": "ادائیگی ریکارڈ کریں"
+    },
+    "udharModal": {
+      "title": "ادھار شامل کریں",
+      "currentBalance": "موجودہ بیلنس",
+      "amount": "رقم (روپے)",
+      "amountPlaceholder": "مثلاً 500",
+      "note": "نوٹ",
+      "notePlaceholder": "مثلاً گروسری اشیاء، راشن...",
+      "newBalance": "ادھار کے بعد نیا بیلنس"
+    },
+    "paymentModal": {
+      "title": "ادائیگی ریکارڈ کریں",
+      "outstanding": "باقی رقم",
+      "quickAmount": "فوری رقم",
+      "full": "مکمل",
+      "amount": "رقم (روپے)",
+      "exceedsBalance": "رقم باقی بیلنس سے زیادہ نہیں ہو سکتی",
+      "note": "نوٹ",
+      "notePlaceholder": "مثلاً نقد، بینک ٹرانسفر...",
+      "remainingBalance": "باقی بیلنس",
+      "confirm": "ادائیگی کی تصدیق کریں"
+    }
+  },
+  "invoice": {
+    "loading": "انوائس لوڈ ہو رہی ہے…",
+    "notFound": {
+      "title": "انوائس نہیں ملی",
+      "description": "جو انوائس آپ تلاش کر رہے ہیں وہ موجود نہیں یا حذف کر دی گئی ہے۔"
+    },
+    "goBack": "واپس جائیں",
+    "print": "پرنٹ",
+    "whatsapp": "واٹس ایپ",
+    "pdf": "پی ڈی ایف",
+    "title": "انوائس",
+    "invoiceNo": "انوائس نمبر",
+    "date": "تاریخ",
+    "customer": "کسٹمر",
+    "status": {
+      "label": "حیثیت",
+      "paid": "ادا شدہ",
+      "udhar": "ادھار",
+      "pending": "زیر التوا"
+    },
+    "items": "اشیاء ({{count}})",
+    "itemsInSale": "اس سیل میں {{count}} اشیاء",
+    "breakdownUnavailable": "تفصیلی خلاصہ دستیاب نہیں",
+    "grandTotal": "کل رقم",
+    "udharNotice": "یہ انوائس <strong>ادھار</strong> پر ہے۔ <strong>Rs {{amount}}</strong> کی ادائیگی {{customer}} کی جانب سے باقی ہے۔",
+    "paidNotice": "<strong>Rs {{amount}}</strong> کی ادائیگی موصول ہو گئی۔",
+    "thankYou": "آپ کے کاروبار کا شکریہ!",
+    "poweredBy": "تیار کردہ",
+    "share": "شیئر کریں"
+  },
+  "products": {
+    "searchPlaceholder": "پروڈکٹس تلاش کریں...",
+    "allCategories": "تمام اقسام",
+    "allStatus": "تمام حیثیت",
+    "addProduct": "پروڈکٹ شامل کریں",
+
+    "retry": "دوبارہ کوشش کریں",
+    "premiumFeature": "مصنوعات برآمد کرنے کے لیے پریمیم پر اپ گریڈ کریں",
+    "loading": "پروڈکٹس لوڈ ہو رہے ہیں…",
+    "selectAll": "سب منتخب کریں",
+    "delete": "حذف کریں",
+    "export": "ایکسپورٹ",
+    "edit": "ترمیم کریں",
+    "cancel": "منسوخ کریں",
+    "yes": "ہاں",
+    "confirmDelete": "حذف کرنے کی تصدیق کریں؟",
+    "noProducts": "کوئی پروڈکٹ نہیں ملا",
+    "addCategory": "کیٹیگری شامل کریں",
+    "category": {
+      "title": "نئی کیٹیگری",
+      "nameLabel": "کیٹیگری کا نام",
+      "namePlaceholder": "مثلاً مشروبات",
+      "nameRequired": "کیٹیگری کا نام درکار ہے۔",
+      "duplicate": "اس نام کی کیٹیگری پہلے سے موجود ہے۔",
+      "saveFailed": "کیٹیگری محفوظ نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+      "save": "محفوظ کریں"
+    },
+    "errors": {
+      "loadFailed": "پروڈکٹس لوڈ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
+      "saveFailed": "تبدیلیاں محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔"
+    },
+    "offline": {
+      "banner": "آپ آف لائن ہیں — پروڈکٹس میں تبدیلی یا نئی پروڈکٹ شامل کرنے کے لیے انٹرنیٹ درکار ہے۔",
+      "addRequiresConnection": "پروڈکٹ شامل کرنے کے لیے انٹرنیٹ کنکشن درکار ہے۔",
+      "deleteRequiresConnection": "پروڈکٹ حذف کرنے کے لیے انٹرنیٹ کنکشن درکار ہے۔",
+      "pendingBadge": "سِنک باقی",
+      "onlyPriceStockOffline": "آف لائن صرف قیمت اور اسٹاک میں تبدیلی ممکن ہے۔ نام یا قسم بدلنے کے لیے آن لائن ہوں۔",
+      "categoryNotResolved": "اس پروڈکٹ کی قسم آف لائن حل نہیں ہو سکی — پہلے اسے ایک بار آن لائن کھولیں۔"
+    },
+    "bulkDeleteConfirm": "{{count}} منتخب پروڈکٹس حذف کریں؟",
+    "catalogTruncatedWarning": "جزوی فہرست دکھائی جا رہی ہے — آپ کی پروڈکٹ لسٹ اس صفحے کی گنجائش سے بڑی ہے۔ اگر تلاش یا ترتیب کے نتائج نامکمل لگیں تو سپورٹ سے رابطہ کریں۔",
+    "table": {
+      "name": "نام",
+      "category": "قسم",
+      "price": "قیمت",
+      "stock": "اسٹاک",
+      "status": "حیثیت",
+      "actions": "اعمال"
+    },
+    "status": {
+      "inStock": "اسٹاک میں",
+      "lowStock": "کم اسٹاک",
+      "outOfStock": "اسٹاک ختم"
+    },
+    "pagination": {
+      "prev": "پچھلا",
+      "next": "اگلا"
+    },
+    "productsCount": "{{count}} پروڈکٹس",
+    "unitsCount": "{{count}} یونٹس",
+    "mobileSummary": {
+      "in": "{{count}} موجود",
+      "low": "{{count}} کم",
+      "out": "{{count}} ختم"
+    }
+  },
+  "reports": {
+    "dateRange": "تاریخ کی حد",
+    "apply": "لاگو کریں",
+    "pdf": "پی ڈی ایف",
+    "excel": "ایکسل",
+    "retry": "دوبارہ کوشش کریں",
+    "loading": "رپورٹ لوڈ ہو رہی ہے…",
+    "revenueTrend": "آمدنی کا رجحان",
+    "noTrendData": "ماہانہ رجحان کا ڈیٹا ابھی دستیاب نہیں",
+    "topSellingProducts": "زیادہ فروخت ہونے والی پروڈکٹس",
+    "noTopProductsData": "ٹاپ پروڈکٹس کا ڈیٹا ابھی دستیاب نہیں",
+    "stats": {
+      "totalRevenue": "کل آمدنی",
+      "grossProfit": "مجموعی منافع",
+      "totalOrders": "کل آرڈرز",
+      "avgPerOrder": "اوسط Rs {{amount}}/آرڈر",
+      "expenses": "اخراجات",
+      "outstanding": "باقی رقم",
+      "totalCustomers": "کل کسٹمرز"
+    },
+    "errors": {
+      "topProducts": "ٹاپ پروڈکٹس ابھی دستیاب نہیں ہیں۔",
+      "revenueTrend": "آمدنی کا رجحان ابھی دستیاب نہیں ہے۔",
+      "loadFailed": "رپورٹ کا ڈیٹا لوڈ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "dateRangeInvalid": "\"سے\" تاریخ \"تک\" تاریخ سے پہلے ہونی چاہیے۔"
+    },
+    "chart": {
+      "revenue": "آمدنی"
+    }
+  },
+  "staffInvite": {
+    "title": "عملے کو دعوت دیں",
+    "successMessage": "دعوت نامہ کامیابی سے بھیج دیا گیا۔",
+    "subtitle": "اپنی ٹیم میں مینیجر یا عملہ شامل کریں",
+    "sendViaWhatsApp": "واٹس ایپ کے ذریعے دعوت بھیجیں",
+    "errorMessageFallback": "دعوت نامہ بھیجنے میں ناکامی۔ دوبارہ کوشش کریں۔",
+    "fields": {
+      "fullName": {
+        "label": "پورا نام",
+        "error": "پورا نام کم از کم 3 حروف پر مشتمل ہونا چاہیے۔"
+      },
+      "email": {
+        "label": "ای میل",
+        "error": "درست ای میل ایڈریس درج کریں۔"
+      },
+      "phoneNumber": {
+        "label": "فون نمبر",
+        "placeholder": "+923001234567",
+        "error": "درست فون نمبر درج کریں۔"
+      },
+      "role": {
+        "label": "کردار",
+        "options": {
+          "Manager": "مینیجر",
+          "Staff": "عملہ"
+        }
+      }
+    },
+    "submit": {
+      "default": "دعوت نامہ بھیجیں",
+      "loading": "بھیجا جا رہا ہے…"
+    }
+  },
+  "landing": {
+    "nav": {
+      "home": "ہوم",
+      "features": "فیچرز",
+      "how": "طریقہ کار",
+      "faq": "عمومی سوالات",
+      "login": "لاگ ان",
+      "getStarted": "شروع کریں",
+      "langToggle": "زبان تبدیل کریں"
+    },
+    "hero": {
+      "eyebrow": "ڈیجیٹل کھاتہ",
+      "title": {
+        "line1": "ہر سیل۔",
+        "line2Before": "ہر ",
+        "line2Highlight": "ادھار۔",
+        "line3": "ایک کھاتہ۔"
+      },
+      "subtitle": "کھاتہ فلو کاغذی کھاتے کی جگہ ایک زندہ کھاتہ دیتا ہے — سیل کریں، ادا شدہ یا ادھار نشان زد کریں، اور کھاتہ خود بخود درست ہو جائے گا۔",
+      "ctaPrimary": "اپنا کھاتہ شروع کریں — مفت",
+      "ctaSecondary": "لائیو سیل دیکھیں",
+      "checklist": {
+        "noPaper": "اب کاغذی کھاتے کی ضرورت نہیں",
+        "staffLogins": "عملہ اور مینیجر لاگ اِنز",
+        "bilingual": "انگریزی + اردو"
+      },
+      "mock": {
+        "activeCustomer": "فعال کسٹمر",
+        "loggingSale": "سیل درج ہو رہی ہے",
+        "item1": "آٹا 10 کلو × 1",
+        "item2": "کوکنگ آئل 5 لیٹر × 2",
+        "item3": "چائے 950 گرام × 1",
+        "total": "کل رقم"
+      }
+    },
+    "roles": {
+      "eyebrow": "پورے کاؤنٹر کے لیے بنایا گیا",
+      "title": "ایک کاؤنٹر۔ ہر کردار، مدعو۔",
+      "subtitle": "مالک دکان چلاتا ہے، مینیجر فلور سنبھالتا ہے، عملہ ٹِل چلاتا ہے — تینوں کو ایک ہی ٹیب سے دعوت دیں، اور ہر ایک کو صرف وہی دکھائیں جو اسے دیکھنا چاہیے۔",
+      "owner": {
+        "label": "مالک",
+        "title": "مکمل کھاتہ، مکمل کنٹرول۔",
+        "description": "آمدنی، رپورٹس، سبسکرپشن، اور دعوت والا ٹیب — مالک دکان کا ہر عدد دیکھ سکتا ہے۔"
+      },
+      "staff": {
+        "label": "مینیجر · عملہ",
+        "title": "صرف وہی جو ٹِل کو چاہیے۔",
+        "description": "سیل کریں، اسٹاک درج کریں، اور ادھار ریکارڈ کریں — مالک کی رپورٹس کے بغیر، صرف فلور تک محدود۔"
+      },
+      "inviteMock": {
+        "label": "دعوت ٹیب",
+        "send": "دعوت بھیجیں"
+      }
+    },
+    "modulesSection": {
+      "eyebrow": "کاؤنٹر کے پیچھے ہر چیز",
+      "title": "دکان کے ہر حصے کے لیے ایک ٹیب۔",
+      "subtitle": "صبح کھلنے سے لے کر رات کے حساب تک، کھاتہ فلو کاؤنٹر کے پیچھے چلتا ہے تاکہ آپ کو حساب ہاتھ سے نہ کرنا پڑے۔"
+    },
+    "modules": {
+      "dashboard": {
+        "title": "ڈیش بورڈ",
+        "description": "لاگ اِن کرتے ہی آج کی سیلز، کم اسٹاک، اور ہفتے کا چارٹ۔",
+        "stat": "آج Rs 48,200"
+      },
+      "sales": {
+        "title": "سیلز اور پی او ایس",
+        "description": "کارٹ بنائیں، رعایت لگائیں، یا بس سیل بول کر بتائیں۔",
+        "stat": "آج 112 سیلز"
+      },
+      "products": {
+        "title": "پروڈکٹس",
+        "description": "ہر ٹِل پر اسٹاک، اقسام، اور قیمتیں تازہ ترین۔",
+        "stat": "312 پروڈکٹس ٹریک"
+      },
+      "customers": {
+        "title": "کسٹمرز اور ادھار",
+        "description": "ہر کسٹمر کا بیلنس، سب سے زیادہ واجب الادا کے مطابق ترتیب شدہ۔",
+        "stat": "Rs 96,400 باقی"
+      },
+      "expenses": {
+        "title": "اخراجات",
+        "description": "کرایہ یا سپلائر کا بل ٹائپ کریں — یا آواز سے درج کریں۔",
+        "stat": "اس ماہ 18 اندراج"
+      },
+      "reports": {
+        "title": "رپورٹس",
+        "description": "آمدنی، منافع، اور ٹاپ پروڈکٹس، پی ڈی ایف یا ایکسل میں ایکسپورٹ۔",
+        "stat": "ایک ٹیپ میں ایکسپورٹ"
+      }
+    },
+    "voice": {
+      "eyebrow": "آواز سے اندراج",
+      "title": { "line1": "سیل بولیں۔", "line2": "ہم ادھار درج کر دیں گے۔" },
+      "subtitle": "چیک آؤٹ کے دوران سیل بولیں، انگریزی یا اردو میں۔ کھاتہ فلو اسے کارٹ میں لکھتا ہے، ادا شدہ یا ادھار نشان زد کرتا ہے، اور فون رکھنے سے پہلے کسٹمر کا بیلنس اپڈیٹ کر دیتا ہے۔",
+      "liveLedgerLabel": "لائیو لیجر",
+      "recording": "ریکارڈنگ جاری",
+      "mock": {
+        "customer1": "زینب ٹریڈرز",
+        "udharAmount": "− Rs 4,200 ادھار",
+        "customer2": "حامد جنرل اسٹور",
+        "paidAmount": "+ Rs 2,000 ادا شدہ",
+        "customer3": "کامران خان",
+        "sayingUdhar": "Rs 5,830 — \"ادھار\" بول رہے ہیں…"
+      },
+      "bullets": {
+        "voiceLogged": "آواز سے سیل اور ادھار، انگریزی اور اردو میں",
+        "balancesUpdate": "بولتے ہی باقی بیلنس اپڈیٹ ہو جاتا ہے",
+        "whatsappDelivery": "ایک ٹیپ میں کسٹمر کا کھاتہ واٹس ایپ پر"
+      }
+    },
+    "how": {
+      "eyebrow": "ورک فلو",
+      "title": "سیل سے یاد دہانی تک، چار مراحل میں۔",
+      "step1": {
+        "title": "سیل درج کریں",
+        "description": "شیلف تلاش کریں یا براؤز کریں، تعداد سیٹ کریں، اور کسٹمر کی بات ختم ہونے سے پہلے کارٹ تیار۔",
+        "item1": "کوکنگ آئل 5 لیٹر × 2",
+        "item2": "آٹا 10 کلو × 1"
+      },
+      "step2": {
+        "title": "ادائیگی کا طریقہ منتخب کریں",
+        "description": "نقد، کارڈ، یا ادھار — سیدھا کسٹمر کے چلتے بیلنس میں درج۔"
+      },
+      "step3": {
+        "title": "یاد دہانیاں چلی جاتی ہیں",
+        "description": "کھاتے کی اپڈیٹ کسٹمر کے واٹس ایپ پر پہنچ جاتی ہے — نہ فون کال، نہ عجیب سوال۔",
+        "mock": "بیلنس +92 3xx پر بھیج دیا گیا"
+      },
+      "step4": {
+        "title": "دن بند کریں",
+        "description": "ڈیش بورڈ آمدنی، منافع، اور بالکل وہی جو باقی ہے تیار کر دیتا ہے — ہاتھ سے جوڑنے کی ضرورت نہیں۔",
+        "mockLabel": "آج",
+        "mockAmount": "Rs 48,200",
+        "mockSuffix": "آمدنی"
+      }
+    },
+    "faq": {
+      "title": "وہ سوالات جو دکاندار واقعی پوچھتے ہیں۔",
+      "subtitle": "اگر آپ کو جواب نہ ملے تو براہ راست رابطہ کریں۔",
+      "offline": {
+        "question": "کیا کھاتہ فلو انٹرنیٹ کے بغیر کام کرتا ہے؟",
+        "answer": "جی ہاں۔ سیلز، اسٹاک کی تبدیلیاں، اور ادھار کے اندراجات ڈیوائس پر قطار میں رہتے ہیں اور کنکشن واپس آتے ہی سِنک ہو جاتے ہیں — سگنل جانے سے کاؤنٹر نہیں رکتا۔"
+      },
+      "invite": {
+        "question": "کیا میں اپنے عملے اور مینیجرز کو دعوت دے سکتا ہوں؟",
+        "answer": "دعوت ٹیب سے، مالک ای میل کے ذریعے مینیجرز اور عملہ شامل کر سکتا ہے، ہر ایک کو صرف اسی کے کردار کے مطابق رسائی ملتی ہے۔"
+      },
+      "udhar": {
+        "question": "کیا ادھار خودکار طور پر ٹریک ہوتا ہے؟",
+        "answer": "جیسے ہی سیل کو ادھار نشان زد کریں، وہ سیدھا اسی کسٹمر کے کھاتے میں لکھی جاتی ہے — الگ رجسٹر یا دو ریکارڈ ملانے کی ضرورت نہیں۔"
+      },
+      "share": {
+        "question": "کیا میں کسٹمر کو اس کا کھاتہ بھیج سکتا ہوں؟",
+        "answer": "جی ہاں — کسی بھی کسٹمر کا باقی بیلنس اور حالیہ اندراجات ایک ٹیپ میں سیدھا واٹس ایپ پر بھیجیں۔"
+      },
+      "urdu": {
+        "question": "کیا یہ اردو سپورٹ کرتا ہے؟",
+        "answer": "پوری ایپ، انوائسز سمیت، انگریزی اور اردو میں کام کرتی ہے — ہیڈر میں ٹوگل سے کسی بھی وقت بدل لیں۔"
+      },
+      "pricing": {
+        "question": "کیا فی سیل یا فی کسٹمر کوئی فیس ہے؟",
+        "answer": "نہیں۔ ہر دکان کے لیے ایک ہی فلیٹ پلان ہے — جتنی چاہیں سیلز اور کسٹمرز کاؤنٹر پر درج کریں۔"
+      }
+    },
+    "cta": {
+      "title": "آج کا کھاتہ اگلے پانچ منٹ میں بند کریں۔",
+      "subtitle": "کاؤنٹر پر آزمانے کے لیے کارڈ درکار نہیں۔",
+      "button": "مفت شروع کریں"
+    },
+    "footer": {
+      "tagline": "آپکی دکان، ڈیجیٹل کھاتہ۔",
+      "description": "کھاتہ فلو پاکستان کے دکانداروں کے لیے بنایا گیا پوائنٹ آف سیل اور کھاتہ ہے — سیلز، اسٹاک، ادھار، اور عملہ، سب ایک ہی کاؤنٹر ٹیب سے، انگریزی یا اردو میں۔",
+      "copyright": "© 2026 کھاتہ فلو۔ جملہ حقوق محفوظ ہیں۔"
+    }
+  },
+  "login": {
+    "welcomeBack": "دوبارہ خوش آمدید",
+    "subtitle": "اپنے کھاتہ فلو ڈیش بورڈ میں سائن ان کریں",
+    "emailOrPhone": "ای میل یا فون",
+    "emailPlaceholder": "owner@shop.com",
+    "password": "پاس ورڈ",
+    "rememberMe": "مجھے یاد رکھیں",
+    "forgotPassword": "پاس ورڈ بھول گئے؟",
+    "signingIn": "سائن ان ہو رہا ہے…",
+    "signIn": "سائن ان کریں →",
+    "or": "یا",
+    "createAccount": "نیا اکاؤنٹ بنائیں",
+    "errors": {
+      "missingFields": "براہ کرم ای میل اور پاس ورڈ دونوں درج کریں۔",
+      "invalidCredentials": "غلط ای میل یا پاس ورڈ۔",
+      "generic": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  },
+  "register": {
+    "createAccount": "اپنا اکاؤنٹ بنائیں",
+    "subtitle": "2 منٹ سے کم میں شروع کریں",
+    "businessName": "کاروبار کا نام",
+    "businessNamePlaceholder": "احمد جنرل اسٹور",
+    "ownerName": "مالک کا نام",
+    "ownerNamePlaceholder": "احمد علی",
+    "email": "ای میل",
+    "emailPlaceholder": "owner@shop.com",
+    "phone": "فون",
+    "phonePlaceholder": "0300-1234567",
+    "password": "پاس ورڈ",
+    "creatingAccount": "اکاؤنٹ بنایا جا رہا ہے…",
+    "createAccountBtn": "اکاؤنٹ بنائیں →",
+    "alreadyHaveAccount": "پہلے سے اکاؤنٹ ہے؟",
+    "signIn": "سائن ان کریں",
+    "errors": {
+      "missingFields": "براہ کرم تمام فیلڈز پُر کریں۔",
+      "emailExists": "اس ای میل سے پہلے ہی ایک اکاؤنٹ موجود ہے۔",
+      "generic": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  },
+  "forgotPassword": {
+    "title": "پاس ورڈ بھول گئے؟",
+    "subtitle": "فکر نہ کریں، ہم آپ کو ری سیٹ کرنے کی ہدایات بھیجیں گے",
+    "identifier": "ای میل یا فون",
+    "identifierPlaceholder": "owner@shop.com",
+    "sending": "بھیجا جا رہا ہے...",
+    "sendCode": "ری سیٹ کوڈ بھیجیں",
+    "checkInbox": "اپنا ان باکس چیک کریں",
+    "codeSentTo": "ہم نے 6 ہندسوں کا کوڈ بھیجا ہے",
+    "verificationCode": "تصدیقی کوڈ",
+    "resendIn": "کوڈ دوبارہ بھیجنے میں",
+    "resend": "کوڈ موصول نہیں ہوا؟ دوبارہ بھیجیں",
+    "verifyCode": "کوڈ تصدیق کریں",
+    "setNewPassword": "نیا پاس ورڈ سیٹ کریں",
+    "passwordHint": "کم از کم 8 حروف ہونے چاہئیں",
+    "newPassword": "نیا پاس ورڈ",
+    "confirmPassword": "پاس ورڈ کی تصدیق",
+    "resetting": "ری سیٹ ہو رہا ہے...",
+    "resetPasswordBtn": "پاس ورڈ ری سیٹ کریں",
+    "successTitle": "پاس ورڈ ری سیٹ ہو گیا!",
+    "successSubtitle": "آپ کا پاس ورڈ کامیابی سے اپڈیٹ ہو گیا ہے۔",
+    "backToSignIn": "سائن ان پر واپس جائیں",
+    "strength": {
+      "weak": "کمزور",
+      "fair": "مناسب",
+      "good": "اچھا",
+      "strong": "مضبوط"
+    },
+    "errors": {
+      "missingIdentifier": "براہ کرم اپنا ای میل یا فون نمبر درج کریں۔",
+      "notFound": "اس ای میل سے کوئی اکاؤنٹ نہیں ملا۔",
+      "incompleteCode": "براہ کرم 6 ہندسوں کا کوڈ درج کریں۔",
+      "invalidToken": "غلط یا میعاد ختم کوڈ۔ دوبارہ کوشش کریں۔",
+      "tooShort": "پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے۔",
+      "mismatch": "پاس ورڈز مماثل نہیں ہیں۔",
+      "generic": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  }
+}

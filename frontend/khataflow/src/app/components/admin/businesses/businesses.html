@@ -1,0 +1,647 @@
+<div class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen">
+
+    @if (error()) {
+    <div
+        class="rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 flex items-center justify-between mb-4">
+        <span>{{ error() }}</span>
+        <button (click)="load()" class="text-red-700 font-medium underline">Retry</button>
+    </div>
+    }
+
+    @if (loading()) {
+    <div class="text-sm text-text-muted px-1 mb-4">Loading businesses...</div>
+    }
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+
+        <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+
+            <div class="relative w-full sm:w-60">
+                <i
+                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-icon-muted text-xs"></i>
+                <input [(ngModel)]="search" type="text" placeholder="Search businesses..."
+                    class="w-full pl-9 pr-4 py-2.5 border border-input-border rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+            </div>
+
+            <div class="flex gap-2">
+                <select [(ngModel)]="selectedPlan"
+                    class="flex-1 sm:flex-none border border-input-border rounded-xl px-3 py-2.5 text-sm bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    <option value="">All Plans</option>
+                    <option value="Free">Free</option>
+                    <option value="Premium">Premium</option>
+                </select>
+
+                <select [(ngModel)]="selectedStatus"
+                    class="flex-1 sm:flex-none border border-input-border rounded-xl px-3 py-2.5 text-sm bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Trial">Trial</option>
+                    <option value="Suspended">Suspended</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button (click)="exportData()"
+            class="flex items-center justify-center gap-2 border border-primary-border text-primary-text bg-bg-card hover:bg-primary-soft text-sm font-medium px-4 py-2.5 rounded-xl transition w-full sm:w-auto flex-shrink-0">
+            <i class="fa-solid fa-file-arrow-down text-xs"></i>
+            Export
+        </button>
+
+    </div>
+
+
+    <div class="hidden md:block bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+        <div class="h-1 bg-primary"></div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[780px]">
+
+                <thead>
+                    <tr class="bg-table-header-bg border-b border-border-card">
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Business</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Owner</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Phone</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Plan
+                        </th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Status</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Joined</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-label uppercase tracking-wide">
+                            Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (biz of filteredBusinesses; track biz.id) {
+                    <tr class="border-b border-border-card last:border-none hover:bg-hover-bg transition group">
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm font-semibold"
+                                    [style.background]="biz.avatarColor">
+                                    {{ biz.name.charAt(0) }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-text-heading">{{ biz.name }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-7 h-7 rounded-full bg-table-header-bg flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-user text-text-label text-xs"></i>
+                                </div>
+                                <span class="text-sm text-text-body">{{ biz.owner }}</span>
+                            </div>
+                        </td>
+
+                        <td class="px-5 py-4 text-sm text-text-muted">{{ biz.phone }}</td>
+
+                        <td class="px-5 py-4">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
+                                [ngClass]="{
+                                'bg-hover-bg text-text-label': biz.plan === 'Free',
+                                'bg-warning-soft text-warning-text border border-warning-border': biz.plan === 'Premium'
+                            }">
+                                <i class="text-[9px]" [ngClass]="{
+                                    'fa-solid fa-circle text-icon-muted': biz.plan === 'Free',
+                                    'fa-solid fa-crown text-warning-text': biz.plan === 'Premium'
+                                }">
+                                </i>
+                                {{ biz.plan }}
+                            </span>
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
+                                [ngClass]="{
+                                'bg-status-success-bg text-status-success-text border border-status-success-border': biz.status === 'Active',
+                                'bg-warning-soft text-warning-text border border-warning-border': biz.status === 'Trial',
+                                'bg-danger-soft text-danger-text border border-danger-border':       biz.status === 'Suspended'
+                            }">
+                                <i class="fa-solid text-[9px]" [ngClass]="{
+                                    'fa-circle text-success': biz.status === 'Active',
+                                    'fa-clock text-warning-text':  biz.status === 'Trial',
+                                    'fa-ban text-danger-icon':       biz.status === 'Suspended'
+                                }">
+                                </i>
+                                {{ biz.status }}
+                            </span>
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <p class="text-sm text-text-body">{{ biz.joined }}</p>
+                            <p class="text-xs text-text-muted">{{ biz.joinedAgo }}</p>
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                @if (biz.status !== 'Suspended') {
+                                <button (click)="loginAs(biz)"
+                                    class="text-xs font-semibold text-white bg-btn-primary hover:bg-btn-primary-hover px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                    <i class="fa-solid fa-arrow-right-to-bracket mr-1 text-[10px]"></i>
+                                    Login As
+                                </button>
+                                }
+                                @if (biz.status === 'Suspended') {
+                                <button (click)="activate(biz)"
+                                    class="text-xs font-semibold text-white bg-success hover:bg-success-hover px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                    <i class="fa-solid fa-circle-check mr-1 text-[10px]"></i>
+                                    Activate
+                                </button>
+                                }
+                                @if (biz.plan === 'Free') {
+                                <button (click)="upgrade(biz)"
+                                    class="text-xs font-semibold text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                    <i class="fa-solid fa-arrow-up mr-1 text-[10px]"></i>
+                                    Upgrade
+                                </button>
+                                }
+                                @if (biz.status === 'Active' || biz.status === 'Trial') {
+                                <button (click)="suspend(biz)"
+                                    class="text-xs font-semibold text-text-label border border-border-table bg-bg-card hover:bg-danger-soft hover:text-danger-text hover:border-danger-border px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                    Suspend
+                                </button>
+                                }
+                                @if (biz.status === 'Suspended') {
+                                <button (click)="viewDetails(biz)"
+                                    class="text-xs font-semibold text-text-label border border-border-table bg-bg-card hover:bg-hover-bg px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                    Details
+                                </button>
+                                }
+                            </div>
+                        </td>
+
+                    </tr>
+                    }
+
+                    @if (filteredBusinesses.length === 0) {
+                    <tr>
+                        <td colspan="7" class="px-5 py-14 text-center">
+                            <i class="fa-solid fa-store-slash text-3xl text-icon-muted block mb-3"></i>
+                            <p class="text-sm font-medium text-text-muted">No businesses found.</p>
+                            <p class="text-xs text-icon-muted mt-1">Try adjusting your search or filters.</p>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        <div
+            class="px-5 py-3.5 bg-table-header-bg border-t border-border-card flex flex-wrap items-center justify-between gap-2">
+            <p class="text-xs text-text-muted">
+                Showing {{ filteredBusinesses.length }} of {{ businesses().length }} businesses
+            </p>
+            <div class="flex items-center gap-3 text-xs text-text-muted">
+                <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-circle text-success text-[8px]"></i>
+                    Active: {{ activeCount }}
+                </span>
+                <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-circle text-warning-text text-[8px]"></i>
+                    Trial: {{ trialCount }}
+                </span>
+                <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-circle text-error text-[8px]"></i>
+                    Suspended: {{ suspendedCount }}
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="md:hidden space-y-3">
+
+        @for (biz of filteredBusinesses; track biz.id) {
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+            <div class="h-0.5" [style.background]="biz.avatarColor"></div>
+
+            <div class="flex items-center justify-between px-4 py-3 border-b border-border-card bg-table-header-bg">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm font-semibold"
+                        [style.background]="biz.avatarColor">
+                        {{ biz.name.charAt(0) }}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-text-heading truncate">{{ biz.name }}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-1 flex-shrink-0 ml-2">
+                    <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+                        [ngClass]="{
+                        'bg-status-success-bg text-status-success-text border border-status-success-border': biz.status === 'Active',
+                        'bg-warning-soft text-warning-text border border-warning-border': biz.status === 'Trial',
+                        'bg-danger-soft text-danger-text border border-danger-border':       biz.status === 'Suspended'
+                    }">
+                        {{ biz.status }}
+                    </span>
+                    <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+                        [ngClass]="{
+                        'bg-hover-bg text-text-label': biz.plan === 'Free',
+                        'bg-warning-soft text-warning-text border border-warning-border':   biz.plan === 'Premium'
+                    }">
+                        {{ biz.plan }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="px-4 py-3">
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3 text-xs text-text-muted">
+                    <span class="flex items-center gap-1">
+                        <i class="fa-solid fa-user text-icon-muted"></i>
+                        {{ biz.owner }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <i class="fa-solid fa-phone text-icon-muted"></i>
+                        {{ biz.phone }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <i class="fa-solid fa-calendar text-icon-muted"></i>
+                        {{ biz.joined }}
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <p class="text-xs text-text-muted">{{ biz.joinedAgo }}</p>
+                    <div class="flex gap-2 flex-wrap">
+                        @if (biz.status !== 'Suspended') {
+                        <button (click)="loginAs(biz)"
+                            class="text-xs font-semibold text-white bg-btn-primary hover:bg-btn-primary-hover px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-arrow-right-to-bracket mr-1 text-[10px]"></i>
+                            Login As
+                        </button>
+                        }
+                        @if (biz.plan === 'Free') {
+                        <button (click)="upgrade(biz)"
+                            class="text-xs font-semibold text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover px-3 py-1.5 rounded-lg transition">
+                            Upgrade
+                        </button>
+                        }
+                        @if (biz.status === 'Suspended') {
+                        <button (click)="activate(biz)"
+                            class="text-xs font-semibold text-white bg-success hover:bg-success-hover px-3 py-1.5 rounded-lg transition">
+                            Activate
+                        </button>
+                        <button (click)="viewDetails(biz)"
+                            class="text-xs font-semibold text-text-label border border-border-table px-3 py-1.5 rounded-lg transition">
+                            Details
+                        </button>
+                        }
+                        @if (biz.status !== 'Suspended') {
+                        <button (click)="suspend(biz)"
+                            class="text-xs font-semibold text-text-label border border-border-table hover:bg-danger-soft hover:text-danger-text px-3 py-1.5 rounded-lg transition">
+                            Suspend
+                        </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        }
+
+        @if (filteredBusinesses.length === 0) {
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-5 py-12 text-center">
+            <i class="fa-solid fa-store-slash text-2xl text-icon-muted block mb-2"></i>
+            <p class="text-sm text-text-muted">No businesses found.</p>
+        </div>
+        }
+
+        <div class="flex items-center justify-between px-1 pt-1 pb-2 flex-wrap gap-1">
+            <p class="text-xs text-text-muted">{{ filteredBusinesses.length }} of {{ businesses().length }}</p>
+            <p class="text-xs text-text-muted">
+                <span class="text-success">{{ activeCount }} active</span> ·
+                <span class="text-warning-text">{{ trialCount }} trial</span> ·
+                <span class="text-error">{{ suspendedCount }} suspended</span>
+            </p>
+        </div>
+
+    </div>
+
+    @if (showLoginModal && loginBiz) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showLoginModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right-to-bracket text-primary-icon text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">Login As Business</h3>
+                </div>
+                <button (click)="showLoginModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-5 text-center space-y-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg font-bold mx-auto"
+                    [style.background]="loginBiz.avatarColor">
+                    {{ loginBiz.name.charAt(0) }}
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-text-heading">{{ loginBiz.name }}</p>
+                    <p class="text-xs text-text-muted mt-0.5">{{ loginBiz.owner }} · {{ loginBiz.plan }} Plan</p>
+                </div>
+                <div class="bg-warning-soft border border-warning-border rounded-xl px-4 py-3 text-left">
+                    <p class="text-xs text-warning-text flex items-start gap-2">
+                        <i class="fa-solid fa-triangle-exclamation mt-0.5 flex-shrink-0"></i>
+                        You will be temporarily logged in as this business. Any actions will affect their account.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showLoginModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                    Cancel
+                </button>
+                <button (click)="confirmLoginAs()" [disabled]="actionPending() === loginBiz.id"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-btn-primary hover:bg-btn-primary-hover text-white transition disabled:opacity-60">
+                    <i class="fa-solid fa-arrow-right-to-bracket mr-1.5 text-xs"></i>
+                    {{ actionPending() === loginBiz.id ? 'Logging in...' : 'Confirm Login' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showSuspendModal && suspendingBiz) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showSuspendModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-ban text-danger-icon text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">Suspend Business</h3>
+                </div>
+                <button (click)="showSuspendModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-4">
+                <div class="flex items-center gap-3 bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                        [style.background]="suspendingBiz.avatarColor">
+                        {{ suspendingBiz.name.charAt(0) }}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-text-heading">{{ suspendingBiz.name }}</p>
+                        <p class="text-xs text-text-muted">{{ suspendingBiz.owner }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">
+                        Reason for suspension <span class="text-text-muted font-normal">(optional)</span>
+                    </label>
+                    <textarea [(ngModel)]="suspendReason" rows="3"
+                        placeholder="e.g. Payment overdue, policy violation..."
+                        class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-focus-ring transition resize-none"></textarea>
+                </div>
+
+                <div class="bg-danger-soft border border-danger-border rounded-xl px-4 py-3">
+                    <p class="text-xs text-danger-text flex items-start gap-2">
+                        <i class="fa-solid fa-circle-exclamation mt-0.5 flex-shrink-0"></i>
+                        The business will lose access to their account immediately. They will be notified by email.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showSuspendModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                    Cancel
+                </button>
+                <button (click)="confirmSuspend()" [disabled]="actionPending() === suspendingBiz.id"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-danger-btn hover:bg-danger-btn-hover text-white transition disabled:opacity-60">
+                    <i class="fa-solid fa-ban mr-1.5 text-xs"></i>
+                    {{ actionPending() === suspendingBiz.id ? 'Suspending...' : 'Suspend' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showActivateModal && activatingBiz) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+        (click)="showActivateModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-success text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">Activate Business</h3>
+                </div>
+                <button (click)="showActivateModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-5 text-center space-y-3">
+                <div
+                    class="w-12 h-12 rounded-full bg-status-success-bg border border-status-success-border flex items-center justify-center mx-auto">
+                    <i class="fa-solid fa-circle-check text-status-success-text text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-text-heading">{{ activatingBiz.name }}</p>
+                    <p class="text-xs text-text-muted mt-0.5">{{ activatingBiz.owner }} · {{ activatingBiz.plan }} Plan
+                    </p>
+                </div>
+                <p class="text-xs text-text-label leading-relaxed">
+                    This will restore full access to the business account and notify the owner.
+                </p>
+            </div>
+
+            <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showActivateModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                    Cancel
+                </button>
+                <button (click)="confirmActivate()" [disabled]="actionPending() === activatingBiz.id"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-success hover:bg-success-hover text-white transition disabled:opacity-60">
+                    <i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>
+                    {{ actionPending() === activatingBiz.id ? 'Activating...' : 'Activate' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showUpgradeModal && upgradingBiz) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showUpgradeModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-up text-primary-icon text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">Upgrade Plan</h3>
+                </div>
+                <button (click)="showUpgradeModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-4">
+
+                <div class="flex items-center gap-3 bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                        [style.background]="upgradingBiz.avatarColor">
+                        {{ upgradingBiz.name.charAt(0) }}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-text-heading">{{ upgradingBiz.name }}</p>
+                        <p class="text-xs text-text-muted">{{ upgradingBiz.owner }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center gap-3">
+                    <div class="flex-1 text-center py-3 rounded-xl border border-border-card bg-hover-bg">
+                        <p class="text-xs text-text-muted mb-0.5">Current</p>
+                        <p class="text-sm font-bold text-text-heading">{{ upgradingBiz.plan }}</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-primary-icon text-sm flex-shrink-0"></i>
+                    <div class="flex-1 text-center py-3 rounded-xl border-2 border-primary bg-primary-soft">
+                        <p class="text-xs text-primary-text mb-0.5">Upgrading to</p>
+                        <p class="text-sm font-bold text-primary-text">{{ upgradeTargetPlan }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">
+                        New expiry date
+                    </label>
+                    <input [(ngModel)]="upgradeExpiryDate" type="date"
+                        class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                </div>
+
+                <div class="bg-primary-soft border border-primary-border rounded-xl px-4 py-3">
+                    <p class="text-xs text-primary-text flex items-start gap-2">
+                        <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
+                        The business will be upgraded immediately and billed on their next cycle.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showUpgradeModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                    Cancel
+                </button>
+                <button (click)="confirmUpgrade()" [disabled]="actionPending() === upgradingBiz.id"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-btn-primary hover:bg-btn-primary-hover text-white transition disabled:opacity-60">
+                    <i class="fa-solid fa-arrow-up mr-1.5 text-xs"></i>
+                    {{ actionPending() === upgradingBiz.id ? 'Upgrading...' : 'Confirm Upgrade' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showDetailsModal && detailsBiz) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showDetailsModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-store text-primary-icon text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">Business Details</h3>
+                </div>
+                <button (click)="showDetailsModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-4">
+
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg font-bold flex-shrink-0"
+                        [style.background]="detailsBiz.avatarColor">
+                        {{ detailsBiz.name.charAt(0) }}
+                    </div>
+                    <div>
+                        <p class="text-base font-bold text-text-heading">{{ detailsBiz.name }}</p>
+                        <p class="text-xs text-text-muted">{{ detailsBiz.category }}</p>
+                    </div>
+                </div>
+
+                <div class="border-t border-border-card pt-3 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-text-muted">Owner</span>
+                        <span class="text-xs font-medium text-text-heading">{{ detailsBiz.owner }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-text-muted">Phone</span>
+                        <span class="text-xs font-medium text-text-heading">{{ detailsBiz.phone }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-text-muted">Plan</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full" [ngClass]="{
+              'bg-hover-bg text-text-label': detailsBiz.plan === 'Free',
+              'bg-warning-soft text-warning-text border border-warning-border': detailsBiz.plan === 'Premium'
+            }">
+                            {{ detailsBiz.plan }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-text-muted">Status</span>
+                        <span
+                            class="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger-soft text-danger-text border border-danger-border">
+                            {{ detailsBiz.status }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-text-muted">Joined</span>
+                        <span class="text-xs font-medium text-text-heading">{{ detailsBiz.joined }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showDetailsModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body transition">
+                    Close
+                </button>
+                <button (click)="confirmActivate(); showDetailsModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-success hover:bg-success-hover text-white transition">
+                    <i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>
+                    Activate
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+</div>

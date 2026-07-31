@@ -1,0 +1,883 @@
+<div *transloco="let t" class="p-3 sm:p-5 lg:p-6 bg-bg-page min-h-screen customers-container">
+
+    @if (isRecording) {
+    <div
+        class="mb-4 flex items-center gap-2 rounded-xl border border-danger-border bg-danger-soft px-4 py-2.5 text-sm text-danger-text">
+        <span class="w-2 h-2 rounded-full bg-danger-btn animate-pulse"></span>
+        {{ t('customers.listening') }}
+    </div>
+    }
+    @if (voiceError()) {
+    <div
+        class="mb-4 flex items-center justify-between gap-2 rounded-xl border border-danger-border bg-danger-soft px-4 py-2.5 text-sm text-danger-text">
+        <span>{{ voiceError() }}</span>
+        <button (click)="voiceError.set(null)" class="hover:opacity-70">&times;</button>
+    </div>
+    }
+    @if (voiceSuccessMessage()) {
+    <div
+        class="mb-4 flex items-center justify-between gap-2 rounded-xl border border-status-success-border bg-status-success-bg px-4 py-2.5 text-sm text-status-success-text">
+        <span>{{ voiceSuccessMessage() }}</span>
+        <button (click)="voiceSuccessMessage.set(null)" class="hover:opacity-70">&times;</button>
+    </div>
+    }
+
+    <div
+        class="bg-udhar-bg border border-udhar-border rounded-2xl px-4 py-4 sm:px-5 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <p class="text-xs font-medium text-udhar-label uppercase tracking-wide mb-1">
+                <i class="fa-solid fa-fire-flame-curved mr-1"></i>
+                {{ t('customers.totalOutstanding') }}
+            </p>
+            <p class="text-2xl sm:text-3xl font-bold text-udhar-value">Rs {{ totalOutstanding() | number }}</p>
+            <p class="text-xs text-udhar-muted mt-1">{{ t('customers.fromCustomers', { count: udharCustomers }) }}</p>
+        </div>
+        <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+            @if (canSeeOwnerOrManager) {
+            @if (isPremium()) {
+            <button (click)="exportCsv()" [title]="t('customers.exportPageOnly')"
+                class="text-sm font-medium px-5 py-2.5 rounded-xl border border-udhar-border text-udhar-label hover:bg-udhar-border active:scale-[0.98] transition flex items-center justify-center gap-2 w-full xs:w-auto">
+                <i class="fa-solid fa-download text-xs"></i>
+                {{ t('customers.export') }}
+            </button>
+            } @else {
+            <button disabled [title]="t('customers.premiumFeature')"
+                class="text-sm font-medium px-5 py-2.5 rounded-xl border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed flex items-center justify-center gap-2 w-full xs:w-auto">
+                <i class="fa-solid fa-crown text-xs"></i>
+                {{ t('customers.export') }}
+            </button>
+            }
+            }
+
+            <button (click)="viewAllUdhar()"
+                class="bg-udhar-btn hover:bg-udhar-btn-hover active:scale-[0.98] text-white text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center justify-center gap-2 w-full xs:w-auto flex-shrink-0">
+                {{ t('customers.viewAllUdhar') }}
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-5">
+
+        <div class="flex flex-col xs:flex-row gap-2 w-full lg:w-auto">
+            <div class="relative w-full xs:flex-1 sm:w-64 sm:flex-none">
+                <i
+                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-xs"></i>
+                <input [ngModel]="search" (ngModelChange)="onSearchChange($event)" type="text"
+                    [placeholder]="t('customers.searchPlaceholder')"
+                    class="w-full pl-9 pr-4 py-2.5 border border-border-table rounded-xl bg-bg-card text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                @if (isSearching()) {
+                <i
+                    class="fa-solid fa-spinner fa-spin absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-xs"></i>
+                }
+            </div>
+
+            <div class="flex gap-2">
+                <select [(ngModel)]="selectedFilter"
+                    class="flex-1 xs:flex-none border border-border-table rounded-xl px-3 py-2.5 text-sm bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    <option value="">{{ t('customers.filters.all') }}</option>
+                    <option value="udhar">{{ t('customers.filters.hasUdhar') }}</option>
+                    <option value="clear">{{ t('customers.filters.clear') }}</option>
+                </select>
+
+                <select [(ngModel)]="selectedSort" (ngModelChange)="sortCol = ''"
+                    class="flex-1 xs:flex-none border border-border-table rounded-xl px-3 py-2.5 text-sm bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    <option value="">{{ t('customers.sort.label') }}</option>
+                    <option value="name_asc">{{ t('customers.sort.nameAsc') }}</option>
+                    <option value="name_desc">{{ t('customers.sort.nameDesc') }}</option>
+                    <option value="outstanding_desc">{{ t('customers.sort.outstandingDesc') }}</option>
+                    <option value="outstanding_asc">{{ t('customers.sort.outstandingAsc') }}</option>
+                    <option value="purchases_desc">{{ t('customers.sort.purchasesDesc') }}</option>
+                    <option value="lastvisit_desc">{{ t('customers.sort.lastVisitDesc') }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex gap-2 w-full lg:w-auto">
+            @if (isPremium()) {
+            <button (click)="toggleRecording()" [disabled]="isProcessingVoice"
+                [title]="isRecording ? t('customers.stopRecording') : t('customers.addByVoice')"
+                class="inline-flex items-center justify-center w-11 h-11 rounded-xl border transition-colors disabled:opacity-50 flex-shrink-0"
+                [class.bg-danger-soft]="isRecording" [class.border-danger-border]="isRecording"
+                [class.text-danger-text]="isRecording" [class.bg-bg-card]="!isRecording"
+                [class.border-input-border]="!isRecording" [class.text-text-label]="!isRecording">
+                @if (isProcessingVoice) {
+                <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+                } @else if (isRecording) {
+                <i class="fa-solid fa-stop text-sm"></i>
+                } @else {
+                <i class="fa-solid fa-microphone text-sm"></i>
+                }
+            </button>
+            } @else {
+            <button disabled [title]="t('customers.premiumFeature')"
+                class="inline-flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed flex-shrink-0">
+                <i class="fa-solid fa-crown text-sm"></i>
+            </button>
+            }
+
+            <button (click)="openAddModal()"
+                class="bg-btn-primary hover:bg-btn-primary-hover active:scale-[0.98] text-white text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center justify-center gap-2 flex-1 lg:flex-none flex-shrink-0">
+                <i class="fa-solid fa-plus text-xs"></i>
+                {{ t('customers.addCustomer') }}
+            </button>
+        </div>
+
+    </div>
+
+    @if (canSeeOwnerOrManager && selectedIds.size > 0) {
+    <div
+        class="mb-4 flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 rounded-xl border border-primary-border bg-primary-soft px-4 py-3">
+        <p class="text-sm font-medium text-primary-text">
+            {{ t('customers.bulk.selectedCount', { count: selectedIds.size }) }}
+        </p>
+        <div class="flex items-center gap-2">
+            <button (click)="clearSelection()"
+                class="text-xs font-medium px-3 py-1.5 rounded-lg border border-border-table bg-bg-card hover:bg-hover-bg text-text-label transition">
+                {{ t('customers.bulk.clearSelection') }}
+            </button>
+            <button (click)="requestBulkDelete()"
+                class="text-xs font-medium px-3 py-1.5 rounded-lg bg-danger-btn text-white hover:opacity-90 active:scale-95 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-trash text-[10px]"></i>
+                {{ t('customers.bulk.deleteSelected') }}
+            </button>
+        </div>
+    </div>
+    }
+
+    @if (isLoading()) {
+    <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-5 py-12 text-center">
+        <p class="text-sm text-text-muted">{{ t('customers.loading') }}</p>
+    </div>
+    } @else {
+
+    <!-- ─── Desktop Table (md+) ─── -->
+    <div class="hidden md:block bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden">
+
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[720px]">
+
+                <thead>
+                    <tr class="bg-bg-page border-b border-border-card">
+                        @if (canSeeOwnerOrManager) {
+                        <th class="px-4 py-3.5 w-10">
+                            <input type="checkbox" [checked]="allSelected"
+                                (change)="toggleSelectAll($any($event.target).checked)"
+                                [title]="t('customers.bulk.selectAll')"
+                                class="w-4 h-4 rounded border-input-border cursor-pointer accent-primary" />
+                        </th>
+                        }
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide">
+                            {{ t('customers.table.customer') }}</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide">
+                            {{ t('customers.table.phone') }}</th>
+                        <th (click)="setSortCol('totalPurchases')"
+                            class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide cursor-pointer hover:text-text-heading transition select-none">
+                            {{ t('customers.table.totalPurchases') }} <i class="fa-solid ml-1"
+                                [ngClass]="sortIcon('totalPurchases')"></i>
+                        </th>
+                        <th (click)="setSortCol('udharAmount')"
+                            class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide cursor-pointer hover:text-text-heading transition select-none">
+                            {{ t('customers.table.outstanding') }} <i class="fa-solid ml-1"
+                                [ngClass]="sortIcon('udharAmount')"></i>
+                        </th>
+                        <th (click)="setSortCol('lastVisit')"
+                            class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide cursor-pointer hover:text-text-heading transition select-none">
+                            {{ t('customers.table.lastVisit') }} <i class="fa-solid ml-1"
+                                [ngClass]="sortIcon('lastVisit')"></i>
+                        </th>
+                        <th class="px-5 py-3.5 text-left text-xs font-medium text-text-muted uppercase tracking-wide">
+                            {{ t('customers.table.actions') }}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (customer of sortedCustomers; track customer.id) {
+                    <tr class="border-b border-border-card last:border-none hover:bg-bg-page transition"
+                        [class.bg-primary-soft]="selectedIds.has(customer.id)">
+
+                        @if (canSeeOwnerOrManager) {
+                        <td class="px-4 py-4">
+                            <input type="checkbox" [checked]="selectedIds.has(customer.id)"
+                                (change)="toggleSelect(customer.id)"
+                                class="w-4 h-4 rounded border-input-border cursor-pointer accent-primary" />
+                        </td>
+                        }
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                                    <span class="text-white text-xs font-medium">
+                                        {{ (customer.name | localizedText:customer.nameUr:lang()).charAt(0) }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-text-heading">
+                                        {{ customer.name | localizedText:customer.nameUr:lang() }}
+                                    </p>
+                                    <p class="text-xs text-text-muted">
+                                        {{ (customer.address | localizedText:customer.addressUr:lang()) ||
+                                        t('customers.noAddress') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <a href="tel:{{ customer.phoneNumber }}"
+                                class="text-sm text-text-muted hover:text-primary-text transition">
+                                {{ customer.phoneNumber }}
+                            </a>
+                        </td>
+
+                        <td class="px-5 py-4 text-sm text-text-body">Rs {{ customer.totalPurchases | number }}</td>
+
+                        <td class="px-5 py-4">
+                            @if (customer.udharAmount > 0) {
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-danger-soft text-text-danger border border-danger-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-text-danger"></span>
+                                Rs {{ customer.udharAmount | number }}
+                            </span>
+                            } @else {
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-status-success-bg text-status-success-text border border-status-success-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-success-dot"></span>
+                                {{ t('customers.clear') }}
+                            </span>
+                            }
+                        </td>
+
+                        <td class="px-5 py-4 text-sm text-text-muted">{{ customer.lastVisit | date:'MMM d, y' }}</td>
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <button (click)="viewKhata(customer)" [title]="t('customers.actions.khata')"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-white bg-btn-primary hover:bg-btn-primary-hover active:scale-95 transition">
+                                    <i class="fa-solid fa-book text-xs"></i>
+                                </button>
+                                <button (click)="addUdhar(customer)" [title]="t('customers.actions.addUdhar')"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-udhar-label border border-udhar-border bg-udhar-bg hover:bg-udhar-border active:scale-95 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                                @if (customer.udharAmount > 0) {
+                                <button (click)="recordPayment(customer)" [title]="t('customers.actions.pay')"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-status-success-text border border-status-success-border bg-status-success-bg hover:opacity-80 active:scale-95 transition">
+                                    <i class="fa-solid fa-circle-check text-xs"></i>
+                                </button>
+                                }
+                                <button (click)="editCustomer(customer)" [title]="t('customers.actions.edit')"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover active:scale-95 transition">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
+                                <button (click)="shareViaWhatsApp(customer)" title="Share on WhatsApp"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-status-success-text border border-status-success-border bg-status-success-bg hover:opacity-80 active:scale-95 transition">
+                                    <i class="fa-brands fa-whatsapp text-xs"></i>
+                                </button>
+                                @if(canSeeOwnerOrManager){
+                                <button (click)="confirmDelete(customer.id)" title="Delete"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-danger-text border border-danger-border hover:bg-danger-soft active:scale-95 transition">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </button>
+                                }
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    @if (deleteConfirmId === customer.id) {
+                    <tr>
+                        <td [attr.colspan]="canSeeOwnerOrManager ? 7 : 6"
+                            class="px-5 py-3 bg-danger-soft text-center border-b border-danger-border">
+                            <span class="text-sm text-danger-text font-medium">
+                                {{ t('customers.deleteConfirm', { name: customer.name |
+                                localizedText:customer.nameUr:lang() }) }}
+                            </span>
+                            <button (click)="deleteCustomer(customer.id)"
+                                class="ml-3 px-3 py-1 text-xs bg-danger-btn text-white rounded">{{
+                                t('customers.yesDelete') }}</button>
+                            <button (click)="cancelDelete()" class="ml-2 px-3 py-1 text-xs border rounded">{{
+                                t('customers.cancel') }}</button>
+                        </td>
+                    </tr>
+                    }
+                    }
+
+                    @if (sortedCustomers.length === 0) {
+                    <tr>
+                        <td [attr.colspan]="canSeeOwnerOrManager ? 7 : 6" class="px-5 py-12 text-center">
+                            <i class="fa-solid fa-users text-2xl text-text-muted-light block mb-2"></i>
+                            <p class="text-sm text-text-muted">{{ t('customers.noCustomers') }}</p>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @if (totalPages() > 1) {
+        <div class="flex justify-center items-center gap-2 py-4 border-t border-border-card flex-wrap">
+            <button (click)="goToPage(pageNumber() - 1)"
+                class="px-3 py-1.5 text-xs border border-input-border rounded-lg hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="pageNumber() === 1">{{ t('customers.pagination.prev') }}</button>
+
+            @for (p of pageNumbers; track p) {
+            <button (click)="goToPage(p)" class="px-3 py-1.5 text-xs rounded-lg border transition" [ngClass]="{
+                    'bg-primary text-white border-primary': pageNumber() === p,
+                    'border-input-border hover:bg-hover-bg': pageNumber() !== p
+                }">{{ p }}</button>
+            }
+
+            <button (click)="goToPage(pageNumber() + 1)"
+                class="px-3 py-1.5 text-xs border border-input-border rounded-lg hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="pageNumber() === totalPages()">{{ t('customers.pagination.next') }}</button>
+        </div>
+        }
+
+        <div
+            class="px-5 py-3.5 bg-bg-page border-t border-border-card flex items-center justify-between flex-wrap gap-2">
+            <p class="text-xs text-text-muted">{{ t('customers.customersCount', { count: totalCount() }) }}
+            </p>
+            <p class="text-xs text-text-muted">
+                {{ t('customers.totalOutstandingLabel') }}: <span class="text-text-danger font-medium">Rs {{
+                    totalOutstanding() | number }}</span>
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ─── Mobile Cards (< md) ─── -->
+    <div class="md:hidden space-y-3">
+
+        @for (customer of sortedCustomers; track customer.id) {
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm overflow-hidden"
+            [class.ring-2]="selectedIds.has(customer.id)" [class.ring-primary]="selectedIds.has(customer.id)">
+
+            <div class="flex items-center justify-between px-4 py-3 border-b border-border-card bg-bg-page gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    @if (canSeeOwnerOrManager) {
+                    <input type="checkbox" [checked]="selectedIds.has(customer.id)" (change)="toggleSelect(customer.id)"
+                        class="w-4 h-4 rounded border-input-border cursor-pointer accent-primary flex-shrink-0" />
+                    }
+                    <div class="w-8 h-8 rounded-full bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-xs font-medium">
+                            {{ (customer.name | localizedText:customer.nameUr:lang()).charAt(0) }}
+                        </span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-text-heading truncate">
+                            {{ customer.name | localizedText:customer.nameUr:lang() }}
+                        </p>
+                        <a href="tel:{{ customer.phoneNumber }}"
+                            class="text-xs text-text-muted hover:text-primary-text transition">
+                            {{ customer.phoneNumber }}
+                        </a>
+                    </div>
+                </div>
+
+                @if (customer.udharAmount > 0) {
+                <span
+                    class="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-danger-soft text-text-danger border border-danger-border flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-text-danger"></span>
+                    Rs {{ customer.udharAmount | number }}
+                </span>
+                } @else {
+                <span
+                    class="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full bg-status-success-bg text-status-success-text border border-status-success-border flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-status-success-dot"></span>
+                    {{ t('customers.clear') }}
+                </span>
+                }
+            </div>
+
+            <div class="px-4 py-3">
+                <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                    <div class="flex gap-5 flex-wrap">
+                        <div>
+                            <p class="text-xs text-text-muted mb-0.5">{{ t('customers.mobile.purchases') }}</p>
+                            <p class="text-sm font-medium text-text-heading">Rs {{ customer.totalPurchases | number }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-text-muted mb-0.5">{{ t('customers.mobile.lastVisit') }}</p>
+                            <p class="text-sm text-text-label">{{ customer.lastVisit | date:'MMM d' }}</p>
+                        </div>
+                        @if (customer.address) {
+                        <div class="hidden xs:block">
+                            <p class="text-xs text-text-muted mb-0.5">{{ t('customers.mobile.address') }}</p>
+                            <p class="text-sm text-text-label truncate max-w-[120px]">
+                                {{ customer.address | localizedText:customer.addressUr:lang() }}
+                            </p>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 xs:grid-cols-3 gap-2">
+                    <button (click)="viewKhata(customer)"
+                        class="text-xs font-medium text-white bg-btn-primary hover:bg-btn-primary-hover active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-book text-[10px]"></i>{{ t('customers.actions.khata') }}
+                    </button>
+                    <button (click)="addUdhar(customer)"
+                        class="text-xs font-medium text-udhar-label border border-udhar-border bg-udhar-bg hover:bg-udhar-border active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-plus text-[10px]"></i>{{ t('customers.actions.addUdhar') }}
+                    </button>
+                    @if (customer.udharAmount > 0) {
+                    <button (click)="recordPayment(customer)"
+                        class="text-xs font-medium text-status-success-text border border-status-success-border bg-status-success-bg hover:opacity-80 active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i>{{ t('customers.actions.pay') }}
+                    </button>
+                    }
+                    <button (click)="editCustomer(customer)"
+                        class="text-xs font-medium text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-pen text-[10px]"></i>{{ t('customers.actions.edit') }}
+                    </button>
+                    <button (click)="shareViaWhatsApp(customer)"
+                        class="text-xs font-medium text-status-success-text border border-status-success-border bg-status-success-bg hover:opacity-80 active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-brands fa-whatsapp text-[10px]"></i>Share
+                    </button>
+                    @if (canSeeOwnerOrManager) {
+                    <button (click)="confirmDelete(customer.id)"
+                        class="text-xs font-medium text-danger-text border border-danger-border hover:bg-danger-soft active:scale-95 px-3 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-trash text-[10px]"></i>Delete
+                    </button>
+                    }
+                </div>
+            </div>
+
+            @if (deleteConfirmId === customer.id) {
+            <div class="px-4 py-3 bg-danger-soft border-t border-danger-border text-center">
+                <span class="text-sm text-danger-text font-medium block mb-2">
+                    {{ t('customers.deleteConfirmShort', { name: customer.name | localizedText:customer.nameUr:lang() })
+                    }}
+                </span>
+                <div class="flex justify-center gap-2">
+                    <button (click)="deleteCustomer(customer.id)"
+                        class="px-4 py-1.5 text-xs font-medium bg-danger-btn text-white rounded-lg">{{
+                        t('customers.yes') }}</button>
+                    <button (click)="cancelDelete()"
+                        class="px-4 py-1.5 text-xs font-medium border border-border-table rounded-lg bg-bg-card">{{
+                        t('customers.cancel')
+                        }}</button>
+                </div>
+            </div>
+            }
+
+        </div>
+        }
+
+        @if (sortedCustomers.length === 0) {
+        <div class="bg-bg-card rounded-2xl border border-border-card shadow-sm px-5 py-12 text-center">
+            <i class="fa-solid fa-users text-2xl text-text-muted-light block mb-2"></i>
+            <p class="text-sm text-text-muted">{{ t('customers.noCustomers') }}</p>
+        </div>
+        }
+
+        @if (totalPages() > 1) {
+        <div class="flex justify-center items-center gap-2 py-3 flex-wrap">
+            <button (click)="goToPage(pageNumber() - 1)"
+                class="px-3 py-1.5 text-xs border border-input-border rounded-lg hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="pageNumber() === 1">{{ t('customers.pagination.prev') }}</button>
+
+            @for (p of pageNumbers; track p) {
+            <button (click)="goToPage(p)" class="px-3 py-1.5 text-xs rounded-lg border transition" [ngClass]="{
+                    'bg-primary text-white border-primary': pageNumber() === p,
+                    'border-input-border hover:bg-hover-bg': pageNumber() !== p
+                }">{{ p }}</button>
+            }
+
+            <button (click)="goToPage(pageNumber() + 1)"
+                class="px-3 py-1.5 text-xs border border-input-border rounded-lg hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="pageNumber() === totalPages()">{{ t('customers.pagination.next') }}</button>
+        </div>
+        }
+
+        <div class="flex items-center justify-between px-1 pb-3 flex-wrap gap-1">
+            <p class="text-xs text-text-muted">{{ t('customers.customersCount', { count: totalCount() }) }}
+            </p>
+            <p class="text-xs text-text-muted">{{ t('customers.outstandingLabel') }}: <span
+                    class="text-text-danger font-medium">Rs {{ totalOutstanding() | number }}</span></p>
+        </div>
+
+    </div>
+    }
+
+    @if (showKhataModal && khataCustomer) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showKhataModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-lg max-h-[90vh] flex flex-col"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card flex-shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 rounded-full bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm font-semibold">
+                            {{ (khataCustomer.name | localizedText:khataCustomer.nameUr:lang()).charAt(0) }}
+                        </span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold text-text-heading truncate">
+                            {{ khataCustomer.name | localizedText:khataCustomer.nameUr:lang() }}
+                        </h3>
+                        <p class="text-xs text-text-muted">{{ khataCustomer.phoneNumber }}</p>
+                    </div>
+                </div>
+                <button (click)="showKhataModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted flex-shrink-0">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            @if (isKhataLoading()) {
+            <div class="px-5 py-10 text-center text-sm text-text-muted">{{ t('customers.khata.loading') }}</div>
+            } @else if (khata()) {
+
+            <div class="grid grid-cols-3 gap-px bg-border-card flex-shrink-0">
+                <div class="bg-bg-card px-2 sm:px-4 py-3 text-center">
+                    <p class="text-[11px] sm:text-xs text-text-muted mb-0.5">{{ t('customers.khata.totalPurchases') }}
+                    </p>
+                    <p class="text-sm font-bold text-text-heading">Rs {{ khata()!.totalPurchases | number }}</p>
+                </div>
+                <div class="bg-udhar-bg px-2 sm:px-4 py-3 text-center">
+                    <p class="text-[11px] sm:text-xs text-udhar-label mb-0.5">{{ t('customers.khata.outstanding') }}</p>
+                    <p class="text-sm font-bold text-udhar-value">Rs {{ khata()!.outstanding | number }}</p>
+                </div>
+                <div class="bg-status-success-bg px-2 sm:px-4 py-3 text-center">
+                    <p class="text-[11px] sm:text-xs text-status-success-text mb-0.5">{{ t('customers.khata.totalPaid')
+                        }}</p>
+                    <p class="text-sm font-bold text-status-success-text">
+                        Rs {{ khata()!.totalPaid | number }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 sm:px-5 py-3">
+
+                @if (getKhataEntries().length === 0) {
+                <div class="text-center py-10">
+                    <i class="fa-regular fa-book-open text-2xl text-text-muted block mb-2"></i>
+                    <p class="text-sm text-text-muted">{{ t('customers.khata.noEntries') }}</p>
+                </div>
+                }
+
+                <div class="space-y-2">
+                    @for (entry of getKhataEntries(); track entry.id) {
+                    <div class="flex items-start gap-3 p-3 rounded-xl border transition" [ngClass]="entry.type === 'Udhar'
+          ? 'bg-udhar-bg border-udhar-border'
+          : 'bg-status-success-bg border-status-success-border'">
+
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                            [ngClass]="entry.type === 'Udhar' ? 'bg-udhar-border' : 'bg-status-success-border'">
+                            <i class="text-xs" [ngClass]="entry.type === 'Udhar'
+              ? 'fa-solid fa-arrow-up text-udhar-label'
+              : 'fa-solid fa-arrow-down text-status-success-text'">
+                            </i>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-xs font-semibold"
+                                    [ngClass]="entry.type === 'Udhar' ? 'text-udhar-label' : 'text-status-success-text'">
+                                    {{ entry.type === 'Udhar' ? t('customers.khata.udhar') :
+                                    t('customers.khata.payment') }}
+                                </p>
+                                <p class="text-xs font-bold flex-shrink-0"
+                                    [ngClass]="entry.type === 'Udhar' ? 'text-udhar-value' : 'text-status-success-text'">
+                                    {{ entry.type === 'Udhar' ? '+' : '-' }} Rs {{ entry.amount | number }}
+                                </p>
+                            </div>
+                            <p class="text-xs text-text-label mt-0.5 break-words">{{ entry.notes }}</p>
+
+                            @if (entry.items && entry.items.length > 0) {
+                            <div class="mt-1.5 space-y-0.5">
+                                @for (item of entry.items; track item.productName) {
+                                <p class="text-[10px] text-text-muted flex justify-between gap-2">
+                                    <span class="truncate">{{ item.productName | localizedText:item.productNameUr:lang()
+                                        }} × {{
+                                        item.quantity }}</span>
+                                    <span class="flex-shrink-0">Rs {{ item.lineTotal | number }}</span>
+                                </p>
+                                }
+                            </div>
+                            }
+
+                            <div class="flex items-center justify-between mt-1 gap-2">
+                                <p class="text-[10px] text-text-muted">{{ entry.createdAt | date:'MMM d, y, h:mm a' }}
+                                </p>
+                                <p class="text-[10px] text-text-muted flex-shrink-0">{{ t('customers.khata.balance') }}:
+                                    Rs {{
+                                    entry.runningBalance | number }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <div class="flex flex-col xs:flex-row gap-2 px-5 py-4 border-t border-border-card flex-shrink-0">
+                <button (click)="showKhataModal = false; addUdhar(khataCustomer)"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium text-udhar-label border border-udhar-border bg-udhar-bg hover:bg-udhar-border active:scale-[0.98] transition">
+                    <i class="fa-solid fa-plus mr-1.5 text-xs"></i>{{ t('customers.actions.addUdhar') }}
+                </button>
+                @if (khataCustomer.udharAmount > 0) {
+                <button (click)="showKhataModal = false; recordPayment(khataCustomer)"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium text-status-success-text border border-status-success-border bg-status-success-bg hover:opacity-80 active:scale-[0.98] transition">
+                    <i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>{{ t('customers.khata.recordPayment') }}
+                </button>
+                }
+                <button (click)="showKhataModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body active:scale-[0.98] transition">
+                    {{ t('customers.close') }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showUdharModal && udharCustomer) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showUdharModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-udhar-label text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">{{ t('customers.udharModal.title') }}</h3>
+                </div>
+                <button (click)="showUdharModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-4">
+
+                <div class="flex items-center gap-3 bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+                    <div class="w-8 h-8 rounded-full bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-xs font-semibold">
+                            {{ (udharCustomer.name | localizedText:udharCustomer.nameUr:lang()).charAt(0) }}
+                        </span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-text-heading truncate">
+                            {{ udharCustomer.name | localizedText:udharCustomer.nameUr:lang() }}
+                        </p>
+                        <p class="text-xs text-text-muted">
+                            {{ t('customers.udharModal.currentBalance') }}:
+                            <span class="text-udhar-value font-semibold">Rs {{ udharCustomer.udharAmount | number
+                                }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">{{ t('customers.udharModal.amount')
+                        }} <span class="text-danger-text">*</span></label>
+                    <input type="number" [(ngModel)]="udharForm.amount" min="1"
+                        [placeholder]="t('customers.udharModal.amountPlaceholder')"
+                        class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">{{ t('customers.udharModal.note')
+                        }}</label>
+                    <input type="text" [(ngModel)]="udharForm.note"
+                        [placeholder]="t('customers.udharModal.notePlaceholder')"
+                        class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                </div>
+
+                @if (udharForm.amount > 0) {
+                <div
+                    class="bg-udhar-bg border border-udhar-border rounded-xl px-4 py-3 flex items-center justify-between">
+                    <p class="text-xs text-udhar-label">{{ t('customers.udharModal.newBalance') }}</p>
+                    <p class="text-sm font-bold text-udhar-value">
+                        Rs {{ (udharCustomer.udharAmount + udharForm.amount) | number }}
+                    </p>
+                </div>
+                }
+
+            </div>
+
+            <div class="flex flex-col-reverse xs:flex-row gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showUdharModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body active:scale-[0.98] transition">
+                    {{ t('customers.cancel') }}
+                </button>
+                <button (click)="confirmAddUdhar()" [disabled]="!udharForm.amount || udharForm.amount <= 0"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-udhar-btn hover:bg-udhar-btn-hover active:scale-[0.98] text-white transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-plus mr-1.5 text-xs"></i>{{ t('customers.actions.addUdhar') }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (showPaymentModal && paymentCustomer) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="showPaymentModal = false">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-status-success-text text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">{{ t('customers.paymentModal.title') }}</h3>
+                </div>
+                <button (click)="showPaymentModal = false"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-4">
+
+                <div class="flex items-center gap-3 bg-bg-page rounded-xl px-4 py-3 border border-border-card">
+                    <div class="w-8 h-8 rounded-full bg-avatar-bg flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-xs font-semibold">
+                            {{ (paymentCustomer.name | localizedText:paymentCustomer.nameUr:lang()).charAt(0) }}
+                        </span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-text-heading truncate">
+                            {{ paymentCustomer.name | localizedText:paymentCustomer.nameUr:lang() }}
+                        </p>
+                        <p class="text-xs text-text-muted">
+                            {{ t('customers.paymentModal.outstanding') }}:
+                            <span class="text-udhar-value font-semibold">Rs {{ paymentCustomer.udharAmount | number
+                                }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">{{
+                        t('customers.paymentModal.quickAmount') }}</label>
+                    <div class="flex gap-2 flex-wrap">
+                        @for (amt of [500, 1000, 2000, 5000]; track amt) {
+                        <button
+                            (click)="paymentForm.amount = amt < paymentCustomer.udharAmount ? amt : paymentCustomer.udharAmount"
+                            class="text-xs font-medium px-3 py-1.5 rounded-lg border transition" [ngClass]="paymentForm.amount === amt
+                ? 'bg-primary text-white border-primary'
+                : 'border-border-table bg-bg-card hover:bg-hover-bg text-text-label'">
+                            Rs {{ amt | number }}
+                        </button>
+                        }
+                        <button (click)="paymentForm.amount = paymentCustomer.udharAmount"
+                            class="text-xs font-medium px-3 py-1.5 rounded-lg border transition" [ngClass]="paymentForm.amount === paymentCustomer.udharAmount
+              ? 'bg-primary text-white border-primary'
+              : 'border-border-table bg-bg-card hover:bg-hover-bg text-text-label'">
+                            {{ t('customers.paymentModal.full') }}
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">{{
+                        t('customers.paymentModal.amount') }} <span class="text-danger-text">*</span></label>
+                    <input type="number" [(ngModel)]="paymentForm.amount" min="1" [max]="paymentCustomer.udharAmount"
+                        class="w-full border rounded-xl px-3 py-2.5 text-sm text-text-heading bg-input-bg focus:outline-none focus:ring-2 focus:ring-focus-ring transition"
+                        [ngClass]="paymentForm.amount > paymentCustomer.udharAmount ? 'border-danger-border' : 'border-input-border'" />
+                    @if (paymentForm.amount > paymentCustomer.udharAmount) {
+                    <p class="text-xs text-danger-text mt-1">{{ t('customers.paymentModal.exceedsBalance') }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-text-label mb-1.5">{{ t('customers.paymentModal.note')
+                        }}</label>
+                    <input type="text" [(ngModel)]="paymentForm.note"
+                        [placeholder]="t('customers.paymentModal.notePlaceholder')"
+                        class="w-full border border-input-border bg-input-bg rounded-xl px-3 py-2.5 text-sm text-text-heading focus:outline-none focus:ring-2 focus:ring-focus-ring transition" />
+                </div>
+
+                @if (paymentForm.amount > 0) {
+                <div class="rounded-xl px-4 py-3 border flex items-center justify-between" [ngClass]="paymentForm.amount >= paymentCustomer.udharAmount
+            ? 'bg-status-success-bg border-status-success-border'
+            : 'bg-udhar-bg border-udhar-border'">
+                    <p class="text-xs" [ngClass]="paymentForm.amount >= paymentCustomer.udharAmount
+              ? 'text-status-success-text'
+              : 'text-udhar-label'">
+                        {{ t('customers.paymentModal.remainingBalance') }}
+                    </p>
+                    <p class="text-sm font-bold" [ngClass]="paymentForm.amount >= paymentCustomer.udharAmount
+              ? 'text-status-success-text'
+              : 'text-udhar-value'">
+                        Rs {{ (paymentCustomer.udharAmount - paymentForm.amount < 0 ? 0 : paymentCustomer.udharAmount -
+                            paymentForm.amount) | number }} </p>
+                </div>
+                }
+
+            </div>
+
+            <div class="flex flex-col-reverse xs:flex-row gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="showPaymentModal = false"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body active:scale-[0.98] transition">
+                    {{ t('customers.cancel') }}
+                </button>
+                <button (click)="confirmPayment()"
+                    [disabled]="!paymentForm.amount || paymentForm.amount <= 0 || paymentForm.amount > paymentCustomer.udharAmount"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-success hover:bg-success-hover active:scale-[0.98] text-white transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>{{ t('customers.paymentModal.confirm') }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @if (bulkDeleteConfirmOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" (click)="cancelBulkDelete()">
+        <div class="bg-bg-card rounded-2xl shadow-xl border border-border-card w-full max-w-sm"
+            (click)="$event.stopPropagation()">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-border-card">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-danger-text text-sm"></i>
+                    <h3 class="text-sm font-semibold text-text-heading">{{ t('customers.bulk.confirmTitle') }}</h3>
+                </div>
+                <button (click)="cancelBulkDelete()" [disabled]="isDeleting()"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover-bg transition text-text-muted disabled:opacity-50">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4">
+                <p class="text-sm text-text-body">
+                    {{ t('customers.bulk.confirmMessage', { count: selectedIds.size }) }}
+                </p>
+            </div>
+
+            <div class="flex flex-col-reverse xs:flex-row gap-2 px-5 py-4 border-t border-border-card">
+                <button (click)="cancelBulkDelete()" [disabled]="isDeleting()"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border-table bg-bg-card hover:bg-hover-bg text-text-body active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ t('customers.cancel') }}
+                </button>
+                <button (click)="bulkDelete()" [disabled]="isDeleting()"
+                    class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-danger-btn hover:opacity-90 active:scale-[0.98] text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5">
+                    @if (isDeleting()) {
+                    <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+                    {{ t('customers.bulk.deleting') }}
+                    } @else {
+                    <i class="fa-solid fa-trash text-xs"></i>
+                    {{ t('customers.bulk.yesDelete') }}
+                    }
+                </button>
+            </div>
+
+        </div>
+    </div>
+    }
+
+</div>
+
+@if (isModalOpen) {
+<app-customer-modal [isEditMode]="isEditMode" [customer]="form" [isSaving]="isSaving()" (close)="isModalOpen = false"
+    (save)="saveCustomer($event)">
+</app-customer-modal>
+}

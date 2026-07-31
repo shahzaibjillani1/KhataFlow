@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+	</resheader>
+
+	<data name="Validation.CustomerId.Required" xml:space="preserve"><value>کسٹمر آئی ڈی درکار ہے۔</value></data>
+	<data name="Validation.Amount.GreaterThanZero" xml:space="preserve"><value>رقم صفر سے زیادہ ہونی چاہیے۔</value></data>
+	<data name="Validation.Notes.MaxLength" xml:space="preserve"><value>نوٹس 500 حروف سے تجاوز نہیں کرنے چاہئیں۔</value></data>
+	<data name="Subscription.BusinessId.Empty" xml:space="preserve">
+  <value>بزنس آئی ڈی خالی نہیں ہو سکتی۔</value>
+</data>
+	<data name="Subscription.Business.NotFound" xml:space="preserve">
+  <value>بزنس نہیں ملا۔</value>
+</data>
+	<data name="Subscription.Checkout.Success" xml:space="preserve">
+  <value>چیک آؤٹ سیشن کامیابی سے بن گیا۔</value>
+</data>
+	<data name="Subscription.Notification.Upgraded.Title" xml:space="preserve">
+  <value>سبسکرپشن اپ گریڈ ہو گئی</value>
+</data>
+	<data name="Subscription.Notification.Upgraded.Message" xml:space="preserve">
+  <value>{0} کو پریمیم پلان میں اپ گریڈ کر دیا گیا ہے۔</value>
+</data>
+	<data name="Validation.BusinessId.Required" xml:space="preserve"><value>کاروبار کی آئی ڈی درکار ہے۔</value></data>
+	<data name="Validation.BusinessName.Required" xml:space="preserve"><value>کاروبار کا نام درکار ہے۔</value></data>
+	<data name="Voice_UnknownCommand" xml:space="preserve"><value>معذرت، یہ کمانڈ سمجھ نہیں آئی۔ براہ کرم دوبارہ کوشش کریں۔</value></data>
+	<data name="Voice_UnsupportedCommand" xml:space="preserve"><value>اس قسم کی وائس کمانڈ ابھی سپورٹ نہیں کی جاتی۔</value></data>
+	<data name="Voice_NoCustomerName" xml:space="preserve"><value>گاہک کا نام سمجھ نہیں آیا۔</value></data>
+	<data name="Sale_MustHaveAtLeastOneItem" xml:space="preserve"><value>سیل میں کم از کم ایک آئٹم ہونا ضروری ہے۔</value></data>
+	<data name="Sale_ProductNotFound" xml:space="preserve"><value>پروڈکٹ '{0}' نہیں ملی۔</value></data>
+	<data name="Sale_InsufficientStock" xml:space="preserve"><value>'{0}' کا اسٹاک ناکافی ہے۔</value></data>
+	<data name="Sale_NotFound" xml:space="preserve"><value>آئی ڈی '{0}' والی سیل نہیں ملی۔</value></data>
+	<data name="Sale_Notification_OutOfStock_Title" xml:space="preserve"><value>پروڈکٹ ختم ہو گئی</value></data>
+	<data name="Sale_Notification_OutOfStock_Message" xml:space="preserve"><value>'{0}' ابھی ابھی ختم ہو گئی ہے۔</value></data>
+	<data name="Sale_Notification_LowStock_Title" xml:space="preserve"><value>کم اسٹاک الرٹ</value></data>
+	<data name="Sale_Notification_LowStock_Message" xml:space="preserve"><value>'{0}' کم ہو رہی ہے ({1} باقی)۔</value></data>
+	<data name="Voice_NoValidUdharAmount" xml:space="preserve"><value>ادھار کی درست رقم سمجھ نہیں آئی۔</value></data>
+	<data name="Voice_CustomerNotFound" xml:space="preserve"><value>'{0}' نام کا کوئی گاہک نہیں ملا۔</value></data>
+	<data name="Voice_MultipleCustomersFound" xml:space="preserve"><value>'{0}' نام کے کئی گاہک ملے۔ براہ کرم فون نمبر بتائیں۔</value></data>
+	<data name="Voice_UdharRecorded" xml:space="preserve"><value>{1} کے لیے {0} روپے ادھار درج کر دیا گیا ہے۔</value></data>
+	<data name="Voice_NoProductsUnderstood" xml:space="preserve"><value>اس کمانڈ میں کوئی پروڈکٹ سمجھ نہیں آئی۔</value></data>
+	<data name="Voice_CustomerRequiredForUdhar" xml:space="preserve"><value>ادھار سیل کے لیے گاہک کا نام درکار ہے۔</value></data>
+	<data name="Voice_ProductNotFound" xml:space="preserve"><value>'{0}' سے ملتی کوئی پروڈکٹ نہیں ملی۔</value></data>
+	<data name="Voice_ProductNotFoundWithSuggestions" xml:space="preserve"><value>'{0}' سے ملتی کوئی پروڈکٹ نہیں ملی۔ کیا آپ کی مراد یہ ہے: {1}؟</value></data>
+	<data name="Voice_MultipleProductsFound" xml:space="preserve"><value>'{0}' سے ملتی کئی پروڈکٹس ملیں۔ براہ کرم مزید واضح کریں۔</value></data>
+	<data name="Voice_UdharSaleRecorded" xml:space="preserve"><value>{0} آئٹم(ز) کی ادھار سیل درج کر دی گئی ہے۔</value></data>
+	<data name="Voice_SaleRecorded" xml:space="preserve"><value>{0} آئٹم(ز) کی سیل درج کر دی گئی ہے۔</value></data>
+	<data name="Voice_NoValidPaymentAmount" xml:space="preserve"><value>ادائیگی کی درست رقم سمجھ نہیں آئی۔</value></data>
+	<data name="Voice_PaymentRecorded" xml:space="preserve"><value>{1} کی {0} روپے ادائیگی درج کر دی گئی ہے۔</value></data>
+	<data name="Voice_NoValidExpenseAmount" xml:space="preserve"><value>خرچ کی درست رقم سمجھ نہیں آئی۔</value></data>
+	<data name="Voice_ExpenseRecorded" xml:space="preserve"><value>{1} کے تحت {0} روپے کا خرچ درج کر دیا گیا ہے۔</value></data>
+	<data name="Voice_RecordedViaVoice" xml:space="preserve"><value>وائس کمانڈ کے ذریعے درج کیا گیا</value></data>
+<data name="Validation.BusinessName.MinLength" xml:space="preserve"><value>کاروبار کا نام کم از کم 2 حروف کا ہونا چاہیے۔</value></data>
+	<data name="Validation.BusinessName.MaxLength" xml:space="preserve"><value>کاروبار کا نام 100 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.OwnerName.Required" xml:space="preserve"><value>مالک کا نام درکار ہے۔</value></data>
+	<data name="Validation.OwnerName.MinLength" xml:space="preserve"><value>مالک کا نام کم از کم 2 حروف کا ہونا چاہیے۔</value></data>
+	<data name="General.PageNumber.Invalid" xml:space="preserve">
+  <value>صفحہ نمبر 1 یا اس سے زیادہ ہونا چاہیے۔</value>
+</data>
+
+	<data name="General.PageSize.Invalid" xml:space="preserve">
+  <value>صفحہ کا سائز 1 سے 100 کے درمیان ہونا چاہیے۔</value>
+</data>
+	<data name="Validation.OwnerName.MaxLength" xml:space="preserve"><value>مالک کا نام 100 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.Email.Required" xml:space="preserve"><value>ای میل درکار ہے۔</value></data>
+	<data name="Validation.Email.Invalid" xml:space="preserve"><value>ایک درست ای میل ایڈریس درکار ہے۔</value></data>
+	<data name="Validation.Email.MaxLength" xml:space="preserve"><value>ای میل 200 حروف سے تجاوز نہیں کرنی چاہیے۔</value></data>
+	<data name="Validation.PhoneNumber.Required" xml:space="preserve"><value>فون نمبر درکار ہے۔</value></data>
+	<data name="Validation.PhoneNumber.MaxLength" xml:space="preserve"><value>فون نمبر 11 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.PhoneNumber.Invalid" xml:space="preserve"><value>ایک درست فون نمبر درکار ہے۔</value></data>
+	<data name="Validation.PhoneNumber.InvalidPakistani" xml:space="preserve"><value>فون نمبر ایک درست پاکستانی نمبر ہونا چاہیے، مثلاً 0300-1234567 یا +923001234567۔</value></data>
+	<data name="Ai.Voice.NoAudioReceived" xml:space="preserve"><value>کوئی آڈیو فائل موصول نہیں ہوئی۔</value></data>
+	<data name="Ai.Voice.AudioTooLarge" xml:space="preserve"><value>آڈیو فائل حد سے زیادہ بڑی ہے۔</value></data>
+	<data name="Ledger.NoOutstandingBalance" xml:space="preserve">
+    <value>اس کسٹمر پر کوئی بقایا رقم نہیں ہے۔</value>
+  </data>
+	<data name="Ledger.PaymentExceedsOutstanding" xml:space="preserve">
+    <value>ادائیگی روپے {0} بقایا رقم روپے {1} سے زیادہ ہے۔</value>
+  </data>
+	<data name="Ledger.CustomerNotFound" xml:space="preserve">
+    <value>کسٹمر نہیں ملا۔</value>
+  </data>
+	<data name="Ledger.CustomerBusinessMismatch" xml:space="preserve">
+    <value>کسٹمر اس کاروبار سے تعلق نہیں رکھتا۔</value>
+  </data>
+	<data name="Ledger.Notification.UdharRecorded.Title" xml:space="preserve">
+    <value>ادھار درج ہو گیا</value>
+  </data>
+	<data name="Ledger.Notification.UdharRecorded.Message" xml:space="preserve">
+    <value>روپے {0} ادھار {1} کے لیے درج کیا گیا۔ بقایا: روپے {2}۔</value>
+  </data>
+	<data name="Ledger.Notification.PaymentReceived.Title" xml:space="preserve">
+    <value>ادائیگی موصول ہوئی</value>
+  </data>
+	<data name="Ledger.Notification.PaymentReceived.Message" xml:space="preserve">
+    <value>روپے {0} {1} سے موصول ہوئے۔ باقی: روپے {2}۔</value>
+  </data>
+	<data name="Ai.Voice.CommandProcessingFailed" xml:space="preserve"><value>کمانڈ پر عمل نہیں ہو سکا۔</value></data>
+	<data name="Auth.Register.Success" xml:space="preserve"><value>اکاؤنٹ کامیابی سے بن گیا۔</value></data>
+	<data name="User.NoPermissionToInvite" xml:space="preserve">
+  <value>صرف کاروبار کا مالک عملے کے ارکان کو مدعو کر سکتا ہے۔</value>
+</data>
+	<data name="User.Invite.InvalidRole" xml:space="preserve">
+  <value>مدعو کردہ کردار مینیجر یا اسٹاف ہونا چاہیے۔</value>
+</data>
+	
+	<data name="User.Notification.StaffInvited.Title" xml:space="preserve">
+  <value>نیا عملہ شامل کیا گیا</value>
+</data>
+	<data name="User.Notification.StaffInvited.Message" xml:space="preserve">
+  <value>{0} کو {1} کے طور پر شامل کیا گیا ہے۔</value>
+</data>
+	<data name="User.Invite.WhatsAppMessage" xml:space="preserve">
+  <value>ہیلو {0}، آپ کو KhataFlow پر {1} میں عملے کے رکن کے طور پر شامل کیا گیا ہے۔
+لاگ ان: {2}
+عارضی پاس ورڈ: {3}
+لاگ ان کرنے کے بعد براہ کرم پاس ورڈ تبدیل کر لیں۔</value>
+</data>
+	<data name="Plan.Limit.SalesExceeded" xml:space="preserve">
+  <value>آپ اپنی ماہانہ سیل کی حد {0} تک پہنچ چکے ہیں۔ لامحدود سیلز کے لیے پریمیم میں اپ گریڈ کریں۔</value>
+</data>
+	<data name="Plan.Limit.ProductsExceeded" xml:space="preserve">
+  <value>آپ اپنی پروڈکٹ کی حد {0} تک پہنچ چکے ہیں۔ مزید شامل کرنے کے لیے پریمیم میں اپ گریڈ کریں۔</value>
+</data>
+	<data name="Plan.Limit.CustomersExceeded" xml:space="preserve">
+  <value>آپ اپنے کسٹمرز کی حد {0} تک پہنچ چکے ہیں۔ مزید شامل کرنے کے لیے پریمیم میں اپ گریڈ کریں۔</value>
+</data>
+	<data name="Plan.Limit.StaffExceeded" xml:space="preserve">
+  <value>آپ اپنے عملے کی حد {0} تک پہنچ چکے ہیں۔ مزید عملہ شامل کرنے کے لیے پریمیم میں اپ گریڈ کریں۔</value>
+</data>
+	<data name="Plan.Limit.FeatureLocked" xml:space="preserve">
+  <value>{0} ایک پریمیم فیچر ہے۔ اسے کھولنے کے لیے اپ گریڈ کریں۔</value>
+</data>
+	<data name="Auth.Login.Success" xml:space="preserve"><value>لاگ ان کامیاب رہا۔</value></data>
+	<data name="Auth.Login.InvalidCredentials" xml:space="preserve"><value>ای میل یا پاس ورڈ غلط ہے۔</value></data>
+	<data name="Auth.Refresh.Success" xml:space="preserve"><value>ٹوکن کامیابی سے تازہ ہو گیا۔</value></data>
+	<data name="Auth.Logout.UserIdentityUnresolved" xml:space="preserve"><value>صارف کی شناخت کا تعین نہیں ہو سکا۔</value></data>
+	<data name="Auth.Logout.Success" xml:space="preserve"><value>کامیابی سے لاگ آؤٹ ہو گئے۔</value></data>
+	<data name="Auth.ForgotPassword.LinkSent" xml:space="preserve"><value>اگر یہ ای میل رجسٹرڈ ہے تو ری سیٹ لنک بھیج دیا گیا ہے۔</value></data>
+	<data name="Auth.ResetPassword.InvalidRequest" xml:space="preserve"><value>درخواست غلط ہے۔</value></data>
+	<data name="Auth.ResetPassword.Success" xml:space="preserve"><value>پاس ورڈ کامیابی سے تبدیل ہو گیا ہے۔</value></data>
+	<data name="Auth.Email.ResetSubject" xml:space="preserve"><value>اپنا پاس ورڈ ری سیٹ کریں</value></data>
+	<data name="Auth.Email.ResetHeading" xml:space="preserve"><value>پاس ورڈ ری سیٹ</value></data>
+	<data name="Auth.Email.ResetInstruction" xml:space="preserve"><value>اپنا پاس ورڈ ری سیٹ کرنے کے لیے نیچے دیے گئے لنک پر کلک کریں:</value></data>
+	<data name="Auth.Email.ResetLinkText" xml:space="preserve"><value>پاس ورڈ ری سیٹ کریں</value></data>
+	<data name="Auth.Email.ResetExpiry" xml:space="preserve"><value>یہ لنک 1 گھنٹے میں ختم ہو جائے گا۔</value></data>
+	<data name="Ai.Voice.CommandProcessed" xml:space="preserve"><value>کمانڈ مکمل ہو گئی۔</value></data>
+	<data name="Ai.Receipt.NoTextProvided" xml:space="preserve"><value>کوئی متن فراہم نہیں کیا گیا۔</value></data>
+	<data name="Ai.Receipt.ProcessingFailed" xml:space="preserve"><value>ان پٹ پر عمل نہیں ہو سکا۔</value></data>
+	<data name="Ai.Receipt.ParsedSuccessfully" xml:space="preserve"><value>متن کامیابی سے پارس ہو گیا۔</value></data>
+	<data name="Validation.PhoneNumber.InvalidGeneric" xml:space="preserve"><value>فون نمبر 7 سے 15 ہندسوں کا ہونا چاہیے اور '+' سے شروع ہو سکتا ہے۔</value></data>
+	<data name="Validation.Address.Required" xml:space="preserve"><value>پتہ درکار ہے۔</value></data>
+	<data name="Validation.Address.MaxLength" xml:space="preserve"><value>پتہ 200 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.Address.MaxLength250" xml:space="preserve"><value>پتہ 250 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.Plan.Invalid" xml:space="preserve"><value>ایک درست سبسکرپشن پلان منتخب کرنا ضروری ہے۔</value></data>
+	<data name="Validation.CategoryName.Required" xml:space="preserve"><value>کیٹیگری کا نام درکار ہے۔</value></data>
+	<data name="Validation.CategoryName.MaxLength" xml:space="preserve"><value>کیٹیگری کا نام 100 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.CustomerName.Required" xml:space="preserve"><value>کسٹمر کا نام درکار ہے۔</value></data>
+	<data name="Validation.CustomerName.MaxLength" xml:space="preserve"><value>نام 100 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.CustomerId.RequiredUpdate" xml:space="preserve"><value>کسٹمر آئی ڈی درکار ہے۔</value></data>
+	<data name="Validation.LastVisit.Required" xml:space="preserve"><value>آخری وزٹ کی تاریخ درکار ہے۔</value></data>
+	<data name="Validation.LastVisit.NotFuture" xml:space="preserve"><value>آخری وزٹ مستقبل کی تاریخ نہیں ہو سکتی۔</value></data>
+	<data name="Validation.TotalPurchases.NotNegative" xml:space="preserve"><value>کل خریداری منفی نہیں ہو سکتی۔</value></data>
+	<data name="Validation.UdharAmount.NotNegative" xml:space="preserve"><value>ادھار کی رقم منفی نہیں ہو سکتی۔</value></data>
+	<data name="Validation.DateFrom.Required" xml:space="preserve"><value>آغاز کی تاریخ درکار ہے۔</value></data>
+	<data name="Validation.DateTo.Required" xml:space="preserve"><value>اختتام کی تاریخ درکار ہے۔</value></data>
+	<data name="Validation.DateTo.MustBeAfterFrom" xml:space="preserve"><value>اختتامی تاریخ آغاز کی تاریخ سے پہلے نہیں ہو سکتی۔</value></data>
+	<data name="Validation.DateTo.NotFuture" xml:space="preserve"><value>اختتامی تاریخ مستقبل کی نہیں ہو سکتی۔</value></data>
+	<data name="Domain.Product.InsufficientStock" xml:space="preserve"><value>پروڈکٹ '{0}' کے لیے اسٹاک ناکافی ہے۔</value></data>
+	<data name="Domain.Product.RestockQuantity.GreaterThanZero" xml:space="preserve"><value>ری اسٹاک کی مقدار صفر سے زیادہ ہونی چاہیے۔</value></data>
+	<data name="Validation.Expense.Title.Required" xml:space="preserve"><value>عنوان درکار ہے۔</value></data>
+	<data name="Validation.Expense.Title.MaxLength" xml:space="preserve"><value>عنوان 150 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.Expense.Amount.GreaterThanZero" xml:space="preserve"><value>رقم صفر سے زیادہ ہونی چاہیے۔</value></data>
+	<data name="Validation.Expense.Category.Invalid" xml:space="preserve"><value>ایک درست اخراجات کی قسم منتخب کرنا ضروری ہے۔</value></data>
+	<data name="Auth.UserIdentity.Undetermined" xml:space="preserve"><value>صارف کی شناخت کا تعین نہیں ہو سکا۔</value></data>
+	<data name="Business.NotFoundForAccount" xml:space="preserve"><value>اس اکاؤنٹ کے لیے کوئی کاروبار نہیں ملا۔ براہ کرم یہ عمل انجام دینے سے پہلے ایک کاروبار بنائیں۔</value></data>
+	<data name="General.ValidationFailed" xml:space="preserve"><value>توثیق ناکام ہوئی۔</value></data>
+	<data name="Business.GetAll.Success" xml:space="preserve"><value>کاروبار کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="Invoice.Sale.NotFound" xml:space="preserve"><value>سیل '{0}' نہیں ملی۔</value></data>
+
+	<data name="Ledger.GetKhata.Success" xml:space="preserve"><value>کھاتہ کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="Ledger.CustomerId.Mismatch" xml:space="preserve"><value>روٹ کسٹمر آئی ڈی اور باڈی کسٹمر آئی ڈی مماثل نہیں ہیں۔</value></data>
+	<data name="Ledger.AddUdhar.Success" xml:space="preserve"><value>ادھار کامیابی سے شامل ہو گیا۔</value></data>
+	<data name="Ledger.RecordPayment.Success" xml:space="preserve"><value>ادائیگی کامیابی سے درج ہو گئی۔</value></data>
+
+	<data name="Notification.GetAll.Success" xml:space="preserve"><value>اطلاعات کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Notification.GetUnread.Success" xml:space="preserve"><value>غیر پڑھی گئی اطلاعات کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Notification.GetUnreadCount.Success" xml:space="preserve"><value>غیر پڑھی گئی تعداد کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Notification.GetById.Success" xml:space="preserve"><value>اطلاع کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Notification.MarkAsRead.Success" xml:space="preserve"><value>اطلاع کو پڑھا ہوا نشان زد کر دیا گیا۔</value></data>
+	<data name="Notification.MarkAllAsRead.Success" xml:space="preserve"><value>تمام اطلاعات کو پڑھا ہوا نشان زد کر دیا گیا۔</value></data>
+	<data name="Notification.NotFound" xml:space="preserve"><value>اطلاع '{0}' نہیں ملی۔</value></data>
+	<data name="Notification.Delete.Success" xml:space="preserve"><value>اطلاع کامیابی سے حذف ہو گئی۔</value></data>
+
+	<data name="PlatformReport.Get.Success" xml:space="preserve"><value>پلیٹ فارم رپورٹ کامیابی سے حاصل ہو گئی۔</value></data>
+
+	<data name="Product.GetAll.Success" xml:space="preserve"><value>پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.LowStockCount.Success" xml:space="preserve"><value>کم اسٹاک پروڈکٹس کی تعداد کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Product.LowStock.Success" xml:space="preserve"><value>کم اسٹاک پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.InStock.Success" xml:space="preserve"><value>دستیاب پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.OutOfStock.Success" xml:space="preserve"><value>ناموجود پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.TopSales.Success" xml:space="preserve"><value>سب سے زیادہ فروخت ہونے والی پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.ByCategory.Success" xml:space="preserve"><value>کیٹیگری کے مطابق پروڈکٹس کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Product.GetByName.Success" xml:space="preserve"><value>پروڈکٹ کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Product.Create.Success" xml:space="preserve"><value>پروڈکٹ کامیابی سے شامل ہو گئی۔</value></data>
+	<data name="Product.Update.Success" xml:space="preserve"><value>پروڈکٹ کامیابی سے اپ ڈیٹ ہو گئی۔</value></data>
+	<data name="Product.NotFound" xml:space="preserve"><value>پروڈکٹ '{0}' نہیں ملی۔</value></data>
+	<data name="Product.Delete.Success" xml:space="preserve"><value>پروڈکٹ کامیابی سے حذف ہو گئی۔</value></data>
+
+	<data name="PublicLedger.NotFound" xml:space="preserve"><value>کھاتہ نہیں ملا۔</value></data>
+	<data name="PublicLedger.Success" xml:space="preserve"><value>کھاتہ حاصل ہو گیا۔</value></data>
+
+	<data name="Reports.Financial.Success" xml:space="preserve"><value>مالیاتی رپورٹ کامیابی سے تیار ہو گئی۔</value></data>
+	<data name="Reports.GrossProfit.Success" xml:space="preserve"><value>مجموعی منافع کامیابی سے حساب کر لیا گیا۔</value></data>
+	<data name="Reports.TotalExpenses.Success" xml:space="preserve"><value>کل اخراجات کامیابی سے حساب کر لیے گئے۔</value></data>
+	<data name="Business.GetById.Success" xml:space="preserve"><value>کاروبار کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="Business.GetById.NotFound" xml:space="preserve"><value>کاروبار نہیں ملا۔</value></data>
+	<data name="Business.PlatformSummary.Success" xml:space="preserve"><value>پلیٹ فارم کا خلاصہ کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="Business.Create.Success" xml:space="preserve"><value>کاروبار کامیابی سے بن گیا۔</value></data>
+	<data name="Business.Update.Success" xml:space="preserve"><value>کاروبار کامیابی سے اپ ڈیٹ ہو گیا۔</value></data>
+	<data name="Business.Update.IdMismatch" xml:space="preserve"><value>آئی ڈی مماثل نہیں ہے۔</value></data>
+	<data name="Business.Suspend.Success" xml:space="preserve"><value>کاروبار کامیابی سے معطل کر دیا گیا۔</value></data>
+	<data name="Business.Suspend.Failed" xml:space="preserve"><value>کاروبار کو معطل نہیں کیا جا سکا۔</value></data>
+	<data name="Business.Reactivate.Success" xml:space="preserve"><value>کاروبار کامیابی سے بحال کر دیا گیا۔</value></data>
+	<data name="Business.Reactivate.Failed" xml:space="preserve"><value>کاروبار کو بحال نہیں کیا جا سکا۔</value></data>
+	<data name="Business.RenewSubscription.Success" xml:space="preserve"><value>سبسکرپشن کامیابی سے تجدید ہو گئی۔</value></data>
+	<data name="Category.GetAll.Success" xml:space="preserve"><value>کیٹیگریز کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Category.GetById.Success" xml:space="preserve"><value>کیٹیگری کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Category.NotFound" xml:space="preserve"><value>کیٹیگری '{0}' نہیں ملی۔</value></data>
+	<data name="Category.Create.Success" xml:space="preserve"><value>کیٹیگری کامیابی سے بن گئی۔</value></data>
+	<data name="Category.Update.Success" xml:space="preserve"><value>کیٹیگری کامیابی سے اپ ڈیٹ ہو گئی۔</value></data>
+	<data name="Category.Update.IdMismatch" xml:space="preserve"><value>روٹ آئی ڈی اور باڈی آئی ڈی مماثل نہیں ہیں۔</value></data>
+	<data name="Category.Delete.Success" xml:space="preserve"><value>کیٹیگری کامیابی سے حذف ہو گئی۔</value></data>
+
+	<data name="Customer.GetAll.Success" xml:space="preserve"><value>کسٹمرز کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="Customer.GetById.Success" xml:space="preserve"><value>کسٹمر کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="Customer.NotFoundById" xml:space="preserve"><value>آئی ڈی '{0}' والا کسٹمر نہیں ملا۔</value></data>
+	<data name="Customer.NotFoundByName" xml:space="preserve"><value>نام '{0}' والا کسٹمر نہیں ملا۔</value></data>
+	<data name="Customer.Create.Success" xml:space="preserve"><value>کسٹمر کامیابی سے بن گیا۔</value></data>
+	<data name="Customer.Update.Success" xml:space="preserve"><value>کسٹمر کامیابی سے اپ ڈیٹ ہو گیا۔</value></data>
+	<data name="Customer.Update.IdMismatch" xml:space="preserve"><value>روٹ آئی ڈی اور باڈی آئی ڈی مماثل نہیں ہیں۔</value></data>
+	<data name="Customer.Delete.Success" xml:space="preserve"><value>کسٹمر کامیابی سے حذف ہو گیا۔</value></data>
+	<data name="Customer.Delete.Error" xml:space="preserve"><value>کسٹمر کو حذف کرتے وقت خرابی پیش آئی۔</value></data>
+
+	<data name="Dashboard.Summary.Success" xml:space="preserve"><value>ڈیش بورڈ کا خلاصہ کامیابی سے تیار ہو گیا۔</value></data>
+
+	<data name="Expense.GetAll.Success" xml:space="preserve"><value>اخراجات کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="Expense.Create.Success" xml:space="preserve"><value>خرچہ کامیابی سے شامل ہو گیا۔</value></data>
+	<data name="Expense.Total.Success" xml:space="preserve"><value>کل اخراجات کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="Expense.ByCategory.Success" xml:space="preserve"><value>اخراجات کی تقسیم کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Expense.Delete.Success" xml:space="preserve"><value>خرچہ کامیابی سے حذف ہو گیا۔</value></data>
+
+	<data name="Sale.GetAll.Success" xml:space="preserve"><value>سیلز کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Sale.GetById.Success" xml:space="preserve"><value>سیل کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Sale.NotFound" xml:space="preserve"><value>سیل '{0}' نہیں ملی۔</value></data>
+	<data name="Sale.Search.Success" xml:space="preserve"><value>سیلز کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Sale.Today.Success" xml:space="preserve"><value>آج کی سیلز کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Sale.TotalMonthlyRevenue.Success" xml:space="preserve"><value>کل ماہانہ آمدنی کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="Sale.TotalSales.Success" xml:space="preserve"><value>کل سیلز کامیابی سے حاصل ہو گئیں۔</value></data>
+	<data name="Sale.Create.Success" xml:space="preserve"><value>سیل کامیابی سے شامل ہو گئی۔</value></data>
+	<data name="Sale.CreateBulk.Success" xml:space="preserve"><value>سیلز کامیابی سے شامل ہو گئیں۔</value></data>
+	<data name="Sale.Delete.Success" xml:space="preserve"><value>سیل کامیابی سے حذف ہو گئی۔</value></data>
+	<data name="Sale.WeeklyGraph.Success" xml:space="preserve"><value>ہفتہ وار سیلز گراف ڈیٹا کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="Sale.MonthlyRevenueGraph.Success" xml:space="preserve"><value>سال {0} کے لیے ماہانہ آمدنی گراف ڈیٹا کامیابی سے حاصل ہو گیا۔</value></data>
+
+	<data name="SubscriptionPlan.GetAll.Success" xml:space="preserve"><value>سبسکرپشن پلانز کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="SubscriptionPlan.NotFound" xml:space="preserve"><value>سبسکرپشن پلان نہیں ملا۔</value></data>
+	<data name="SubscriptionPlan.GetById.Success" xml:space="preserve"><value>سبسکرپشن پلان کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="SubscriptionPlan.UserCount.Success" xml:space="preserve"><value>صارفین کی تعداد کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="SubscriptionPlan.Revenue.Success" xml:space="preserve"><value>آمدنی کامیابی سے حاصل ہو گئی۔</value></data>
+	<data name="SubscriptionPlan.Create.Success" xml:space="preserve"><value>سبسکرپشن پلان کامیابی سے بن گیا۔</value></data>
+	<data name="SubscriptionPlan.Update.Success" xml:space="preserve"><value>سبسکرپشن پلان کامیابی سے اپ ڈیٹ ہو گیا۔</value></data>
+	<data name="SubscriptionPlan.Update.IdMismatch" xml:space="preserve"><value>آئی ڈی مماثل نہیں ہے۔</value></data>
+	<data name="SubscriptionPlan.Delete.Success" xml:space="preserve"><value>سبسکرپشن پلان کامیابی سے حذف ہو گیا۔</value></data>
+
+	<data name="User.NotFound" xml:space="preserve"><value>صارفین نہیں ملے۔</value></data>
+	<data name="User.GetAll.Success" xml:space="preserve"><value>صارفین کامیابی سے حاصل ہو گئے۔</value></data>
+	<data name="User.Update.Success" xml:space="preserve"><value>صارف کامیابی سے اپ ڈیٹ ہو گیا۔</value></data>
+	<data name="Invoice.Label.InvoiceNumber" xml:space="preserve"><value>انوائس نمبر</value></data>
+	<data name="Invoice.Label.Date" xml:space="preserve"><value>تاریخ</value></data>
+	<data name="Invoice.Label.Customer" xml:space="preserve"><value>کسٹمر</value></data>
+	<data name="Product.Notification.NewLowStock.Title" xml:space="preserve"><value>کم اسٹاک کے ساتھ نئی پروڈکٹ شامل کی گئی</value></data>
+	<data name="SubscriptionPlan.PlanName.Empty" xml:space="preserve"><value>پلان کا نام خالی نہیں ہو سکتا۔</value></data>
+	<data name="User.EmailAlreadyExists" xml:space="preserve"><value>اس ای میل کے ساتھ ایک اکاؤنٹ پہلے سے موجود ہے۔</value></data>
+	<data name="User.NoPermissionToEdit" xml:space="preserve"><value>آپ کو اس صارف کو ترمیم کرنے کی اجازت نہیں ہے۔</value></data>
+	<data name="User.EmailInUse" xml:space="preserve"><value>ای میل '{0}' پہلے سے زیرِ استعمال ہے۔</value></data>
+	<data name="User.Notification.Welcome.Title" xml:space="preserve"><value>خوش آمدید KhataFlow میں!</value></data>
+	<data name="User.Notification.Welcome.Message" xml:space="preserve"><value>ہیلو {0}، '{1}' تیار ہے۔ آپ کا ٹرائل {2:MMM dd, yyyy} تک جاری رہے گا۔</value></data>
+	<data name="User.Notification.NewBusinessRegistered.Title" xml:space="preserve"><value>نیا کاروبار رجسٹرڈ ہوا</value></data>
+	<data name="User.Notification.NewBusinessRegistered.Message" xml:space="preserve"><value>'{0}' ({1}) نے ابھی سائن اپ کیا۔</value></data>
+	<data name="SubscriptionPlan.MonthlyPrice.Negative" xml:space="preserve"><value>ماہانہ قیمت منفی نہیں ہو سکتی۔</value></data>
+	<data name="SubscriptionPlan.AlreadyExists" xml:space="preserve"><value>'{0}' نام کا پلان پہلے سے موجود ہے۔</value></data>
+	<data name="SubscriptionPlan.NotFoundById" xml:space="preserve"><value>سبسکرپشن پلان '{0}' نہیں ملا۔</value></data>
+	<data name="SubscriptionPlan.Id.Empty" xml:space="preserve"><value>آئی ڈی خالی نہیں ہونی چاہیے۔</value></data>
+	<data name="SubscriptionPlan.PlanId.Empty" xml:space="preserve"><value>پلان آئی ڈی خالی نہیں ہونی چاہیے۔</value></data>
+	<data name="SubscriptionPlan.Notification.Created.Title" xml:space="preserve"><value>نیا سبسکرپشن پلان بن گیا</value></data>
+	<data name="SubscriptionPlan.Notification.Created.Message" xml:space="preserve"><value>پلان '{0}' 'Rs {1:N0}'/ماہانہ پر بن گیا۔</value></data>
+	<data name="SubscriptionPlan.Notification.PriceChanged.Title" xml:space="preserve"><value>سبسکرپشن پلان کی قیمت تبدیل ہو گئی</value></data>
+	<data name="SubscriptionPlan.Notification.PriceChanged.Message" xml:space="preserve"><value>'{0}' کی قیمت 'Rs {1:N0}' سے 'Rs {2:N0}' ہو گئی۔</value></data>
+	<data name="SubscriptionPlan.Notification.Deactivated.Title" xml:space="preserve"><value>سبسکرپشن پلان غیر فعال کر دیا گیا</value></data>
+	<data name="SubscriptionPlan.Notification.Deactivated.Message" xml:space="preserve"><value>'{0}' کو غیر فعال کر دیا گیا ہے۔</value></data>
+	<data name="SubscriptionPlan.Notification.Reactivated.Title" xml:space="preserve"><value>سبسکرپشن پلان دوبارہ فعال کر دیا گیا</value></data>
+	<data name="SubscriptionPlan.Notification.Reactivated.Message" xml:space="preserve"><value>'{0}' کو دوبارہ فعال کر دیا گیا ہے۔</value></data>
+	<data name="SubscriptionPlan.Notification.Deleted.Title" xml:space="preserve"><value>سبسکرپشن پلان حذف ہو گیا</value></data>
+	<data name="SubscriptionPlan.Notification.Deleted.Message" xml:space="preserve"><value>پلان '{0}' حذف کر دیا گیا۔</value></data>
+	<data name="Product.Notification.NewLowStock.Message" xml:space="preserve"><value>'{0}' صرف {1} اسٹاک کے ساتھ شامل کی گئی۔</value></data>
+	<data name="Product.Notification.OutOfStock.Title" xml:space="preserve"><value>پروڈکٹ ناموجود</value></data>
+	<data name="Product.Notification.OutOfStock.Message" xml:space="preserve"><value>'{0}' اب دستیاب نہیں ہے۔</value></data>
+	<data name="Product.Notification.LowStock.Title" xml:space="preserve"><value>کم اسٹاک کی اطلاع</value></data>
+	<data name="Product.Notification.LowStock.Message" xml:space="preserve"><value>'{0}' کا اسٹاک کم ہے ({1} باقی)۔</value></data>
+	<data name="Product.Notification.Restocked.Title" xml:space="preserve"><value>پروڈکٹ دوبارہ اسٹاک ہو گئی</value></data>
+	<data name="Product.Notification.Restocked.Message" xml:space="preserve"><value>'{0}' دوبارہ دستیاب ہے ({1} یونٹس)۔</value></data>
+	<data name="Product.ReloadFailed.Add" xml:space="preserve"><value>پروڈکٹ بن گئی لیکن دوبارہ لوڈ نہیں ہو سکی۔</value></data>
+	<data name="Product.ReloadFailed.Update" xml:space="preserve"><value>پروڈکٹ اپ ڈیٹ ہو گئی لیکن دوبارہ لوڈ نہیں ہو سکی۔</value></data>
+	<data name="Product.PageNumber.Invalid" xml:space="preserve"><value>صفحہ نمبر کم از کم 1 ہونا چاہیے۔</value></data>
+	<data name="Product.PageSize.Invalid" xml:space="preserve"><value>صفحہ کا سائز 1 سے 100 کے درمیان ہونا چاہیے۔</value></data>
+	<data name="Product.TopN.Invalid" xml:space="preserve"><value>topN صفر سے زیادہ ہونا چاہیے۔</value></data>
+	<data name="Invoice.Label.Status" xml:space="preserve"><value>حیثیت</value></data>
+	<data name="Invoice.WalkInCustomer" xml:space="preserve"><value>واک اِن کسٹمر</value></data>
+	<data name="Invoice.Column.Number" xml:space="preserve"><value>#</value></data>
+	<data name="Notification.UserIdRequired" xml:space="preserve"><value>جب ٹارگٹ صارف ہو تو یوزر آئی ڈی درکار ہے۔</value></data>
+	<data name="Notification.BusinessIdRequired" xml:space="preserve"><value>جب ٹارگٹ کاروبار ہو تو بزنس آئی ڈی درکار ہے۔</value></data>
+	<data name="Invoice.Column.Item" xml:space="preserve"><value>آئٹم</value></data>
+	<data name="Invoice.Column.Qty" xml:space="preserve"><value>مقدار</value></data>
+	<data name="Invoice.Column.UnitPrice" xml:space="preserve"><value>فی یونٹ قیمت</value></data>
+	<data name="Invoice.Column.Total" xml:space="preserve"><value>کل</value></data>
+	<data name="Invoice.Label.Subtotal" xml:space="preserve"><value>ذیلی مجموعہ</value></data>
+	<data name="Invoice.Label.Discount" xml:space="preserve"><value>رعایت</value></data>
+	<data name="Invoice.Label.GrandTotal" xml:space="preserve"><value>کل رقم</value></data>
+	<data name="Invoice.Label.Payment" xml:space="preserve"><value>ادائیگی</value></data>
+	<data name="Invoice.PaymentReceived.Prefix" xml:space="preserve"><value>ادائیگی موصول ہوئی:</value></data>
+	<data name="Invoice.PaymentReceived.Suffix" xml:space="preserve"><value>{0} کے ذریعے۔</value></data>
+	<data name="Invoice.ThankYou" xml:space="preserve"><value>آپ کے کاروبار کا شکریہ! 🙏</value></data>
+	<data name="Invoice.PoweredBy" xml:space="preserve"><value>معاون: </value></data>
+	<data name="User.GetById.Success" xml:space="preserve"><value>صارف کامیابی سے حاصل ہو گیا۔</value></data>
+	<data name="User.GetById.NotFound" xml:space="preserve"><value>صارف '{0}' نہیں ملا۔</value></data>
+	<data name="Expense.NotFound" xml:space="preserve"><value>خرچہ '{0}' نہیں ملا۔</value></data>
+	<data name="Business.ChangeSubscription.Success" xml:space="preserve"><value>سبسکرپشن کامیابی سے تبدیل ہو گئی۔</value></data>
+	<data name="Business.Impersonation.Success" xml:space="preserve"><value>نمائندگی ٹوکن کامیابی سے تیار ہو گیا۔</value></data>
+	<data name="Customer.PhoneAlreadyExists" xml:space="preserve"><value>فون نمبر '{0}' والا کسٹمر پہلے سے موجود ہے۔ براہ کرم ایک مختلف فون نمبر استعمال کریں۔</value></data>
+	<data name="Customer.PhoneInUseByAnother" xml:space="preserve"><value>فون نمبر '{0}' پہلے سے ہی کسی اور کسٹمر کے زیرِ استعمال ہے۔</value></data>
+	<data name="Business.AlreadyRegistered" xml:space="preserve"><value>آپ کا ایک کاروبار پہلے سے رجسٹرڈ ہے۔</value></data>
+	<data name="Business.EmailInUse" xml:space="preserve"><value>ای میل '{0}' پہلے سے زیرِ استعمال ہے۔</value></data>
+	<data name="Business.NoPermissionToUpdate" xml:space="preserve"><value>آپ کو اس کاروبار کو اپ ڈیٹ کرنے کی اجازت نہیں ہے۔</value></data>
+	<data name="Business.NoPermissionToDelete" xml:space="preserve"><value>آپ کو اس کاروبار کو حذف کرنے کی اجازت نہیں ہے۔</value></data>
+	<data name="Business.AlreadyOnPlan" xml:space="preserve"><value>کاروبار پہلے سے '{0}' پلان پر ہے۔</value></data>
+	<data name="Business.InvalidPlanChange" xml:space="preserve"><value>پلان '{0}' سے '{1}' میں تبدیل نہیں کیا جا سکتا۔</value></data>
+	<data name="Validation.Product.Name.Required" xml:space="preserve"><value>پروڈکٹ کا نام درکار ہے۔</value></data>
+	<data name="Validation.Product.Name.MaxLength" xml:space="preserve"><value>پروڈکٹ کا نام 100 حروف سے تجاوز نہیں کرنا چاہیے۔</value></data>
+	<data name="Validation.Product.CategoryId.Required" xml:space="preserve"><value>کیٹیگری درکار ہے۔</value></data>
+	<data name="Validation.Product.Price.GreaterThanZero" xml:space="preserve"><value>قیمت صفر سے زیادہ ہونی چاہیے۔</value></data>
+	<data name="Validation.Product.Price.TooHigh" xml:space="preserve"><value>قیمت غیر حقیقی حد تک زیادہ ہے۔</value></data>
+	<data name="Validation.Product.Stock.NotNegative" xml:space="preserve"><value>اسٹاک منفی نہیں ہو سکتا۔</value></data>
+	<data name="Validation.Product.Id.Required" xml:space="preserve"><value>پروڈکٹ آئی ڈی درکار ہے۔</value></data>
+
+	<data name="Validation.Sale.PaymentStatus.Invalid" xml:space="preserve"><value>ادائیگی کی حیثیت غلط ہے۔</value></data>
+	<data name="Validation.Sale.Items.Required" xml:space="preserve"><value>فروخت میں کم از کم ایک آئٹم ہونا ضروری ہے۔</value></data>
+	<data name="Validation.SaleItem.ProductId.Required" xml:space="preserve"><value>پروڈکٹ درکار ہے۔</value></data>
+	<data name="Validation.SaleItem.Quantity.GreaterThanZero" xml:space="preserve"><value>مقدار کم از کم 1 ہونی چاہیے۔</value></data>
+</root>

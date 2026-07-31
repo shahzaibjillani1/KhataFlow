@@ -1,0 +1,26 @@
+<div class="bg-bg-card rounded-2xl p-4 sm:p-5 shadow-md border border-border-card hover:shadow-lg transition h-full">
+
+  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-3 sm:mb-4" [ngClass]="iconBg">
+    <i class="text-base sm:text-lg" [ngClass]="[icon, iconColor]"></i>
+  </div>
+
+  <p class="text-xs sm:text-sm text-text-label">{{ title }}</p>
+
+  <p class="text-xl sm:text-3xl font-bold text-text-heading mt-1">{{ value }}</p>
+
+  @if (badgeText) {
+  <p class="text-xs mt-2 flex items-center gap-1" [ngClass]="{
+        'text-success':      badgeType === 'up',
+        'text-text-danger':  badgeType === 'down',
+        'text-text-muted':   badgeType === 'neutral'
+      }">
+    @if (badgeType === 'up') {
+    <i class="fa-solid fa-arrow-up text-[10px]"></i>
+    } @else if (badgeType === 'down') {
+    <i class="fa-solid fa-arrow-down text-[10px]"></i>
+    }
+    {{ badgeText }}
+  </p>
+  }
+
+</div>
