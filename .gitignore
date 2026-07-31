@@ -11,6 +11,7 @@ frontend/**/*.env.local
 backend/**/bin/
 backend/**/obj/
 backend/**/*.user
+backend/**/appsettings.json
 backend/**/appsettings.Development.json
 backend/**/appsettings.Local.json
 backend/**/*.pfx
