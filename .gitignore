@@ -1,1 +1,34 @@
-/.vs
+##### Angular / Node #####
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/.angular/
+frontend/**/npm-debug.log*
+frontend/**/yarn-error.log*
+frontend/**/.env
+frontend/**/*.env.local
+
+##### .NET / ASP.NET Core #####
+backend/**/bin/
+backend/**/obj/
+backend/**/*.user
+backend/**/appsettings.Development.json
+backend/**/appsettings.Local.json
+backend/**/*.pfx
+backend/**/*.key
+backend/**/publish/
+
+##### IDE / Editor #####
+.vs/
+.vscode/
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+
+##### OS files #####
+.DS_Store
+Thumbs.db
+
+##### Logs #####
+*.log
+logs/
