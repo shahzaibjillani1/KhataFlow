@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj": {}
+    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj": {}
   },
   "projects": {
-    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj": {
+    "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj",
+        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj",
         "projectName": "KhataFlow.Core",
-        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj",
+        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\obj\\",
+        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -397,14 +397,14 @@
         }
       }
     },
-    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj": {
+    "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
         "projectName": "KhataFlow.Infrastructure",
-        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\obj\\",
+        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -426,8 +426,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj": {
-                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj"
+              "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj": {
+                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj"
               }
             }
           }
@@ -772,14 +772,14 @@
         }
       }
     },
-    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj": {
+    "D:\\KhataFlow\\backend\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj",
+        "projectUniqueName": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj",
         "projectName": "KhataFlow.WebAPI",
-        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj",
+        "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI\\KhataFlow.WebAPI.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.WebAPI\\obj\\",
+        "outputPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -801,11 +801,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj": {
-                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Core\\KhataFlow.Core.csproj"
+              "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj": {
+                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Core\\KhataFlow.Core.csproj"
               },
-              "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj": {
-                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj"
+              "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj": {
+                "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NcSBfWivrtQ=",
+  "dgSpecHash": "+XzmIK+Yzss=",
   "success": true,
-  "projectFilePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+  "projectFilePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\automapper\\16.1.1\\automapper.16.1.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
@@ -92,9 +92,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 10.0.7 has a known high severity vulnerability, https://github.com/advisories/GHSA-23rf-6693-g89p",
-      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -104,9 +104,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 10.0.7 has a known high severity vulnerability, https://github.com/advisories/GHSA-8q5v-6pqq-x66h",
-      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -116,9 +116,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 10.0.7 has a known high severity vulnerability, https://github.com/advisories/GHSA-cvvh-rhrc-wg4q",
-      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -128,9 +128,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 10.0.7 has a known high severity vulnerability, https://github.com/advisories/GHSA-g8r8-53c2-pm3f",
-      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -140,9 +140,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 10.0.7 has a known high severity vulnerability, https://github.com/advisories/GHSA-mmjf-rqrv-855v",
-      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "projectPath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.WebAPI.Solution\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
+      "filePath": "D:\\KhataFlow\\backend\\KhataFlow.Infrastructure\\KhataFlow.Infrastructure.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
