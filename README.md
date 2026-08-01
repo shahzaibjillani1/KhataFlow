@@ -428,6 +428,19 @@ Sensitive configuration (connection strings, JWT signing keys, Safepay API keys)
 - [ ] Reports module (PDF/Excel export)
 - [ ] Full PWA support
 
+
+---
+
+## Contact
+
+For any questions, feedback, or collaboration opportunities, reach out at [shahzaibjillani8@gmail.com](mailto:shahzaibjillani8@gmail.com)
+
+* 📧 Email: [shahzaibjillani8@gmail.com](mailto:shahzaibjillani8@gmail.com)
+* 🐙 GitHub: [github.com/shahzaibjillani1](https://github.com/shahzaibjillani1)
+* 💼 LinkedIn: [linkedin.com/in/shahzaib-jillani-338352375](https://www.linkedin.com/in/shahzaib-jillani-338352375)
+
+---
+
 ## License
 
 Proprietary — all rights reserved.
