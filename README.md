@@ -22,6 +22,7 @@ KhataFlow digitizes the traditional "khata" (ledger) system used by local shopke
 - SignalR for real-time notifications
 - QuestPDF for invoice generation
 - JWT-based authentication with role and business claims
+- Gemini API & Groq API for AI-powered voice-to-transaction processing
 
 ## Roles & Access
 
@@ -49,7 +50,7 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 **Sales / POS**
 - Today's sales, pending udhar, cart total
 - New sale: browse/search products by category, set quantity, add to cart
-- Voice-based sale creation
+- **Voice-based sale creation** — powered by Groq (fast transcription) and Gemini (structured data extraction from natural speech)
 - Sales history with filters (date, status: paid/udhar/pending)
 - Delete sale; view, print, and download invoice
 - In-cart: select customer, apply discount, complete sale
@@ -65,13 +66,13 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 - Full udhar record view; filter by status (pending/cleared)
 - Sort by name, highest udhar, lowest udhar
 - Search customers
-- Add udhar or record payment by voice
+- **Add udhar or record payment by voice** — same Groq + Gemini voice pipeline as Sales
 - Send ledger to customer via WhatsApp
 
 **Expenses**
 - Total expenses summary
 - List view: title, category, note, date, amount, delete action
-- Add expense manually or by voice
+- **Add expense manually or by voice**
 - Search, filter by category, export to CSV
 
 **Reports**
@@ -124,6 +125,7 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 - **Real-time notifications** — SignalR-backed low-stock/out-of-stock alerts via a fire-and-forget `TryNotifyAsync` pattern
 - **Bilingual by design** — most user-facing entities carry parallel English/Urdu fields (e.g. `BusinessName` / `BusinessNameUr`) rather than a translation layer bolted on afterward
 - **Idempotent writes** — dedicated `IdempotencyRecord` entity supports safe retry of sales/mutations from offline or flaky-network clients
+- **AI-assisted voice input** — sales, expenses, and udhar entries can be created by voice, using Groq for fast transcription and Gemini for structured extraction of transaction data from natural speech
 
 ## Entity Relationship Diagram
 
@@ -393,6 +395,7 @@ khataflow/
 - .NET SDK
 - Node.js + npm
 - SQL Server (local or remote instance)
+- Gemini API key and Groq API key (for voice-to-transaction)
 
 ### Backend
 ```bash
@@ -413,7 +416,7 @@ The frontend runs on `http://localhost:4200` by default and expects the API at t
 
 ## Configuration
 
-Sensitive configuration (connection strings, JWT signing keys, Safepay API keys) is kept out of source control.
+Sensitive configuration (connection strings, JWT signing keys, Safepay API keys, Gemini API key, Groq API key) is kept out of source control.
 
 - **Backend**: `appsettings.json` → override locally via `appsettings.Development.json` (gitignored) or user secrets
 - **Frontend**: `src/environments/environment.ts` / `environment.prod.ts`
@@ -421,13 +424,11 @@ Sensitive configuration (connection strings, JWT signing keys, Safepay API keys)
 ## Roadmap
 
 - [ ] Role/policy matrix hardening (controller-level authorization per role)
-- [ ] Voice-based input (sales, expenses, udhar) — speech-to-text integration
 - [ ] Invoice editing (update existing sale line items with server-authoritative repricing)
 - [ ] Custom invoice branding (colors, logo, footer per business)
 - [ ] Admin Panel: Platform Analytics & Subscriptions modules
 - [ ] Reports module (PDF/Excel export)
 - [ ] Full PWA support
-
 
 ---
 
