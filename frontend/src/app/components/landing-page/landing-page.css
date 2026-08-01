@@ -1,20 +1,41 @@
 @font-face {
   font-family: 'Inter';
-  src: url('/assets/fonts/inter-v13-latin-regular.woff2') format('woff2');
+  src: url('/assets/fonts/inter-v13-latin-400.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-v13-latin-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-v13-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-v13-latin-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 :host {
-  --brand: #4f46e5; 
-  --brand-dark: #4338ca; 
-  --brand-tint: #eef2ff; 
+  --brand: #4f46e5;
+  --brand-dark: #4338ca;
+  --brand-tint: #eef2ff;
   --bg: #f8f9fc;
   --surface: #ffffff;
-  --border: #f3f4f6; 
-  --text: #111827; 
-  --text-soft: #6b7280; 
-  --amber: #d97706; 
+  --border: #f3f4f6;
+  --text: #111827;
+  --text-soft: #6b7280;
+  --amber: #d97706;
   --green: #16a34a;
 
   display: block;
