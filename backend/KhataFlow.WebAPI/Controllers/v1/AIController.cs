@@ -53,18 +53,4 @@ public class AIController : CustomControllerBase
 
         return Success(result, result.Message ?? _localizer["Ai.Voice.CommandProcessed"]);
     }
-
-    [HttpPost("receipt-parser")]
-    public async Task<IActionResult> ReceiptParser([FromBody] ReceiptParseRequest request, CancellationToken ct)
-    {
-        if (string.IsNullOrWhiteSpace(request?.Text))
-            return BadRequestResponse(_localizer["Ai.Receipt.NoTextProvided"]);
-
-        var result = await _transactionAiService.ExtractTransactionFromTextAsync(request.Text, ct);
-
-        if (!result.Success)
-            return BadRequestResponse(result.ErrorMessage ?? _localizer["Ai.Receipt.ProcessingFailed"]);
-
-        return Success<TransactionAIResponse>(result, _localizer["Ai.Receipt.ParsedSuccessfully"]);
-    }
 }

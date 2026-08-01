@@ -20,6 +20,7 @@ backend/**/publish/
 
 ##### IDE / Editor #####
 .vs/
+backend/.vs/
 .vscode/
 *.suo
 *.userosscache

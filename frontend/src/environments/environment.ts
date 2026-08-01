@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7173',
-  hubUrl: 'https://localhost:7173/hubs/notifications',
+  apiUrl: 'https://khataflow.runasp.net',
+  hubUrl: 'https://khataflow.runasp.net/hubs/notifications',
 };
