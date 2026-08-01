@@ -1,10 +1,12 @@
 # KhataFlow
 
-A multi-tenant SaaS platform built to help small and medium-sized businesses in Pakistan manage sales, inventory, customers, and invoicing — with offline-first support for areas with unreliable connectivity, and full bilingual (English/Urdu) support throughout.
+**A multi-tenant SaaS platform reimagining how Pakistan's small businesses manage sales, inventory, and customer credit** — built offline-first for areas with unreliable connectivity, fully bilingual (English/Urdu), and powered by AI-driven voice input for hands-free record keeping.
 
 ## Overview
 
-KhataFlow digitizes the traditional "khata" (ledger) system used by local shopkeepers and small business owners, replacing manual bookkeeping with a modern, role-based, subscription-tiered platform. Each business operates in its own isolated tenant space, with staff, sales, inventory, and reporting scoped per business — while a separate Admin Panel gives platform operators visibility and control across all tenants.
+For generations, small shopkeepers across Pakistan have tracked sales and customer credit ("khata") in paper ledgers — accurate, but fragile, unsearchable, and impossible to scale. KhataFlow replaces that system with a modern, role-based, subscription-tiered platform: each business gets its own isolated workspace to manage products, sales, customers, and udhar (credit) tracking, while a dedicated Admin Panel gives platform operators full visibility and control across every tenant.
+
+This isn't a toy CRUD app — it's built to survive the real constraints small businesses actually face: patchy internet, staff who need voice input instead of typing, and owners who think in Urdu as often as English.
 
 ## Tech Stack
 
