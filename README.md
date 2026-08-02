@@ -25,6 +25,7 @@ This isn't a toy CRUD app — it's built to survive the real constraints small b
 - SignalR for real-time notifications
 - QuestPDF for invoice generation
 - JWT-based authentication with role and business claims
+- Safepay integration for subscription payment processing
 - Gemini API & Groq API for AI-powered voice-to-transaction processing
 
 ## Roles & Access
@@ -88,7 +89,7 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 **Settings**
 - View/edit business info and profile
 - Language toggle (English / Urdu)
-- Subscribe to premium plan
+- Subscribe to premium plan (payment via Safepay)
 - In-app notifications
 - **Invoice Settings** (custom branding: logo, colors, footer note, font, template style) — restricted to the Owner role on a Premium subscription
 
@@ -153,6 +154,7 @@ Plan limits are enforced server-side via `IPlanLimitService` before any gated wr
 - **Installable PWA** — custom service-worker setup (Angular's standalone-bootstrap architecture isn't compatible with the `@angular/pwa` `ng add` schematic, so the service worker and manifest are wired up manually)
 - **Claims-based authorization policies** — `OwnerOnly`, `OwnerOrManager`, `AnyBusinessUser`, and `SuperAdminOnly` policies enforce role checks at the controller/action level, registered via an `AddWebApiServices` extension method
 - **Rate limiting** — ASP.NET Core fixed-window limiter protects public-facing endpoints (e.g. the public customer ledger view, capped at 20 requests/minute)
+- **Payment processing** — Safepay handles subscription plan payments (upgrades, renewals)
 
 ## Entity Relationship Diagram
 
