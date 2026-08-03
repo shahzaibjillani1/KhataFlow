@@ -1,6 +1,6 @@
 # KhataFlow
 
-**A multi-tenant SaaS platform reimagining how Pakistan's small businesses manage sales, inventory, and customer credit** — built offline-first for areas with unreliable connectivity, fully bilingual (English/Urdu), and powered by AI-driven voice input for hands-free record keeping.
+**A multi-tenant SaaS platform reimagining how Pakistan's small businesses manage sales, inventory, and customer credit** — built offline-first for areas with unreliable connectivity, fully bilingual (English/Urdu), and powered by AI-driven voice input for hands-free record keeping. Delivered as an installable Progressive Web App.
 
 ## Overview
 
@@ -12,6 +12,7 @@ This isn't a toy CRUD app — it's built to survive the real constraints small b
 
 **Frontend**
 - Angular 21 (standalone components, signals, `OnPush` change detection)
+- Progressive Web App (installable, offline-capable via custom service worker)
 - Tailwind CSS with custom design tokens
 - Transloco for i18n (English / Urdu)
 - Dexie (IndexedDB) for offline storage
@@ -24,6 +25,7 @@ This isn't a toy CRUD app — it's built to survive the real constraints small b
 - SignalR for real-time notifications
 - QuestPDF for invoice generation
 - JWT-based authentication with role and business claims
+- Safepay integration for subscription payment processing
 - Gemini API & Groq API for AI-powered voice-to-transaction processing
 
 ## Roles & Access
@@ -55,6 +57,7 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 - **Voice-based sale creation** — powered by Groq (fast transcription) and Gemini (structured data extraction from natural speech)
 - Sales history with filters (date, status: paid/udhar/pending)
 - Delete sale; view, print, and download invoice
+- **Edit existing sales** — update line items with server-authoritative repricing
 - In-cart: select customer, apply discount, complete sale
 
 **Products**
@@ -86,8 +89,9 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 **Settings**
 - View/edit business info and profile
 - Language toggle (English / Urdu)
-- Subscribe to premium plan
+- Subscribe to premium plan (payment via Safepay)
 - In-app notifications
+- **Invoice Settings** (custom branding: logo, colors, footer note, font, template style) — restricted to the Owner role on a Premium subscription
 
 ### Admin Panel
 
@@ -117,6 +121,25 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 
 ---
 
+## Subscription Plans
+
+| | Free (₨0/mo) | Premium (₨999/mo) |
+|---|---|---|
+| Products | Up to 50 | Unlimited |
+| Customers | Up to 100 | Unlimited |
+| Staff logins | 1 (owner only) | Up to 3, role-based |
+| Sales / month | Up to 150 | Unlimited |
+| Sales & udhar history | 30 days | Unlimited |
+| Voice-based entry (sales/udhar/expenses) | ❌ | ✅ |
+| WhatsApp ledger sharing | ❌ | ✅ |
+| Custom invoice branding | ❌ | ✅ |
+| Reports export (CSV/PDF/Excel) | Basic | Full |
+| Support | Standard | Priority WhatsApp support |
+
+Plan limits are enforced server-side via `IPlanLimitService` before any gated write operation — not just hidden in the UI.
+
+---
+
 ## Architecture Highlights
 
 - **Clean Architecture** on the backend — clear separation between Core (domain), Infrastructure (data access, external services), and WebAPI (presentation)
@@ -128,6 +151,10 @@ Authorization is enforced at the controller/action level via role- and policy-ba
 - **Bilingual by design** — most user-facing entities carry parallel English/Urdu fields (e.g. `BusinessName` / `BusinessNameUr`) rather than a translation layer bolted on afterward
 - **Idempotent writes** — dedicated `IdempotencyRecord` entity supports safe retry of sales/mutations from offline or flaky-network clients
 - **AI-assisted voice input** — sales, expenses, and udhar entries can be created by voice, using Groq for fast transcription and Gemini for structured extraction of transaction data from natural speech
+- **Installable PWA** — custom service-worker setup (Angular's standalone-bootstrap architecture isn't compatible with the `@angular/pwa` `ng add` schematic, so the service worker and manifest are wired up manually)
+- **Claims-based authorization policies** — `OwnerOnly`, `OwnerOrManager`, `AnyBusinessUser`, and `SuperAdminOnly` policies enforce role checks at the controller/action level, registered via an `AddWebApiServices` extension method
+- **Rate limiting** — ASP.NET Core fixed-window limiter protects public-facing endpoints (e.g. the public customer ledger view, capped at 20 requests/minute)
+- **Payment processing** — Safepay handles subscription plan payments (upgrades, renewals)
 
 ## Entity Relationship Diagram
 
@@ -422,15 +449,6 @@ Sensitive configuration (connection strings, JWT signing keys, Safepay API keys,
 
 - **Backend**: `appsettings.json` → override locally via `appsettings.Development.json` (gitignored) or user secrets
 - **Frontend**: `src/environments/environment.ts` / `environment.prod.ts`
-
-## Roadmap
-
-- [ ] Role/policy matrix hardening (controller-level authorization per role)
-- [ ] Invoice editing (update existing sale line items with server-authoritative repricing)
-- [ ] Custom invoice branding (colors, logo, footer per business)
-- [ ] Admin Panel: Platform Analytics & Subscriptions modules
-- [ ] Reports module (PDF/Excel export)
-- [ ] Full PWA support
 
 ---
 
