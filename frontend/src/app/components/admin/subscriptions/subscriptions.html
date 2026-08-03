@@ -6,7 +6,8 @@
   </div>
 
   @if (error()) {
-  <div class="rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 flex items-center justify-between">
+  <div
+    class="rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 flex items-center justify-between">
     <span>{{ error() }}</span>
     <button (click)="load()" class="text-red-700 font-medium underline">Retry</button>
   </div>
@@ -190,7 +191,8 @@
             <td class="px-5 py-4">
               <div class="flex items-center gap-2">
                 <button (click)="renewSub(sub)" [disabled]="actionPending() === sub.businessId"
-                  class="text-xs font-semibold px-3 py-1.5 rounded-lg transition whitespace-nowrap disabled:opacity-60" [ngClass]="sub.status === 'Expired'
+                  class="text-xs font-semibold px-3 py-1.5 rounded-lg transition whitespace-nowrap disabled:opacity-60"
+                  [ngClass]="sub.status === 'Expired'
                       ? 'text-white bg-btn-primary hover:bg-btn-primary-hover'
                       : 'text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover'">
                   <i class="fa-solid fa-rotate-right mr-1 text-[10px]"></i>
@@ -270,8 +272,7 @@
 
         <div class="flex gap-2">
           <button (click)="renewSub(sub)" [disabled]="actionPending() === sub.businessId"
-            class="flex-1 text-xs font-semibold py-2 rounded-lg transition text-center disabled:opacity-60"
-            [ngClass]="sub.status === 'Expired'
+            class="flex-1 text-xs font-semibold py-2 rounded-lg transition text-center disabled:opacity-60" [ngClass]="sub.status === 'Expired'
                 ? 'text-white bg-btn-primary hover:bg-btn-primary-hover'
                 : 'text-primary-text border border-primary-border bg-primary-soft hover:bg-primary-soft-hover'">
             <i class="fa-solid fa-rotate-right mr-1 text-[10px]"></i>
@@ -294,14 +295,70 @@
       }
     </div>
 
+    <!-- Desktop pagination + summary footer -->
     <div
-      class="px-5 py-3.5 bg-table-header-bg border-t border-border-card flex flex-wrap items-center justify-between gap-2">
-      <p class="text-xs text-text-muted">{{ filteredActivity.length }} subscriptions</p>
+      class="hidden md:flex px-5 py-3.5 bg-table-header-bg border-t border-border-card flex-wrap items-center justify-between gap-3">
+
+      <div class="flex items-center gap-3">
+        <p class="text-xs text-text-muted whitespace-nowrap">
+          {{ filteredActivity.length }} of {{ totalCount() }} subscriptions
+        </p>
+        <select [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange($event)"
+          class="border border-input-border rounded-lg px-2 py-1 text-xs bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+          @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }} / page</option>
+          }
+        </select>
+      </div>
+
       <p class="text-xs text-text-muted">
         <span class="text-success">{{ activeCount }} active</span> ·
         <span class="text-error">{{ expiredCount }} expired</span> ·
         <span class="text-text-muted">{{ suspendedCount }} suspended</span>
       </p>
+
+      <div class="flex items-center gap-1">
+        <button (click)="prevPage()" [disabled]="pageNumber() === 1"
+          class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-table bg-bg-card text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+        </button>
+        <span class="text-xs text-text-muted px-2 whitespace-nowrap">
+          Page {{ pageNumber() }} of {{ totalPages() }}
+        </span>
+        <button (click)="nextPage()" [disabled]="pageNumber() === totalPages()"
+          class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-table bg-bg-card text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile pagination + summary footer -->
+    <div class="md:hidden flex flex-col gap-2 px-5 py-3.5 bg-table-header-bg border-t border-border-card">
+
+      <div class="flex items-center justify-between flex-wrap gap-1">
+        <p class="text-xs text-text-muted">{{ filteredActivity.length }} of {{ totalCount() }}</p>
+        <p class="text-xs text-text-muted">
+          <span class="text-success">{{ activeCount }} active</span> ·
+          <span class="text-error">{{ expiredCount }} expired</span> ·
+          <span class="text-text-muted">{{ suspendedCount }} suspended</span>
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between gap-2">
+        <button (click)="prevPage()" [disabled]="pageNumber() === 1"
+          class="flex-1 py-2 rounded-lg border border-border-table bg-bg-card text-text-label text-xs font-medium hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+        </button>
+        <span class="text-xs text-text-muted whitespace-nowrap px-2">
+          {{ pageNumber() }} / {{ totalPages() }}
+        </span>
+        <button (click)="nextPage()" [disabled]="pageNumber() === totalPages()"
+          class="flex-1 py-2 rounded-lg border border-border-table bg-bg-card text-text-label text-xs font-medium hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          Next <i class="fa-solid fa-chevron-right ml-1"></i>
+        </button>
+      </div>
+
     </div>
 
   </div>
@@ -400,7 +457,8 @@
           </div>
           <div>
             <p class="text-sm font-medium text-text-heading">{{ changingSub.business }}</p>
-            <p class="text-xs text-text-muted">Current: <span class="font-semibold text-text-body">{{ changingSub.plan }}</span></p>
+            <p class="text-xs text-text-muted">Current: <span class="font-semibold text-text-body">{{ changingSub.plan
+                }}</span></p>
           </div>
         </div>
 
@@ -470,7 +528,8 @@
         </div>
         <div>
           <p class="text-sm font-semibold text-text-heading">{{ renewingSub.business }}</p>
-          <p class="text-xs text-text-muted mt-0.5">{{ renewingSub.plan }} plan · Rs {{ renewingSub.amount | number }}/month</p>
+          <p class="text-xs text-text-muted mt-0.5">{{ renewingSub.plan }} plan · Rs {{ renewingSub.amount | number
+            }}/month</p>
         </div>
         <p class="text-xs text-text-label leading-relaxed">
           This will renew the subscription and set the status back to Active.

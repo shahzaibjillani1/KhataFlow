@@ -10,14 +10,11 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Chart, registerables } from 'chart.js';
 import { StatCard } from '../../../shared/components/stat-card/stat-card';
 import { badgeTypes } from '../../../core/enums/badgeTypes';
 import { ChartService } from '../../../services/chart';
 import { PlatformReportService } from '../../../services/platform-report-service';
 import { ReportPeriod } from '../../../core/enums/report-period';
-
-Chart.register(...registerables);
 
 type GrowthMetric = 'Revenue' | 'Users' | 'Businesses';
 

@@ -12,13 +12,12 @@ import { BusinessService } from '../../../services/business-service';
 import { BusinessStatus } from '../../../core/enums/business-status';
 import { BusinessPlanType } from '../../../core/enums/business-plan-type';
 
-
 const PLAN_COLORS = ['#6b7280', '#8b5cf6', '#f59e0b', '#10b981', '#f97316', '#6366f1'];
 
 interface SubActivityViewModel {
   businessId: string;
   business: string;
-  owner: string; 
+  owner: string;
   avatarColor: string;
   plan: string;
   planCode: number;
@@ -53,16 +52,22 @@ export class Subscriptions implements OnInit {
 
   loading = signal(true);
   error = signal<string | null>(null);
-  actionPending = signal<string | null>(null); 
+  actionPending = signal<string | null>(null);
 
-  plans = this.subscriptionPlanService.plans; 
+  plans = this.subscriptionPlanService.plans;
 
   private businesses = this.businessService.businesses;
 
+  // Pagination state — server-driven via BusinessService
+  pageNumber = signal(1);
+  pageSize = signal(10);
+  readonly pageSizeOptions = [10, 20, 50, 100];
+
+  readonly totalCount = this.businessService.totalCount;
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));
+
   activity = computed<SubActivityViewModel[]>(() => {
-    const planByType = new Map<number, SubscriptionPlan>(
-      this.plans().map((p) => [p.planType, p])
-    );
+    const planByType = new Map<number, SubscriptionPlan>(this.plans().map((p) => [p.planType, p]));
 
     return this.businesses().map((b: Business) => {
       const plan = planByType.get(b.plan);
@@ -75,7 +80,7 @@ export class Subscriptions implements OnInit {
       return {
         businessId: b.id,
         business: b.name,
-        owner: b.email, 
+        owner: b.email,
         avatarColor: avatarColorFor(b.id),
         plan: plan?.planName ?? 'Unknown',
         planCode: b.plan,
@@ -111,7 +116,7 @@ export class Subscriptions implements OnInit {
 
     forkJoin({
       plans: this.subscriptionPlanService.fetchAll(),
-      businesses: this.businessService.fetchAll(),
+      businesses: this.businessService.fetchAll(this.pageNumber(), this.pageSize()),
     })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
@@ -122,9 +127,29 @@ export class Subscriptions implements OnInit {
       });
   }
 
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages() || page === this.pageNumber()) return;
+    this.pageNumber.set(page);
+    this.load();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.pageNumber() + 1);
+  }
+
+  prevPage(): void {
+    this.goToPage(this.pageNumber() - 1);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.pageNumber.set(1);
+    this.load();
+  }
+
   get filteredActivity(): SubActivityViewModel[] {
     return this.activity().filter((s) =>
-      this.filterStatus ? s.status === this.filterStatus : true
+      this.filterStatus ? s.status === this.filterStatus : true,
     );
   }
   get activeCount() {
@@ -245,7 +270,7 @@ export class Subscriptions implements OnInit {
     const rows = [
       'Business,Owner,Plan,Expiry,Amount,Status',
       ...this.activity().map(
-        (s) => `${s.business},${s.owner},${s.plan},${s.expiry},${s.amount},${s.status}`
+        (s) => `${s.business},${s.owner},${s.plan},${s.expiry},${s.amount},${s.status}`,
       ),
     ].join('\n');
     const blob = new Blob([rows], { type: 'text/csv' });

@@ -176,33 +176,16 @@ export class AdminDashboard implements AfterViewInit {
       users: this.userService.getUsers(),
     })
       .pipe(
-        switchMap(({ summary, plans, users }) => {
+        map(({ summary, plans, users }) => {
           this.summary.set(summary.data);
           this.userGrowthData.set(this.computeUserGrowth(users.data));
 
-          if (!plans.data.length) {
-            return of([] as PlanDistributionItem[]);
-          }
-
-          const userCountCalls = plans.data.map((plan) =>
-            this.subscriptionPlanService.getUserCount(plan.id).pipe(
-              map((res) => ({
-                id: plan.id,
-                label: plan.planName,
-                value: res.data ?? 0,
-              })),
-              catchError(() => of({ id: plan.id, label: plan.planName, value: 0 })),
-            ),
-          );
-
-          return forkJoin(userCountCalls).pipe(
-            map((results) =>
-              results.map((r, i) => ({
-                ...r,
-                color: PLAN_COLORS[i % PLAN_COLORS.length],
-              })),
-            ),
-          );
+          return plans.data.map((plan, i) => ({
+            id: plan.id,
+            label: plan.planName,
+            value: plan.userCount ?? 0,
+            color: PLAN_COLORS[i % PLAN_COLORS.length],
+          }));
         }),
         catchError((err) => {
           console.error('[AdminDashboard] Failed to load dashboard data', err);

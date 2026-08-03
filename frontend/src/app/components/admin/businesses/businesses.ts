@@ -7,7 +7,6 @@ import { BusinessStatus } from '../../../core/enums/business-status';
 import { BusinessPlanType } from '../../../core/enums/business-plan-type';
 import { BusinessService } from '../../../services/business-service';
 
-
 const STATUS_LABELS: Record<number, string> = {
   [BusinessStatus.Active]: 'Active',
   [BusinessStatus.Trial]: 'Trial',
@@ -24,8 +23,8 @@ const AVATAR_COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#
 interface BusinessViewModel {
   id: string;
   name: string;
-  category: string; // not in API — placeholder until backend adds it
-  owner: string; // API has no owner name — falling back to email
+  category: string;
+  owner: string;
   phone: string;
   plan: string;
   planCode: number;
@@ -45,7 +44,8 @@ function relativeTime(iso: string): string {
   if (days === 1) return '1 day ago';
   if (days < 7) return `${days} days ago`;
   if (days < 30) return `${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} ago`;
-  if (days < 365) return `${Math.floor(days / 30)} month${Math.floor(days / 30) > 1 ? 's' : ''} ago`;
+  if (days < 365)
+    return `${Math.floor(days / 30)} month${Math.floor(days / 30) > 1 ? 's' : ''} ago`;
   return `${Math.floor(days / 365)} year${Math.floor(days / 365) > 1 ? 's' : ''} ago`;
 }
 
@@ -58,8 +58,8 @@ function toViewModel(b: Business): BusinessViewModel {
   return {
     id: b.id,
     name: b.name,
-    category: '—', // TODO: backend has no category field on Business yet
-    owner: b.email, // TODO: backend has no ownerName on Business yet — using email as stand-in
+    category: '—',
+    owner: b.email,
     phone: b.phoneNumber,
     plan: PLAN_LABELS[b.plan] ?? 'Unknown',
     planCode: b.plan,
@@ -91,7 +91,15 @@ export class Businesses implements OnInit {
 
   loading = signal(true);
   error = signal<string | null>(null);
-  actionPending = signal<string | null>(null); 
+  actionPending = signal<string | null>(null);
+
+  // Pagination state — server-driven
+  pageNumber = signal(1);
+  pageSize = signal(10);
+  readonly pageSizeOptions = [10, 20, 50, 100];
+
+  readonly totalCount = this.businessService.totalCount;
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));
 
   businesses = computed(() => this.businessService.businesses().map(toViewModel));
 
@@ -121,7 +129,7 @@ export class Businesses implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     this.businessService
-      .fetchAll()
+      .fetchAll(this.pageNumber(), this.pageSize())
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         error: (err) => {
@@ -129,6 +137,26 @@ export class Businesses implements OnInit {
           this.error.set('Could not load businesses.');
         },
       });
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages() || page === this.pageNumber()) return;
+    this.pageNumber.set(page);
+    this.load();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.pageNumber() + 1);
+  }
+
+  prevPage(): void {
+    this.goToPage(this.pageNumber() - 1);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.pageNumber.set(1); // reset to first page when page size changes
+    this.load();
   }
 
   get filteredBusinesses(): BusinessViewModel[] {
@@ -160,7 +188,6 @@ export class Businesses implements OnInit {
     return BusinessPlanType.Premium;
   }
 
-
   loginAs(biz: BusinessViewModel) {
     this.loginBiz = biz;
     this.showLoginModal = true;
@@ -176,7 +203,11 @@ export class Businesses implements OnInit {
       .pipe(finalize(() => this.actionPending.set(null)))
       .subscribe({
         next: (res) => {
-          console.log('Impersonation token acquired for', this.loginBiz?.name, res.data.accessToken);
+          console.log(
+            'Impersonation token acquired for',
+            this.loginBiz?.name,
+            res.data.accessToken,
+          );
           this.showLoginModal = false;
         },
         error: (err) => {
@@ -203,7 +234,7 @@ export class Businesses implements OnInit {
       .subscribe({
         next: () => {
           this.showSuspendModal = false;
-          this.load(); 
+          this.load();
         },
         error: (err) => {
           console.error('[Businesses] Failed to suspend business', err);
@@ -278,7 +309,7 @@ export class Businesses implements OnInit {
     const rows = [
       'Business,Owner,Phone,Plan,Status,Joined',
       ...this.businesses().map(
-        (b) => `${b.name},${b.owner},${b.phone},${b.plan},${b.status},${b.joined}`
+        (b) => `${b.name},${b.owner},${b.phone},${b.plan},${b.status},${b.joined}`,
       ),
     ].join('\n');
     const blob = new Blob([rows], { type: 'text/csv' });

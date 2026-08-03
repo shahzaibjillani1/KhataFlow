@@ -3,8 +3,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/models/auth-models';
-import { Business, BusinessAddRequest, BusinessUpdateRequest, ChangeSubscriptionRequest, PlatformSummary } from '../core/models/business-models';
-
+import { PaginatedResponse } from '../core/models/paginated-response-model';
+import {
+  Business,
+  BusinessAddRequest,
+  BusinessUpdateRequest,
+  ChangeSubscriptionRequest,
+  PlatformSummary,
+} from '../core/models/business-models';
 
 @Injectable({ providedIn: 'root' })
 export class BusinessService {
@@ -14,10 +20,18 @@ export class BusinessService {
   private readonly _businesses = signal<Business[]>([]);
   readonly businesses = this._businesses.asReadonly();
 
-  fetchAll() {
-    return this.http
-      .get<ApiResponse<Business[]>>(this.baseUrl)
-      .pipe(tap((res) => this._businesses.set(res.data)));
+  private readonly _totalCount = signal(0);
+  readonly totalCount = this._totalCount.asReadonly();
+
+  fetchAll(pageNumber = 1, pageSize = 20) {
+    const params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
+
+    return this.http.get<ApiResponse<PaginatedResponse<Business>>>(this.baseUrl, { params }).pipe(
+      tap((res) => {
+        this._businesses.set(res.data.items);
+        this._totalCount.set(res.data.totalCount);
+      }),
+    );
   }
 
   getById(id: string) {
@@ -44,30 +58,24 @@ export class BusinessService {
   }
 
   reactivate(id: string) {
-    return this.http.patch<ApiResponse<Business>>(
-      `${this.baseUrl}/${id}/reactivate`,
-      null
-    );
+    return this.http.patch<ApiResponse<Business>>(`${this.baseUrl}/${id}/reactivate`, null);
   }
 
   renewSubscription(id: string) {
-    return this.http.post<ApiResponse<Business>>(
-      `${this.baseUrl}/${id}/renew-subscription`,
-      null
-    );
+    return this.http.post<ApiResponse<Business>>(`${this.baseUrl}/${id}/renew-subscription`, null);
   }
 
   changeSubscription(id: string, request: ChangeSubscriptionRequest) {
     return this.http.post<ApiResponse<Business>>(
       `${this.baseUrl}/${id}/change-subscription`,
-      request
+      request,
     );
   }
 
   getImpersonationToken(id: string) {
     return this.http.post<ApiResponse<{ accessToken: string }>>(
       `${this.baseUrl}/${id}/impersonation-token`,
-      null
+      null,
     );
   }
 }

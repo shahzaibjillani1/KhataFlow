@@ -201,10 +201,20 @@
         </div>
 
         <div
-            class="px-5 py-3.5 bg-table-header-bg border-t border-border-card flex flex-wrap items-center justify-between gap-2">
-            <p class="text-xs text-text-muted">
-                Showing {{ filteredBusinesses.length }} of {{ businesses().length }} businesses
-            </p>
+            class="px-5 py-3.5 bg-table-header-bg border-t border-border-card flex flex-wrap items-center justify-between gap-3">
+
+            <div class="flex items-center gap-3">
+                <p class="text-xs text-text-muted whitespace-nowrap">
+                    Showing {{ businesses().length }} of {{ totalCount() }} businesses
+                </p>
+                <select [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange($event)"
+                    class="border border-input-border rounded-lg px-2 py-1 text-xs bg-bg-card text-text-label focus:outline-none focus:ring-2 focus:ring-focus-ring transition">
+                    @for (size of pageSizeOptions; track size) {
+                    <option [value]="size">{{ size }} / page</option>
+                    }
+                </select>
+            </div>
+
             <div class="flex items-center gap-3 text-xs text-text-muted">
                 <span class="flex items-center gap-1">
                     <i class="fa-solid fa-circle text-success text-[8px]"></i>
@@ -219,6 +229,21 @@
                     Suspended: {{ suspendedCount }}
                 </span>
             </div>
+
+            <div class="flex items-center gap-1">
+                <button (click)="prevPage()" [disabled]="pageNumber() === 1"
+                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-table bg-bg-card text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                </button>
+                <span class="text-xs text-text-muted px-2 whitespace-nowrap">
+                    Page {{ pageNumber() }} of {{ totalPages() }}
+                </span>
+                <button (click)="nextPage()" [disabled]="pageNumber() === totalPages()"
+                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-table bg-bg-card text-text-label hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+
         </div>
 
     </div>
@@ -324,13 +349,31 @@
         </div>
         }
 
-        <div class="flex items-center justify-between px-1 pt-1 pb-2 flex-wrap gap-1">
-            <p class="text-xs text-text-muted">{{ filteredBusinesses.length }} of {{ businesses().length }}</p>
-            <p class="text-xs text-text-muted">
-                <span class="text-success">{{ activeCount }} active</span> ·
-                <span class="text-warning-text">{{ trialCount }} trial</span> ·
-                <span class="text-error">{{ suspendedCount }} suspended</span>
-            </p>
+        <div class="flex flex-col gap-2 px-1 pt-1 pb-2">
+
+            <div class="flex items-center justify-between flex-wrap gap-1">
+                <p class="text-xs text-text-muted">{{ businesses().length }} of {{ totalCount() }}</p>
+                <p class="text-xs text-text-muted">
+                    <span class="text-success">{{ activeCount }} active</span> ·
+                    <span class="text-warning-text">{{ trialCount }} trial</span> ·
+                    <span class="text-error">{{ suspendedCount }} suspended</span>
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between gap-2">
+                <button (click)="prevPage()" [disabled]="pageNumber() === 1"
+                    class="flex-1 py-2 rounded-lg border border-border-table bg-bg-card text-text-label text-xs font-medium hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+                </button>
+                <span class="text-xs text-text-muted whitespace-nowrap px-2">
+                    {{ pageNumber() }} / {{ totalPages() }}
+                </span>
+                <button (click)="nextPage()" [disabled]="pageNumber() === totalPages()"
+                    class="flex-1 py-2 rounded-lg border border-border-table bg-bg-card text-text-label text-xs font-medium hover:bg-hover-bg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+
         </div>
 
     </div>
