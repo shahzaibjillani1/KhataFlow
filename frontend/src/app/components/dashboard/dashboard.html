@@ -3,8 +3,8 @@
     <div class="fixed inset-0 bg-black/40 z-40 sm:hidden" (click)="isMobileOpen=false">
     </div>
     }
-    <app-sidebar [collapsed]="isCollapsed" [mobileOpen]="isMobileOpen"
-        (tabSelected)="onTabSelected($event)"></app-sidebar>
+    <app-sidebar [collapsed]="isCollapsed" [mobileOpen]="isMobileOpen" (tabSelected)="onTabSelected($event)"
+        (closeMobile)="isMobileOpen = false"></app-sidebar>
 
     <div class="flex-1 flex flex-col">
 

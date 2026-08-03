@@ -22,6 +22,8 @@ export class Sidebar {
   @Input() collapsed = false;
   @Input() mobileOpen = false;
   @Output() tabSelected = new EventEmitter<string>();
+  @Output() closeMobile = new EventEmitter<void>(); // NEW
+
   router = inject(Router);
   private productSrv = inject(ProductService);
   productCount = 0;
@@ -69,6 +71,12 @@ export class Sidebar {
 
   onTabSelect(item: SidebarItem) {
     this.tabSelected.emit(item.labelKey);
+
+    // Close the mobile drawer after navigating, since we're in the
+    // narrow (< sm) viewport where the sidebar overlays content.
+    if (this.mobileOpen) {
+      this.closeMobile.emit();
+    }
   }
 
   logout() {

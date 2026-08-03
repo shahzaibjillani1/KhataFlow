@@ -18,7 +18,6 @@ export class Dashboard implements OnInit {
   private authService = inject(AuthService);
   private languageService = inject(LanguageService);
 
-  // Language — single source of truth, shared with every other component (e.g. Settings)
   readonly lang = this.languageService.currentLang;
 
   isCollapsed = false;
@@ -41,6 +40,10 @@ export class Dashboard implements OnInit {
 
   onTabSelected(titleKey: string) {
     this.activeTitleKey = titleKey;
+  }
+
+  closeMobileSidebar() {
+    this.isMobileOpen = false;
   }
 
   toggleSidebar() {
