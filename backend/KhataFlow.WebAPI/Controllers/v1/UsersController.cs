@@ -96,4 +96,12 @@ public class UsersController : CustomControllerBase
         var result = await _userService.InviteStaffAsync(requestingUserId, request);
         return Success(result, _localizer["User.InviteStaff.Success"]);
     }
+
+    [Authorize(Policy = "SuperAdminOnly")]
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await _userService.GetUsersAsync();
+        return Success(users, "Users retrieved successfully");
+    }
 }

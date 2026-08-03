@@ -11,7 +11,7 @@ export class UserService {
   private readonly baseUrl = `${environment.apiUrl}/api/v1/Users`;
 
   getUsers() {
-    return this.http.get<ApiResponse<User[]>>(`${this.baseUrl}/business`);
+    return this.http.get<ApiResponse<User[]>>(`${this.baseUrl}`);
   }
   
 
