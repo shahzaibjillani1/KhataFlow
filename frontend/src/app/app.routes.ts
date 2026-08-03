@@ -8,6 +8,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/landing-page/landing-page').then((m) => m.LandingPage),
     pathMatch: 'full',
+    canActivate: [guestGuard],
   },
   {
     path: 'login',
