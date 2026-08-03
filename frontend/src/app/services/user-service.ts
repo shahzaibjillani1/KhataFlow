@@ -11,8 +11,9 @@ export class UserService {
   private readonly baseUrl = `${environment.apiUrl}/api/v1/Users`;
 
   getUsers() {
-    return this.http.get<ApiResponse<User[]>>(this.baseUrl);
+    return this.http.get<ApiResponse<User[]>>(`${this.baseUrl}/business`);
   }
+  
 
   updateUser(id: string, request: UserUpdateRequest) {
     return this.http.put<ApiResponse<User>>(`${this.baseUrl}/${id}`, request);
