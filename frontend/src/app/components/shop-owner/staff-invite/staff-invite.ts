@@ -31,9 +31,15 @@ export class StaffInvite {
     role: ['Staff' as UserRole, Validators.required],
   });
 
-  get fullName() { return this.form.controls.fullName; }
-  get email() { return this.form.controls.email; }
-  get phoneNumber() { return this.form.controls.phoneNumber; }
+  get fullName() {
+    return this.form.controls.fullName;
+  }
+  get email() {
+    return this.form.controls.email;
+  }
+  get phoneNumber() {
+    return this.form.controls.phoneNumber;
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -58,7 +64,8 @@ export class StaffInvite {
       },
       error: (err) => {
         this.errorMessage.set(
-          err?.error?.message ?? this.translocoService.translate('staffInvite.errorMessageFallback'),
+          err?.error?.message ??
+            this.translocoService.translate('staffInvite.errorMessageFallback'),
         );
         this.isSubmitting.set(false);
       },
@@ -67,6 +74,7 @@ export class StaffInvite {
 
   openWhatsApp(): void {
     const url = this.whatsAppUrl();
+    console.log('whatsAppUrl:', url);
     if (url) window.open(url, '_blank', 'noopener');
   }
 }
