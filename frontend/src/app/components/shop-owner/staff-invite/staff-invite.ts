@@ -74,7 +74,6 @@ export class StaffInvite {
 
   openWhatsApp(): void {
     const url = this.whatsAppUrl();
-    console.log('whatsAppUrl:', url);
     if (url) window.open(url, '_blank', 'noopener');
   }
 }
