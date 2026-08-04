@@ -779,6 +779,7 @@
       },
       "mock": {
         "activeCustomer": "ACTIVE CUSTOMER",
+        "customerName": "Kamran Khan",
         "loggingSale": "LOGGING SALE",
         "item1": "Atta 10kg × 1",
         "item2": "Cooking Oil 5L × 2",

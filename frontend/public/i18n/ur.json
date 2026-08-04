@@ -765,6 +765,7 @@
       },
       "mock": {
         "activeCustomer": "فعال کسٹمر",
+        "customerName": "کامران خان",
         "loggingSale": "سیل درج ہو رہی ہے",
         "item1": "آٹا 10 کلو × 1",
         "item2": "کوکنگ آئل 5 لیٹر × 2",
