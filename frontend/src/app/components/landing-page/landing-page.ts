@@ -1,8 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  Directive,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { LanguageService } from '../../services/language-service';
-import { RouterLink, RouterOutlet } from "@angular/router";
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 interface FaqItem {
   questionKey: string;
@@ -16,10 +25,43 @@ interface ModuleCard {
   statKey: string;
 }
 
+@Directive({
+  selector: '[appRevealOnScroll]',
+  standalone: true,
+  host: {
+    class: 'reveal-on-scroll',
+    '[class.in-view]': 'visible()',
+  },
+})
+export class RevealOnScrollDirective {
+  private readonly el = inject(ElementRef<HTMLElement>);
+  readonly visible = signal(false);
+
+  private observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          this.visible.set(true);
+          this.observer.disconnect();
+        }
+      }
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+  );
+
+  constructor() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.visible.set(true);
+      return;
+    }
+    this.observer.observe(this.el.nativeElement);
+  }
+}
+
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, TranslocoDirective, RouterLink, RouterOutlet],
+  imports: [CommonModule, TranslocoDirective, RouterLink, RouterOutlet, RevealOnScrollDirective],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,11 +74,17 @@ export class LandingPage {
   private readonly languageService = inject(LanguageService);
 
   readonly lang = this.languageService.currentLang;
-
   readonly dir = computed(() => (this.lang() === 'ur' ? 'rtl' : 'ltr'));
 
   readonly mobileMenuOpen = signal(false);
   readonly openFaqIndex = signal<number | null>(0);
+
+  readonly scrolled = signal(false);
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.scrolled.set(window.scrollY > 8);
+  }
 
   readonly modules: ModuleCard[] = [
     {
