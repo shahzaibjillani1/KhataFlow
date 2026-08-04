@@ -991,5 +991,41 @@
       "mismatch": "پاس ورڈز مماثل نہیں ہیں۔",
       "generic": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔"
     }
+  },
+  "invoiceSettings": {
+    "loading": "لوڈ ہو رہا ہے…",
+    "saved": "سیٹنگز محفوظ ہو گئیں۔",
+    "logo": "لوگو",
+    "useUrl": "یو آر ایل استعمال کریں",
+    "uploadFile": "فائل اپ لوڈ کریں",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "primaryColor": "بنیادی رنگ",
+    "accentColor": "نمایاں رنگ",
+    "fontFamily": "فونٹ فیملی",
+    "templateStyle": "ٹیمپلیٹ اسٹائل",
+    "footerNote": "فوٹر نوٹ",
+    "showAddress": "انوائس پر کاروباری پتہ دکھائیں",
+    "hexError": "رنگ کی قدریں درست ہیکس کوڈ ہونی چاہئیں (مثلاً #7C3AED)۔",
+    "save": "محفوظ کریں",
+    "saving": "محفوظ ہو رہا ہے…",
+    "previewPdf": "پی ڈی ایف پیش منظر",
+    "livePreview": "لائیو پیش منظر",
+    "previewHint": "فوری جائزے کے لیے نمونہ لے آؤٹ — درست پرنٹ آؤٹ کے لیے \"پی ڈی ایف پیش منظر\" پر کلک کریں۔",
+    "mock": {
+      "businessName": "آپ کے کاروبار کا نام",
+      "address": "123 مارکیٹ روڈ، شہر",
+      "item1": "نمونہ پروڈکٹ × 2",
+      "item2": "دوسری چیز × 1",
+      "total": "کل رقم"
+    },
+    "styles": { "classic": "کلاسک", "modern": "جدید", "minimal": "سادہ" },
+    "errors": {
+      "loadFailed": "انوائس سیٹنگز لوڈ نہیں ہو سکیں۔",
+      "invalidFileType": "براہ کرم PNG، JPEG، یا SVG تصویر منتخب کریں۔",
+      "fileTooLarge": "لوگو 2MB سے چھوٹا ہونا چاہیے۔",
+      "fileReadFailed": "منتخب فائل نہیں پڑھی جا سکی۔",
+      "saveFailed": "تبدیلیاں محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
+      "previewUnavailable": "پیش منظر ابھی دستیاب نہیں ہے۔"
+    }
   }
 }

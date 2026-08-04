@@ -987,5 +987,41 @@
       "mismatch": "Passwords do not match.",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "invoiceSettings": {
+    "loading": "Loading…",
+    "saved": "Settings saved.",
+    "logo": "Logo",
+    "useUrl": "Use URL",
+    "uploadFile": "Upload File",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "primaryColor": "Primary Color",
+    "accentColor": "Accent Color",
+    "fontFamily": "Font Family",
+    "templateStyle": "Template Style",
+    "footerNote": "Footer Note",
+    "showAddress": "Show business address on invoice",
+    "hexError": "Color values must be valid hex codes (e.g. #7C3AED).",
+    "save": "Save",
+    "saving": "Saving…",
+    "previewPdf": "Preview PDF",
+    "livePreview": "Live Preview",
+    "previewHint": "Mock layout for quick feedback — click \"Preview PDF\" for the exact print output.",
+    "mock": {
+      "businessName": "Your Business Name",
+      "address": "123 Market Road, City",
+      "item1": "Sample Product × 2",
+      "item2": "Another Item × 1",
+      "total": "Total"
+    },
+    "styles": { "classic": "Classic", "modern": "Modern", "minimal": "Minimal" },
+    "errors": {
+      "loadFailed": "Could not load invoice settings.",
+      "invalidFileType": "Please choose a PNG, JPEG, or SVG image.",
+      "fileTooLarge": "Logo must be smaller than 2MB.",
+      "fileReadFailed": "Could not read the selected file.",
+      "saveFailed": "Failed to save changes. Please try again.",
+      "previewUnavailable": "Preview is not available yet."
+    }
   }
 }

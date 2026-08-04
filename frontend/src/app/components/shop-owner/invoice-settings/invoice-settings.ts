@@ -7,7 +7,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { InvoiceSettingsService } from '../../../services/invoice-settings';
 import {
   InvoiceSettingsRequest,
@@ -19,7 +21,7 @@ const ACCEPTED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
 
 @Component({
   selector: 'app-invoice-settings',
-  imports: [], // signal-driven form — no FormsModule needed
+  imports: [CommonModule, TranslocoDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './invoice-settings.html',
   styleUrl: './invoice-settings.css',
@@ -27,6 +29,7 @@ const ACCEPTED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
 export class InvoiceSettings implements OnInit, OnDestroy {
   private readonly invoiceSettingsService = inject(InvoiceSettingsService);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly translocoService = inject(TranslocoService);
 
   readonly loading = this.invoiceSettingsService.loading;
   readonly saving = this.invoiceSettingsService.saving;
@@ -53,9 +56,9 @@ export class InvoiceSettings implements OnInit, OnDestroy {
   });
 
   readonly styleOptions = [
-    { value: InvoiceTemplateStyle.Classic, label: 'Classic' },
-    { value: InvoiceTemplateStyle.Modern, label: 'Modern' },
-    { value: InvoiceTemplateStyle.Minimal, label: 'Minimal' },
+    { value: InvoiceTemplateStyle.Classic, labelKey: 'invoiceSettings.styles.classic' },
+    { value: InvoiceTemplateStyle.Modern, labelKey: 'invoiceSettings.styles.modern' },
+    { value: InvoiceTemplateStyle.Minimal, labelKey: 'invoiceSettings.styles.minimal' },
   ];
 
   private readonly hexPattern = /^#([0-9A-Fa-f]{6})$/;
@@ -80,11 +83,9 @@ export class InvoiceSettings implements OnInit, OnDestroy {
         style: loaded.style,
       });
 
-      // If a logo URL was already loaded (either a real URL or a saved base64
-      // data URL), default the toggle to whichever mode matches it.
       this.logoInputMode.set(loaded.logoUrl?.startsWith('data:') ? 'file' : 'url');
     } catch {
-      this.saveError.set('Could not load invoice settings.');
+      this.saveError.set(this.translocoService.translate('invoiceSettings.errors.loadFailed'));
     }
   }
 
@@ -125,7 +126,6 @@ export class InvoiceSettings implements OnInit, OnDestroy {
   onLogoUrlInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value.trim();
 
-    // Switching to a pasted URL invalidates any local file preview blob.
     const previous = this.logoPreviewUrl();
     if (previous) {
       URL.revokeObjectURL(previous);
@@ -143,13 +143,13 @@ export class InvoiceSettings implements OnInit, OnDestroy {
     this.logoError.set(null);
 
     if (!ACCEPTED_LOGO_TYPES.includes(file.type)) {
-      this.logoError.set('Please choose a PNG, JPEG, or SVG image.');
+      this.logoError.set(this.translocoService.translate('invoiceSettings.errors.invalidFileType'));
       input.value = '';
       return;
     }
 
     if (file.size > MAX_LOGO_BYTES) {
-      this.logoError.set('Logo must be smaller than 2MB.');
+      this.logoError.set(this.translocoService.translate('invoiceSettings.errors.fileTooLarge'));
       input.value = '';
       return;
     }
@@ -166,7 +166,7 @@ export class InvoiceSettings implements OnInit, OnDestroy {
       this.updateField('logoUrl', base64); // this is what actually gets saved
     };
     reader.onerror = () => {
-      this.logoError.set('Could not read the selected file.');
+      this.logoError.set(this.translocoService.translate('invoiceSettings.errors.fileReadFailed'));
     };
     reader.readAsDataURL(file);
 
@@ -182,7 +182,7 @@ export class InvoiceSettings implements OnInit, OnDestroy {
       await this.invoiceSettingsService.update(this.form());
       this.saveSuccess.set(true);
     } catch {
-      this.saveError.set('Failed to save changes. Please try again.');
+      this.saveError.set(this.translocoService.translate('invoiceSettings.errors.saveFailed'));
     }
   }
 
@@ -199,7 +199,9 @@ export class InvoiceSettings implements OnInit, OnDestroy {
 
       this.previewUrl.set(url);
     } catch {
-      this.saveError.set('Preview is not available yet.');
+      this.saveError.set(
+        this.translocoService.translate('invoiceSettings.errors.previewUnavailable'),
+      );
     }
   }
 
